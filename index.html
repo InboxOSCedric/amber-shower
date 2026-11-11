@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Amber Red Light Shower</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="amber-build" content="11 Nov 2026, 10:45">
+<meta name="amber-build" content="11 Nov 2026, 10:48">
 <script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;if(q.get("theme"))d.dataset.theme=q.get("theme");if(q.has("clean"))d.classList.add("clean-page");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -213,7 +213,7 @@ li b { font-weight: 500; }
     <section class="block">
       <h2>Specification</h2>
       <dl>
-        <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">3.3 mm</span> apart), <b>Round ribs</b> (56 fully round rods, <span class="num">Ø 9 mm</span>, standing side by side around the ring; their domed ends stick out <span class="num">3 mm</span> above and below it), <b>Pleats</b> (90 very shallow pleats, <span class="num">5.9 mm</span> apart and <span class="num">0.3 mm</span> deep, fading in from the underside and stopping just under the top edge) and <b>Smooth</b>.</dd>
+        <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">3.3 mm</span> apart), <b>Round ribs</b> (56 fully round rods, <span class="num">Ø 9 mm</span>, standing side by side around the ring; their domed ends stick out <span class="num">3 mm</span> above and below it), <b>Pleats</b> (90 very shallow pleats, <span class="num">5.9 mm</span> apart and <span class="num">0.3 mm</span> deep, and <b>Smooth</b>. On Round the pleats fade in from the underside and stop just under the sharp top edge; on Pebble and Soft square they run on over the rounded edges, top and bottom.</dd>
         <dt>Shapes</dt><dd>Three versions of the same product, switched at the top of the model: <b>Round</b> (crisp: flat top, sharp upper edge on head and ring, rounded underside, housing set squarely on the head), <b>Pebble</b> (round, with a fully rounded ring edge and a flowing sweep into the housing) and <b>Soft square</b> (a rounded-square head and ring on the same round housing).</dd>
         <dt>Ring lock</dt><dd>Slide the ring up over the head and twist it <span class="num">20°</span>. Three steel lugs on the head run into slots inside the ring, and magnets pull it home with a click. Twist back and it drops into your hand. </dd>
         <dt>Magnetic mount</dt><dd>The soft square cannot turn, so it is held by magnets alone. Lift the ring over the head: eight magnets around the head, one in each corner and one in the middle of each side, pull it up against a stop edge and centre it. It fits in any of the four directions. To take it off, pull it straight down. There are no buttons, slots or catches.</dd>
@@ -385,8 +385,8 @@ function ringTopY(r, shape) { return 2.45 - (r - 6.0) * slopeOf(shape); }
 //   fine: narrow flutes cut into the wall, dissolving over the ring's rounded edges.
 //   bold: fully round rods standing side by side around the ring, with domed ends that stick out a little above
 //         and below it (after a ribbed lantern). Built by roddedRing, not as a cut into the wall.
-//   wave: very shallow pleats, like folded fabric (after a pleated speaker body). soft: they fade in slowly from the
-//         underside and stop just under the top edge, which stays a clean line.
+//   wave: very shallow pleats, like folded fabric (after a pleated speaker body). soft: under a sharp top edge they
+//         fade in slowly from the underside and stop just short of the edge; on rounded edges they run over them.
 //   none: a smooth wall.
 const RIBS = {
   fine: { n: 160, depth: 0.075, segs: 6, cut: (p) => Math.pow((1 - Math.cos(p)) / 2, 1.4) },
@@ -406,8 +406,12 @@ function flutedRing(mat, shape, style = RIBS.fine, wall = 0) {
   // 0 to 1 along a rounded edge, y is the height.
   const show = (zone, t, y) => {
     if (!N) return 0;
+    if (style.soft && rt * aMax >= 0.4) {
+      // Rounded edges (Pebble, Soft square): the pleats run well over both rounded edges before they fade.
+      return zone === 'bottom' ? smooth(0.08, 0.5, t) : zone === 'top' ? 1 - smooth(0.6, 0.97, t) : 1;
+    }
     if (style.soft) {
-      if (zone === 'top') return 0; // the top edge stays plain, sharp or rounded
+      if (zone === 'top') return 0; // a sharp top edge stays a clean line
       const fromBelow = smooth(RB + 0.4 * rb, Math.min(RB + rb + 0.9, yc - 0.35), y);
       return fromBelow * (1 - smooth(yc - 0.3, yc - 0.04, y));
     }
