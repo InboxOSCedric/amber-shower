@@ -131,13 +131,6 @@ button[aria-pressed="true"] .dot.red { background: #ff3b24; opacity: 1; box-shad
 .clean .controls, .clean .hint, .clean .shapes { display: none; }
 .clean-page .stage { position: fixed; inset: 0; height: auto; border-radius: 0; z-index: 5; transition: none; }
 
-.share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: -12px; font-size: 14px; }
-.share label { color: var(--muted); }
-.share input { flex: 1 1 260px; min-width: 0; font: 400 13px/1 var(--font-mono); color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
-.share button { font: 500 14px/1 var(--font-body); color: var(--chip-on-fg); background: var(--chip-on); border: 0; border-radius: 999px; padding: 11px 16px; cursor: pointer; }
-.share button:focus-visible, .share input:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
-.share span { color: var(--muted); min-width: 9ch; }
-.clean-page .share { display: none; }
 .sheet { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: start; }
 .block { border-top: 1px solid var(--fg); padding-top: 14px; display: grid; gap: 14px; min-width: 0; }
 .block h2 { font: 500 20px/1.2 var(--font-display); letter-spacing: -0.015em; margin: 0; }
@@ -206,13 +199,6 @@ li b { font-weight: 500; }
       <button type="button" class="solo" id="btn-below" aria-pressed="false">From below</button>
       <button type="button" class="solo" id="btn-ribs" aria-pressed="true">Ribs</button>
     </div>
-  </section>
-
-  <section class="share" aria-label="Link to this view">
-    <label for="share-link">Link to this view</label>
-    <input id="share-link" type="text" readonly value="https://claude.ai/artifact/UZUVGuAJRP7ubsExXjW6oV">
-    <button type="button" id="share-copy">Copy link</button>
-    <span id="share-status" role="status"></span>
   </section>
 
   <div class="sheet">
@@ -947,14 +933,12 @@ function setMode(mode, instant = false) {
   state.mode = mode;
   for (const m of MODES) btn[m].setAttribute('aria-pressed', String(m === mode));
   hintEl.textContent = hintFor(mode);
-  updateShare();
   goCamera({ instant });
 }
 function setLight(on) {
   state.lightTo = on ? 1 : 0;
   btn.light.setAttribute('aria-pressed', String(on));
   stageEl.classList.toggle('night', on);
-  updateShare();
 }
 function setWater(on) {
   state.waterTo = on ? 1 : 0;
@@ -963,26 +947,8 @@ function setWater(on) {
 function setBelow(on, instant = false) {
   state.below = on;
   btn.below.setAttribute('aria-pressed', String(on));
-  updateShare();
   goCamera({ instant });
 }
-// Link to the current view. The page cannot change its own address, so it shows the link to copy instead.
-// Inside Claude the page sits in a frame and cannot see its own address, so it uses the artifact link. Hosted as
-// a normal web page it uses its own address, and keeps the address bar in step with the view.
-const STANDALONE = window.top === window.self && !/claude/.test(location.hostname);
-const SHARE_URL = STANDALONE ? location.href.split('#')[0].split('?')[0] : 'https://claude.ai/artifact/UZUVGuAJRP7ubsExXjW6oV';
-const shareInput = document.getElementById('share-link'), shareStatus = document.getElementById('share-status');
-function updateShare() {
-  const token = [state.shape !== 'round' ? state.shape : '', state.mode !== 'assembled' ? state.mode : '', state.lightTo ? 'light' : '', state.below ? 'below' : '', state.ribs ? '' : 'smooth'].filter(Boolean).join('-');
-  shareInput.value = SHARE_URL + (token ? '#' + token : '');
-  if (STANDALONE) try { history.replaceState(null, '', token ? '#' + token : location.pathname + location.search); } catch (err) { /* address bar stays as it is */ }
-  shareStatus.textContent = '';
-}
-document.getElementById('share-copy').onclick = () => {
-  const done = () => { shareStatus.textContent = 'Copied'; };
-  const manual = () => { shareInput.focus(); shareInput.select(); shareStatus.textContent = 'Press copy'; };
-  try { navigator.clipboard.writeText(shareInput.value).then(done, manual); } catch (err) { manual(); }
-};
 // The soft square cannot turn, so its ring pushes straight on.
 function hintFor(mode) {
   if (mode === 'ring' && !SHAPES[state.shape].twist) return 'Magnetic mount: lift the ring over the head and the magnets pull it up against the stop edge. Pull it straight down to take it off.';
@@ -998,7 +964,6 @@ function setShape(key) {
   hintEl.textContent = hintFor(state.mode);
   if (state.mode === 'ring' || state.mode === 'charge') goCamera();
   dirty = true;
-  updateShare();
 }
 for (const k in SHAPES) document.getElementById('shape-' + k).onclick = () => setShape(k);
 for (const m of MODES) btn[m].onclick = () => setMode(m);
@@ -1011,7 +976,6 @@ function setRibs(on) {
   btn.ribs.setAttribute('aria-pressed', String(on));
   for (const k in variants) { const sh = variants[k].ring.userData.shells; sh.ribbed.visible = on; sh.plain.visible = !on; }
   dirty = true;
-  updateShare();
 }
 btn.ribs.onclick = () => setRibs(!state.ribs);
 controls.addEventListener('start', () => { userMoved = true; controls.autoRotate = false; camTween = null; });
