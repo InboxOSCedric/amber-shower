@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Amber Red Light Shower</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="amber-build" content="11 Nov 2026, 10:48">
+<meta name="amber-build" content="11 Nov 2026, 10:59">
 <script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;if(q.get("theme"))d.dataset.theme=q.get("theme");if(q.has("clean"))d.classList.add("clean-page");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -202,6 +202,7 @@ li b { font-weight: 500; }
         <button type="button" id="btn-ring" aria-pressed="false">Ring off</button>
         <button type="button" id="btn-filter" aria-pressed="false">Filter</button>
         <button type="button" id="btn-charge" aria-pressed="false">Charging</button>
+        <button type="button" id="btn-bath" aria-pressed="false">Bathroom</button>
       </div>
       <button type="button" class="solo" id="btn-light" aria-pressed="false"><i class="dot red"></i>Red light</button>
       <button type="button" class="solo" id="btn-water" aria-pressed="false"><i class="dot"></i>Water</button>
@@ -214,6 +215,7 @@ li b { font-weight: 500; }
       <h2>Specification</h2>
       <dl>
         <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">3.3 mm</span> apart), <b>Round ribs</b> (56 fully round rods, <span class="num">Ø 9 mm</span>, standing side by side around the ring; their domed ends stick out <span class="num">3 mm</span> above and below it), <b>Pleats</b> (90 very shallow pleats, <span class="num">5.9 mm</span> apart and <span class="num">0.3 mm</span> deep, and <b>Smooth</b>. On Round the pleats fade in from the underside and stop just under the sharp top edge; on Pebble and Soft square they run on over the rounded edges, top and bottom.</dd>
+        <dt>Bathroom view</dt><dd>The Bathroom button hangs the shower head on a wall arm in a walk-in shower, at about <span class="num">2 m</span>, so each shape and rib finish can be judged in place. Red light and water work there too.</dd>
         <dt>Shapes</dt><dd>Three versions of the same product, switched at the top of the model: <b>Round</b> (crisp: flat top, sharp upper edge on head and ring, rounded underside, housing set squarely on the head), <b>Pebble</b> (round, with a fully rounded ring edge and a flowing sweep into the housing) and <b>Soft square</b> (a rounded-square head and ring on the same round housing).</dd>
         <dt>Ring lock</dt><dd>Slide the ring up over the head and twist it <span class="num">20°</span>. Three steel lugs on the head run into slots inside the ring, and magnets pull it home with a click. Twist back and it drops into your hand. </dd>
         <dt>Magnetic mount</dt><dd>The soft square cannot turn, so it is held by magnets alone. Lift the ring over the head: eight magnets around the head, one in each corner and one in the middle of each side, pull it up against a stop edge and centre it. It fits in any of the four directions. To take it off, pull it straight down. There are no buttons, slots or catches.</dd>
@@ -306,12 +308,12 @@ const scene = new THREE.Scene();
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
-const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 600);
+const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 3000);
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.enablePan = false;
 controls.minDistance = 18;
-controls.maxDistance = 170;
+controls.maxDistance = 170; // the bathroom view raises this, so you can step back and see the whole shower
 controls.autoRotate = !reduce && !STILL;
 controls.autoRotateSpeed = 0.55;
 
@@ -914,6 +916,100 @@ for (const key in SHAPES) {
   variants[key] = { shape, head: h, ring: buildRing(shape), charge: c.group, chargePos: c.pos, chargeTheta: c.theta, chargeTags: c.tags, water: h.water, streamData: h.streamData };
 }
 
+// Bathroom: a walk-in shower to judge the shower head in place. Two tiled walls, a floor with a drain, a glass
+// screen, a wall arm that the head screws onto, and a thermostat below. Sizes in cm; the head hangs at about 2 m.
+// The walls only show from inside the room, so you can orbit round the outside and still look in.
+const FLOOR_Y = -205, WALL_Z = -38, SIDE_X = -85, CEIL_Y = 55, GLASS_X = 78;
+const bath = new THREE.Group();
+bath.visible = false;
+scene.add(bath);
+{
+  const tiles = (base, grout, tileW, tileH, w, h, seed) => {
+    const t = canvasTex(256, Math.round((256 * tileH) / tileW), (g, cw, ch) => {
+      const r = rng(seed);
+      g.fillStyle = base; g.fillRect(0, 0, cw, ch);
+      for (let i = 0; i < 160; i++) { // faint mottling, like honed stone
+        g.fillStyle = `rgba(${r() < 0.5 ? '255,255,255' : '60,50,40'},${0.006 + r() * 0.01})`;
+        g.beginPath(); g.ellipse(r() * cw, r() * ch, 20 + r() * 70, 10 + r() * 40, r() * Math.PI, 0, TAU); g.fill();
+      }
+      g.strokeStyle = grout; g.lineWidth = 3; g.strokeRect(0, 0, cw, ch);
+    });
+    t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(w / tileW, h / tileH);
+    return new THREE.MeshStandardMaterial({ map: t, roughness: 0.6, metalness: 0, envMapIntensity: 0.45 });
+  };
+  const H = CEIL_Y - FLOOR_Y, yMid = (CEIL_Y + FLOOR_Y) / 2;
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(420, H), tiles('#b3a999', '#9c9283', 60, 120, 420, H, 3));
+  back.position.set(SIDE_X + 210, yMid, WALL_Z);
+  const side = new THREE.Mesh(new THREE.PlaneGeometry(260, H), tiles('#b3a999', '#9c9283', 60, 120, 260, H, 9));
+  side.rotation.y = Math.PI / 2;
+  side.position.set(SIDE_X, yMid, WALL_Z + 130);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(420, 420), tiles('#6b655d', '#57524b', 60, 60, 420, 420, 5));
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.set(SIDE_X + 210, FLOOR_Y, WALL_Z + 210);
+  const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(420, 420), new THREE.MeshStandardMaterial({ color: 0xd9d4cb, roughness: 0.9, envMapIntensity: 0.45 }));
+  ceiling.rotation.x = Math.PI / 2;
+  ceiling.position.set(SIDE_X + 210, CEIL_Y, WALL_Z + 210);
+  bath.add(back, side, floor, ceiling);
+  // Soft shading where surfaces meet, so the room reads as a space and not as flat colour.
+  const fade = canvasTex(4, 128, (g, cw, ch) => {
+    const grd = g.createLinearGradient(0, 0, 0, ch);
+    grd.addColorStop(0, 'rgba(0,0,0,0)'); grd.addColorStop(0.55, 'rgba(0,0,0,0.25)'); grd.addColorStop(1, 'rgba(0,0,0,1)');
+    g.fillStyle = grd; g.fillRect(0, 0, cw, ch);
+  });
+  // A strip that is darkest along its bottom edge; turn says which way that edge faces.
+  const shade = (w, h, strength, place) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: fade, color: 0x1b1612, transparent: true, opacity: strength, depthWrite: false }));
+    place(m);
+    bath.add(m);
+  };
+  shade(420, 70, 0.3, (m) => m.position.set(SIDE_X + 210, FLOOR_Y + 35, WALL_Z + 0.15));                                   // back wall, at the floor
+  shade(420, 60, 0.26, (m) => { m.rotation.z = Math.PI; m.position.set(SIDE_X + 210, CEIL_Y - 30, WALL_Z + 0.15); });      // back wall, at the ceiling
+  shade(H, 70, 0.34, (m) => { m.rotation.z = -Math.PI / 2; m.position.set(SIDE_X + 35, yMid, WALL_Z + 0.15); });          // back wall, in the corner
+  shade(260, 70, 0.3, (m) => { m.rotation.y = Math.PI / 2; m.position.set(SIDE_X + 0.15, FLOOR_Y + 35, WALL_Z + 130); }); // side wall, at the floor
+  shade(260, 60, 0.26, (m) => { m.rotation.set(0, Math.PI / 2, Math.PI); m.position.set(SIDE_X + 0.15, CEIL_Y - 30, WALL_Z + 130); });
+  shade(H, 70, 0.34, (m) => { m.rotation.set(0, Math.PI / 2, Math.PI / 2); m.position.set(SIDE_X + 0.15, yMid, WALL_Z + 35); }); // side wall, in the corner
+  shade(420, 90, 0.36, (m) => { m.rotation.set(-Math.PI / 2, 0, Math.PI); m.position.set(SIDE_X + 210, FLOOR_Y + 0.15, WALL_Z + 45); }); // floor, along the back wall
+  shade(420, 90, 0.36, (m) => { m.rotation.set(-Math.PI / 2, 0, Math.PI / 2); m.position.set(SIDE_X + 45, FLOOR_Y + 0.15, WALL_Z + 210); }); // floor, along the side wall
+  // Linear drain along the back wall.
+  const drain = new THREE.Mesh(new THREE.BoxGeometry(70, 0.3, 6), M.steel);
+  drain.position.set(0, FLOOR_Y + 0.15, WALL_Z + 12);
+  bath.add(drain);
+  // Glass screen with slim profiles in the same gunmetal.
+  const glass = new THREE.Mesh(new THREE.PlaneGeometry(110, 210), new THREE.MeshStandardMaterial({ color: 0xcfe2e4, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.18, depthWrite: false, side: THREE.DoubleSide }));
+  glass.rotation.y = Math.PI / 2;
+  glass.position.set(GLASS_X, FLOOR_Y + 105, WALL_Z + 55);
+  const rail = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.4, 110), M.graphite);
+  rail.position.set(GLASS_X, FLOOR_Y + 210, WALL_Z + 55);
+  const channel = new THREE.Mesh(new THREE.BoxGeometry(1.4, 210, 1.4), M.graphite);
+  channel.position.set(GLASS_X, FLOOR_Y + 105, WALL_Z + 0.7);
+  bath.add(glass, rail, channel);
+  // Wall arm: out of the wall, then down into the neck of the shower head.
+  const arm = new THREE.CatmullRomCurve3([[0, 17, WALL_Z], [0, 17, -14], [0, 17, -5.5], [0, 15.6, -1.4], [0, 13.6, 0], [0, 10.9, 0]].map((p) => new THREE.Vector3(...p)));
+  bath.add(new THREE.Mesh(new THREE.TubeGeometry(arm, 90, 1.05, 20), M.graphite));
+  const flange = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 0.8, 48), M.graphite);
+  flange.rotation.x = Math.PI / 2;
+  flange.position.set(0, 17, WALL_Z + 0.4);
+  bath.add(flange);
+  // Thermostat bar on the wall below.
+  const bar = new THREE.Mesh(new THREE.CylinderGeometry(2.3, 2.3, 26, 40), M.graphite);
+  bar.rotation.z = Math.PI / 2;
+  bar.position.set(0, -100, WALL_Z + 5.5);
+  bath.add(bar);
+  for (const dx of [-15.3, 15.3]) {
+    const knob = new THREE.Mesh(new THREE.CylinderGeometry(2.7, 2.7, 4.6, 40), M.graphite);
+    knob.rotation.z = Math.PI / 2;
+    knob.position.set(dx, -100, WALL_Z + 5.5);
+    bath.add(knob);
+  }
+  for (const dx of [-7.5, 7.5]) {
+    const stub = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 5.5, 24), M.graphite);
+    stub.rotation.x = Math.PI / 2;
+    stub.position.set(dx, -100, WALL_Z + 2.75);
+    bath.add(stub);
+  }
+}
+
 const LABELS = [
   { part: 'connector', y: 10.6, r: 1.4, side: 1, name: 'Ball joint, G½ thread', short: 'Ball joint', detail: 'Ball hides inside the dome' },
   { part: 'housing', y: 7.2, r: 3.3, side: -1, name: 'Filter housing', short: 'Housing', detail: 'Debossed wordmark' },
@@ -946,6 +1042,7 @@ const VIEW = {
   ring: { h: 20.5, w: 22, ty: 2.8, phi: 1.28 },
   filter: { h: 27.5, w: 22, ty: -0.8, phi: 1.42 },
   below: { h: 21, w: 21, ty: 2.5, phi: 2.55 },
+  bath: { h: 64, w: 84, wn: 64, ty: -10, phi: 1.66, theta: 0.55 },
   charge: { h: 15, w: 41, wn: 41, ty: CHARGE_Y + 1.4, phi: 1.0 },
 };
 const HINT = {
@@ -954,6 +1051,7 @@ const HINT = {
   ring: 'Ring lock: twist the ring 20° and it drops off. Magnets pull it back into place with a click.',
   filter: 'Filter change: ring off, quarter-turn the head. The cartridge comes down with it and lifts out.',
   charge: 'Charging: take the ring off and plug a USB-C cable into the port on its inner wall. Any USB-C charger works.',
+  bath: 'Bathroom: the shower head on a wall arm in a walk-in shower. Zoom out to see the whole shower, and switch shape, ribs, light and water.',
 };
 const state = { mode: 'assembled', shape: 'round', ribs: 'fine', pE: 0, pR: 0, pF: 0, pD: 0, light: 0, lightTo: 0, water: 0, waterTo: 0, below: false };
 let userMoved = false, dirty = true, lastSig = '';
@@ -1002,12 +1100,21 @@ function stepCam(dt) {
 }
 
 const btn = {};
-for (const id of ['assembled', 'exploded', 'ring', 'filter', 'charge', 'light', 'water', 'below']) btn[id] = document.getElementById('btn-' + id);
-const MODES = ['assembled', 'exploded', 'ring', 'filter', 'charge'];
+for (const id of ['assembled', 'exploded', 'ring', 'filter', 'charge', 'bath', 'light', 'water', 'below']) btn[id] = document.getElementById('btn-' + id);
+const MODES = ['assembled', 'exploded', 'ring', 'filter', 'charge', 'bath'];
 function setMode(mode, instant = false) {
   state.mode = mode;
   for (const m of MODES) btn[m].setAttribute('aria-pressed', String(m === mode));
   hintEl.textContent = hintFor(mode);
+  // The bathroom is a far bigger scene than the product on its own: let the camera step back, push the near plane
+  // out so fine details do not flicker at a distance, and let the red light reach the floor.
+  const inBath = mode === 'bath';
+  bath.visible = inBath;
+  controls.maxDistance = inBath ? 620 : 170;
+  camera.near = inBath ? 4 : 0.5;
+  camera.updateProjectionMatrix();
+  spot.distance = inBath ? 0 : 70;
+  dirty = true;
   goCamera({ instant });
 }
 function setLight(on) {
@@ -1093,7 +1200,10 @@ setShape(SHAPES[params.get('shape')] ? params.get('shape') : linkTokens.find((t)
 if (STILL) {
   if (STILL === 'side') VIEW.assembled.phi = 1.6;
   if (STILL === 'detail') Object.assign(VIEW.assembled, { h: 6.5, w: 9, ty: 1.05, phi: 1.36 });
-  if (STILL === 'exploded' || STILL === 'ring' || STILL === 'filter' || STILL === 'charge') setMode(STILL, true);
+  if (STILL === 'exploded' || STILL === 'ring' || STILL === 'filter' || STILL === 'charge' || STILL === 'bath' || STILL === 'bathwide' || STILL === 'bathnight') setMode(STILL.startsWith('bath') ? 'bath' : STILL, true);
+  if (STILL === 'bathwide') Object.assign(VIEW.bath, { h: 290, w: 300, ty: -85, phi: 1.55, theta: 0.5 });
+  if (STILL === 'bathwide' || STILL === 'bathnight') { state.water = 1; setWater(true); }
+  if (STILL === 'bathnight') { state.light = 1; setLight(true); }
   if (STILL === 'glow' || STILL === 'night') { state.light = 1; setLight(true); }
   if (STILL === 'night') { state.water = 1; setWater(true); }
   if (STILL === 'below' || STILL === 'glow') setBelow(true, true);
@@ -1155,6 +1265,7 @@ function frame(now) {
   for (const k in variants) variants[k].charge.visible = k === state.shape && D > 0.96;
 
   const Lt = state.light;
+  const inBath = state.mode === 'bath';
   // How squarely the camera faces the lenses, whichever way the ring is turned.
   const lift = Math.abs(v3.copy(camera.position).sub(controls.target).normalize().dot(axis.set(0, 1, 0).applyQuaternion(parts.ring.quaternion)));
   const sideOn = 1 - smooth(0.2, 0.55, lift);
@@ -1162,8 +1273,8 @@ function frame(now) {
   hotMat.opacity = Lt;
   poolMat.opacity = 0.9 * Lt;
   haloMat.opacity = Lt * sideOn;
-  spot.intensity = 900 * Lt;
-  curtain.material.opacity = 0.09 * Lt * (0.2 + 0.8 * sideOn) * (1 - 0.85 * seat);
+  spot.intensity = (inBath ? 6000 : 900) * Lt;
+  curtain.material.opacity = 0.09 * Lt * (0.2 + 0.8 * sideOn) * (1 - 0.85 * seat) * (inBath ? 0.35 : 1);
   scene.environmentIntensity = 1 - 0.72 * Lt;
   key.intensity = 1.5 * (1 - 0.7 * Lt);
   rim.intensity = 0.9 * (1 - 0.4 * Lt);
@@ -1174,9 +1285,11 @@ function frame(now) {
     M.water.opacity = 0.5 * Wt;
     for (let i = 0; i < STREAMS; i++) {
       const d = streamData[i];
-      const f = (time * d.v * 26 + d.p * FALL) % FALL;
-      const spread = 1 + f * 0.012;
-      m4.makeTranslation(d.n[0] * spread, -0.45 - f, d.n[1] * spread);
+      // In the bathroom the water falls all the way to the floor, in longer and faster streaks.
+      const fall = inBath ? 200 : FALL;
+      const f = (time * d.v * (inBath ? 230 : 26) + d.p * fall) % fall;
+      const spread = 1 + f * (inBath ? 0.004 : 0.012);
+      m4.makeScale(inBath ? 2.4 : 1, inBath ? 6 : 1, inBath ? 2.4 : 1).setPosition(d.n[0] * spread, -0.45 - f, d.n[1] * spread);
       water.setMatrixAt(i, m4);
     }
     water.instanceMatrix.needsUpdate = true;
