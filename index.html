@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Amber Red Light Shower</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="amber-build" content="11 Nov 2026, 11:05">
+<meta name="amber-build" content="11 Nov 2026, 11:09">
 <script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;if(q.get("theme"))d.dataset.theme=q.get("theme");if(q.has("clean"))d.classList.add("clean-page");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -214,15 +214,15 @@ li b { font-weight: 500; }
     <section class="block">
       <h2>Specification</h2>
       <dl>
-        <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">3.3 mm</span> apart), <b>Round ribs</b> (56 fully round rods, <span class="num">Ø 9 mm</span>, standing side by side around the ring; their domed ends stick out <span class="num">3 mm</span> above and below it), <b>Pleats</b> (90 very shallow pleats, <span class="num">5.9 mm</span> apart and <span class="num">0.3 mm</span> deep, and <b>Smooth</b>. On Round the pleats fade in from the underside and stop just under the sharp top edge; on Pebble and Soft square they run on over the rounded edges, top and bottom.</dd>
-        <dt>Bathroom view</dt><dd>The Bathroom button hangs the shower head on a wall arm in a walk-in shower, at about <span class="num">2 m</span>, so each shape and rib finish can be judged in place. Red light and water work there too, and Ring off takes the ring off the head in the room. In this view the head is drawn <span class="num">25%</span> larger than the sizes in this list.</dd>
+        <dt>Light ring</dt><dd><span class="num">Ø 212 × 42 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">4.2 mm</span> apart), <b>Round ribs</b> (56 fully round rods, <span class="num">Ø 11 mm</span>, standing side by side around the ring; their domed ends stick out <span class="num">4 mm</span> above and below it), <b>Pleats</b> (90 very shallow pleats, <span class="num">7.4 mm</span> apart and <span class="num">0.35 mm</span> deep, and <b>Smooth</b>. On Round the pleats fade in from the underside and stop just under the sharp top edge; on Pebble and Soft square they run on over the rounded edges, top and bottom.</dd>
+        <dt>Bathroom view</dt><dd>The Bathroom button hangs the shower head on a wall arm in a walk-in shower, at about <span class="num">2 m</span>, so each shape and rib finish can be judged in place. Red light and water work there too, and Ring off takes the ring off the head in the room.</dd>
         <dt>Shapes</dt><dd>Three versions of the same product, switched at the top of the model: <b>Round</b> (crisp: flat top, sharp upper edge on head and ring, rounded underside, housing set squarely on the head), <b>Pebble</b> (round, with a fully rounded ring edge and a flowing sweep into the housing) and <b>Soft square</b> (a rounded-square head and ring on the same round housing).</dd>
         <dt>Ring lock</dt><dd>Slide the ring up over the head and twist it <span class="num">20°</span>. Three steel lugs on the head run into slots inside the ring, and magnets pull it home with a click. Twist back and it drops into your hand. </dd>
         <dt>Magnetic mount</dt><dd>The soft square cannot turn, so it is held by magnets alone. Lift the ring over the head: eight magnets around the head, one in each corner and one in the middle of each side, pull it up against a stop edge and centre it. It fits in any of the four directions. To take it off, pull it straight down. There are no buttons, slots or catches.</dd>
-        <dt>Shower head</dt><dd><span class="num">Ø 120 mm</span>, smooth body that sweeps up into the housing in one short curve. The filter sits deep inside the head, which keeps the whole unit <span class="num">115 mm</span> tall. <span class="num" id="nozzle-count">241</span> easy-clean silicone nozzles</dd>
+        <dt>Shower head</dt><dd><span class="num">Ø 150 mm</span>, smooth body that sweeps up into the housing in one short curve. The filter sits deep inside the head, which keeps the whole unit <span class="num">144 mm</span> tall. <span class="num" id="nozzle-count">241</span> easy-clean silicone nozzles</dd>
         <dt>Filter change</dt><dd>Take the ring off and give the head a quarter-turn. It comes away with the cartridge sitting in it, so you lift the old one out and drop the new one in, without tools.</dd>
         <dt>Fitting</dt><dd>Seat the cartridge in the head, screw the housing down over it, then screw the whole unit onto the shower arm by hand.</dd>
-        <dt>Filter housing</dt><dd><span class="num">Ø 64 × 50 mm</span>, Amber wordmark debossed <span class="num">0.4 mm</span> into the front</dd>
+        <dt>Filter housing</dt><dd><span class="num">Ø 80 × 62 mm</span>, Amber wordmark debossed <span class="num">0.5 mm</span> into the front</dd>
         <dt>Connection</dt><dd>Ball joint with the ball hidden inside the dome, so the head still tilts. Only a short neck shows, in the same graphite as the body, with a <span class="num">G½</span> thread (<span class="num">½ inch, 1.27 cm</span>), the standard size that fits any shower arm.</dd>
         <dt>Finish</dt><dd><span class="swatch" aria-hidden="true"></span>Anodised aluminium, bead-blasted satin, gunmetal <span class="num">#4B4A49</span></dd>
         <dt>Light</dt><dd>12 round LED lenses, each with a <span class="num">630 nm</span> red and an <span class="num">850 nm</span> near-infrared chip</dd>
@@ -308,12 +308,16 @@ const scene = new THREE.Scene();
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
+// The model is built at its first size (ring Ø 170 mm, written in cm) and shown SIZE times larger: the product
+// was scaled up as a whole, so the ring is now Ø 212 mm. Lengths in the code are the first size; multiply by SIZE.
+const SIZE = 1.25;
+
 const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 3000);
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.enablePan = false;
-controls.minDistance = 18;
-controls.maxDistance = 170; // the bathroom view raises this, so you can step back and see the whole shower
+controls.minDistance = 18 * SIZE;
+controls.maxDistance = 170 * SIZE; // the bathroom view raises this, so you can step back and see the whole shower
 controls.autoRotate = !reduce && !STILL;
 controls.autoRotateSpeed = 0.55;
 
@@ -561,6 +565,7 @@ function logoMaps(widthCm) {
 }
 
 const root = new THREE.Group();
+root.scale.setScalar(SIZE);
 scene.add(root);
 const parts = {};
 function part(name) { const g = new THREE.Group(); root.add(g); parts[name] = g; return g; }
@@ -758,6 +763,7 @@ function buildRing(shape) {
     holder.rotation.y = PIN_TH;
     const port = new THREE.Group();
     port.position.set(0, PORT_Y, warpR(shape, RI, PIN_TH) - 0.012);
+    port.scale.setScalar(1 / SIZE); // a USB-C port keeps its real size
     const rim = new THREE.Mesh(new THREE.CapsuleGeometry(0.21, 0.6, 8, 20), M.steel);
     rim.rotation.z = Math.PI / 2; rim.scale.z = 0.1;
     const hole = new THREE.Mesh(new THREE.CapsuleGeometry(0.14, 0.58, 8, 20), M.seam);
@@ -872,6 +878,7 @@ function buildCharge(shape) {
   g.visible = false;
   const plug = new THREE.Mesh(new RoundedBoxGeometry(1.15, 0.6, 1.5, 4, 0.2), M.cable);
   plug.position.copy(at(rin - 0.85, 0, PORT_Y));
+  plug.scale.setScalar(1 / SIZE); // plug, cable and charger keep their real size
   plug.rotation.y = th;
   g.add(plug);
   const path = new THREE.CatmullRomCurve3([
@@ -879,10 +886,11 @@ function buildCharge(shape) {
     at(0, (innerF + outerF) / 2, top), at(0, outerF + 0.2, top - 0.05), at(0, outerF + 0.75, top - 1.5), at(0, outerF + 1.0, 0.3),
     at(0, outerF + 2.4, -0.13), at(0, outerF + 4.2, -0.05), at(0, outerF + 5.0, 0.8),
   ]);
-  g.add(new THREE.Mesh(new THREE.TubeGeometry(path, 140, 0.17, 10), M.cable));
+  g.add(new THREE.Mesh(new THREE.TubeGeometry(path, 140, 0.17 / SIZE, 10), M.cable));
   // USB-C charger with an EU plug (two round pins).
   const charger = new THREE.Group();
   charger.position.copy(at(0, outerF + 7.5, 0.8));
+  charger.scale.setScalar(1 / SIZE);
   charger.rotation.y = th + Math.PI / 2;
   charger.add(new THREE.Mesh(new RoundedBoxGeometry(3.8, 2.2, 4.4, 5, 0.55), M.cable));
   const relief = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.22, 0.9, 16), M.cable);
@@ -920,9 +928,9 @@ for (const key in SHAPES) {
 // screen, a wall arm that the head screws onto, and a thermostat below. Sizes in cm; the head hangs at about 2 m.
 // The walls only show from inside the room, so you can orbit round the outside and still look in.
 const FLOOR_Y = -205, WALL_Z = -38, SIDE_X = -85, CEIL_Y = 55, GLASS_X = 78;
-// In the bathroom the shower head is shown larger than in the other views (BATH_SCALE times), and turned so that
-// the wordmark and the sides of the soft square sit square to the wall.
-const BATH_SCALE = 1.25, BATH_TURN = -LOGO_TH;
+// In the bathroom the shower head is turned so that the wordmark and the sides of the soft square sit square to
+// the wall.
+const BATH_TURN = -LOGO_TH;
 const bath = new THREE.Group();
 bath.visible = false;
 scene.add(bath);
@@ -988,7 +996,7 @@ scene.add(bath);
   channel.position.set(GLASS_X, FLOOR_Y + 105, WALL_Z + 0.7);
   bath.add(glass, rail, channel);
   // Wall arm: out of the wall, then down into the neck of the shower head.
-  const k = BATH_SCALE, armY = 17 * k;
+  const k = SIZE, armY = 17 * k;
   const arm = new THREE.CatmullRomCurve3([[0, armY, WALL_Z], [0, armY, -14 * k], [0, armY, -5.5 * k], [0, 15.6 * k, -1.4 * k], [0, 13.6 * k, 0], [0, 10.9 * k, 0]].map((p) => new THREE.Vector3(...p)));
   bath.add(new THREE.Mesh(new THREE.TubeGeometry(arm, 90, 1.0 * k, 20), M.graphite));
   const flange = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 0.8, 48), M.graphite);
@@ -1019,8 +1027,8 @@ const LABELS = [
   { part: 'connector', y: 10.6, r: 1.4, side: 1, name: 'Ball joint, G½ thread', short: 'Ball joint', detail: 'Ball hides inside the dome' },
   { part: 'housing', y: 7.2, r: 3.3, side: -1, name: 'Filter housing', short: 'Housing', detail: 'Debossed wordmark' },
   { part: 'cartridge', y: 6.4, r: 2.55, side: 1, name: 'Filter cartridge', short: 'Filter', detail: 'KDF-55, carbon, scale inhibitor' },
-  { part: 'head', y: 1.3, r: 6.1, side: -1, name: 'Shower head Ø 120', short: 'Head Ø 120', detail: 'Quarter-turn to open' },
-  { part: 'ring', y: 1.0, r: 8.6, side: 1, name: 'Red light ring Ø 170', short: 'Ring Ø 170', detail: 'Twist-lock, 12 LED lenses' },
+  { part: 'head', y: 1.3, r: 6.1, side: -1, name: 'Shower head Ø 150', short: 'Head Ø 150', detail: 'Quarter-turn to open' },
+  { part: 'ring', y: 1.0, r: 8.6, side: 1, name: 'Red light ring Ø 212', short: 'Ring Ø 212', detail: 'Twist-lock, 12 LED lenses' },
 ];
 // Call-outs for the soft square's magnetic mount, shown in the Ring off view. `out` is where the text starts, so the line
 // reaches from the detail to clear background.
@@ -1062,7 +1070,13 @@ const state = { mode: 'assembled', bathRing: false, shape: 'round', ribs: 'fine'
 let userMoved = false, dirty = true, lastSig = '';
 
 const tmpS = new THREE.Spherical(), v3 = new THREE.Vector3(), camRight = new THREE.Vector3(), m4 = new THREE.Matrix4(), axis = new THREE.Vector3();
+// Framing for the current view. The product views are written at the model's first size, so they scale with SIZE;
+// the bathroom is a room in real centimetres and does not.
 function viewFor() {
+  const v = viewBase();
+  return state.mode === 'bath' ? v : { ...v, h: v.h * SIZE, w: v.w * SIZE, wn: v.wn && v.wn * SIZE, ty: v.ty * SIZE };
+}
+function viewBase() {
   let base = VIEW[state.mode];
   // The soft square's lock is easiest to read corner-on.
   if (state.mode === 'ring' && !SHAPES[state.shape].twist) base = { ...base, theta: SQ_VIEW, wn: 34, h: 24.5, ty: 2.3 };
@@ -1117,13 +1131,12 @@ function setMode(mode, instant = false) {
   // out so fine details do not flicker at a distance, and let the red light reach the floor.
   const inBath = mode === 'bath';
   bath.visible = inBath;
-  root.scale.setScalar(inBath ? BATH_SCALE : 1);
   root.rotation.y = inBath ? BATH_TURN : 0;
   if (!inBath) state.bathRing = false;
-  controls.maxDistance = inBath ? 620 : 170;
+  controls.maxDistance = inBath ? 620 : 170 * SIZE;
   camera.near = inBath ? 4 : 0.5;
   camera.updateProjectionMatrix();
-  spot.distance = inBath ? 0 : 70;
+  spot.distance = inBath ? 0 : 70 * SIZE;
   dirty = true;
   goCamera({ instant });
 }
@@ -1307,7 +1320,7 @@ function frame(now) {
     for (let i = 0; i < STREAMS; i++) {
       const d = streamData[i];
       // In the bathroom the water falls all the way to the floor, in longer and faster streaks.
-      const fall = inBath ? 200 / BATH_SCALE : FALL;
+      const fall = inBath ? 200 / SIZE : FALL;
       const f = (time * d.v * (inBath ? 230 : 26) + d.p * fall) % fall;
       const spread = 1 + f * (inBath ? 0.004 : 0.012);
       m4.makeScale(inBath ? 2.4 : 1, inBath ? 6 : 1, inBath ? 2.4 : 1).setPosition(d.n[0] * spread, -0.45 - f, d.n[1] * spread);
@@ -1325,7 +1338,7 @@ function frame(now) {
   const W = stageEl.clientWidth, H = stageEl.clientHeight;
   for (const L of LABELS) {
     if (show < 0.01) { L.el.style.opacity = 0; continue; }
-    v3.set(0, L.y + parts[L.part].position.y, 0).addScaledVector(camRight, L.side * L.r).project(camera);
+    v3.set(0, L.y + parts[L.part].position.y, 0).addScaledVector(camRight, L.side * L.r).multiplyScalar(SIZE).project(camera);
     const x = (v3.x * 0.5 + 0.5) * W, y = (-v3.y * 0.5 + 0.5) * H;
     L.el.classList.toggle('left', L.side < 0);
     const tx = L.side < 0 ? `calc(${x}px - 100%)` : `${x}px`;
@@ -1338,10 +1351,10 @@ function frame(now) {
   for (const L of CHARGE_TAGS) {
     if (showCharge < 0.01) { L.el.style.opacity = 0; continue; }
     const T = V.chargeTags[L.key];
-    v3.copy(T.at).project(camera);
+    v3.copy(T.at).multiplyScalar(SIZE).project(camera);
     const x = (v3.x * 0.5 + 0.5) * W, y = (-v3.y * 0.5 + 0.5) * H;
     let lead = 28;
-    if (T.out) { v3.copy(T.out).project(camera); lead = Math.max(16, Math.abs((v3.x * 0.5 + 0.5) * W - x)); }
+    if (T.out) { v3.copy(T.out).multiplyScalar(SIZE).project(camera); lead = Math.max(16, Math.abs((v3.x * 0.5 + 0.5) * W - x)); }
     L.el.style.setProperty('--lead', lead + 'px');
     L.el.classList.toggle('left', L.side < 0);
     L.el.style.transform = `translate(${L.side < 0 ? `calc(${x}px - 100%)` : `${x}px`}, calc(${y}px - 50%))`;
@@ -1353,10 +1366,10 @@ function frame(now) {
   for (const L of RING_TAGS) {
     if (showLock < 0.01) { L.el.style.opacity = 0; continue; }
     const dy = parts[L.part].position.y;
-    v3.copy(L.at); v3.y += dy; v3.project(camera);
+    v3.copy(L.at); v3.y += dy; v3.multiplyScalar(SIZE).project(camera);
     const x = (v3.x * 0.5 + 0.5) * W, y = (-v3.y * 0.5 + 0.5) * H;
     let lead = 28;
-    if (L.out) { v3.copy(L.out); v3.y += dy; v3.project(camera); lead = Math.max(16, Math.abs((v3.x * 0.5 + 0.5) * W - x)); }
+    if (L.out) { v3.copy(L.out); v3.y += dy; v3.multiplyScalar(SIZE).project(camera); lead = Math.max(16, Math.abs((v3.x * 0.5 + 0.5) * W - x)); }
     L.el.style.setProperty('--lead', lead + 'px');
     L.el.classList.toggle('left', L.side < 0);
     L.el.style.transform = `translate(${L.side < 0 ? `calc(${x}px - 100%)` : `${x}px`}, calc(${y}px - 50%))`;
