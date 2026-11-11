@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Amber Red Light Shower</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="amber-build" content="11 Nov 2026, 12:18">
+<meta name="amber-build" content="11 Nov 2026, 12:39">
 <script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;if(q.get("theme"))d.dataset.theme=q.get("theme");if(q.has("clean"))d.classList.add("clean-page");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -98,6 +98,11 @@ h1 {
 .controls .solo { background: var(--chip); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 13px 17px; }
 .controls button[aria-pressed="true"], .shapes button[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-fg); }
 .controls button:focus-visible, .shapes button:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.product { justify-self: start; background: var(--surface); margin-bottom: -12px; }
+.product button { font: 500 14px/1 var(--font-body); color: var(--chip-fg); background: transparent; border: 0; border-radius: 999px; padding: 10px 16px; cursor: pointer; white-space: nowrap; }
+.product button[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-fg); }
+.product button:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+[data-product="head"] [data-for="hand"], [data-product="hand"] [data-for="head"] { display: none; }
 .shapes { position: absolute; top: 12px; right: 12px; }
 .shapes.ribs { top: 64px; }
 .shapes.finish { top: 116px; }
@@ -178,11 +183,16 @@ li b { font-weight: 500; }
 }
 </style>
 
-<div class="wrap">
+<div class="wrap" id="wrap" data-product="head">
   <header>
     <h1>Amber red light shower</h1>
-    <p class="lede"><b>Concept 02.</b> A filtered shower head with a fluted red light ring that comes off to charge over USB-C, in six finishes. Drag to turn it, scroll or pinch to zoom.</p>
+    <p class="lede"><b>Concept 02.</b> A filtered shower head and a matching hand shower, each with a red light ring that comes off to charge over USB-C, in six finishes. Drag to turn it, scroll or pinch to zoom.</p>
   </header>
+
+  <div class="seg product" role="group" aria-label="Model">
+    <button type="button" id="product-head" aria-pressed="true">Shower head</button>
+    <button type="button" id="product-hand" aria-pressed="false">Hand shower</button>
+  </div>
 
   <section class="stage" id="stage" aria-label="Interactive 3D model of the shower head">
     <p class="loading" id="loading">Loading the 3D model</p>
@@ -226,7 +236,23 @@ li b { font-weight: 500; }
   <div class="sheet">
     <section class="block">
       <h2>Specification</h2>
-      <dl>
+      <dl data-for="hand">
+        <dt>Hand shower</dt><dd><span class="num">Ø 127 mm</span> across the ring, <span class="num">252 mm</span> long and <span class="num">65 mm</span> deep. Head, ring, ribs, lock and finishes are those of the shower head at 60% of the size, so the two read as a pair.</dd>
+        <dt>Light ring</dt><dd><span class="num">Ø 127 × 26 mm</span>. It slides over the head from the front, with the handle behind it. The outer wall comes in the same four finishes, switched at the top of the model: <b>Fine ribs</b>, <b>Round ribs</b> (56 fully round rods, <span class="num">Ø 6.7 mm</span>), <b>Pleats</b> and <b>Smooth</b>.</dd>
+        <dt>Shapes</dt><dd><b>Round</b> (crisp: flat back, sharp edges on head and ring), <b>Pebble</b> (fully rounded ring edge, the back of the head sweeps into the neck) and <b>Soft square</b> (a rounded-square head and ring).</dd>
+        <dt>Ring lock</dt><dd>Push the ring over the head and twist it <span class="num">20°</span>, as on the shower head. Twist back and it comes off towards you. On Soft square it is held by eight magnets instead and pulls straight off.</dd>
+        <dt>Shower head</dt><dd>A flat disc, <span class="num">Ø 90 × 24 mm</span>, with <span class="num" id="nozzle-count-hand">110</span> easy-clean silicone nozzles. It sits on the front of the handle on a short neck, so the ring has room all the way round. Without the ring it is a compact hand shower.</dd>
+        <dt>Handle</dt><dd><span class="num">Ø 33 mm</span>, straight, with a rounded top and base. It holds the filter. Amber wordmark debossed <span class="num">0.5 mm</span> along the front.</dd>
+        <dt>Filter</dt><dd>A slim cartridge, <span class="num">Ø 26 × 112 mm</span>, inside the handle: KDF-55, coconut-shell carbon and a polyphosphate scale inhibitor, swapped every 3 months.</dd>
+        <dt>Filter change</dt><dd>Unscrew the handle just below the elbow. The cartridge sits on a spigot inside: pull it off, push a new one on and screw the handle back, without tools. The ring stays on the head.</dd>
+        <dt>Connection</dt><dd><span class="num">G½</span> thread (<span class="num">½ inch</span>) at the base of the handle, the standard size that fits any shower hose.</dd>
+        <dt>Light</dt><dd>12 round LED lenses, each with a <span class="num">630 nm</span> red and an <span class="num">850 nm</span> near-infrared chip</dd>
+        <dt>Power</dt><dd>Rechargeable battery in the ring, sealed to <span class="num">IPX7</span></dd>
+        <dt>Charging</dt><dd>A USB-C port on the inner wall of the ring. Take the ring off and plug in any USB-C charger. On the hand shower the port sits at the bottom, covered by the head.</dd>
+        <dt>Finish</dt><dd>The same six finishes: <b>Gunmetal</b>, <b>Beige</b>, <b>Brushed aluminium</b>, <b>Brushed gold</b>, <b>Brushed copper</b> and <b>Black</b>. Holder, hose and fittings in the bathroom view follow the finish.</dd>
+        <dt>Bathroom view</dt><dd>The Bathroom button puts the hand shower in a wall holder at about <span class="num">1.75 m</span>, with its hose down to the thermostat. Red light, water and Ring off work there too.</dd>
+      </dl>
+      <dl data-for="head">
         <dt>Light ring</dt><dd><span class="num">Ø 212 × 42 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">4.2 mm</span> apart), <b>Round ribs</b> (56 fully round rods, <span class="num">Ø 11 mm</span>, standing side by side around the ring; their domed ends stick out <span class="num">4 mm</span> above and below it), <b>Pleats</b> (90 very shallow pleats, <span class="num">7.4 mm</span> apart and <span class="num">0.35 mm</span> deep, and <b>Smooth</b>. On Round the pleats fade in from the underside and stop just under the sharp top edge; on Pebble and Soft square they run on over the rounded edges, top and bottom.</dd>
         <dt>Bathroom view</dt><dd>The Bathroom button hangs the shower head on a wall arm in a walk-in shower, at about <span class="num">2 m</span>, so each shape and rib finish can be judged in place. Red light and water work there too, and Ring off takes the ring off the head in the room.</dd>
         <dt>Shapes</dt><dd>Three versions of the same product, switched at the top of the model: <b>Round</b> (crisp: flat top, sharp upper edge on head and ring, rounded underside, housing set squarely on the head), <b>Pebble</b> (round, with a fully rounded ring edge and a flowing sweep into the housing) and <b>Soft square</b> (a rounded-square head and ring on the same round housing).</dd>
@@ -248,7 +274,13 @@ li b { font-weight: 500; }
     <div class="side">
       <section class="block">
         <h2>Design intent</h2>
-        <ul>
+        <ul data-for="hand">
+          <li><b>A flat disc on a slim handle.</b> The head sits on the front of the handle and not on top of it, which leaves its whole edge free for the light ring.</li>
+          <li><b>Filter in the handle.</b> The handle is the filter housing, so the head stays thin.</li>
+          <li><b>One family.</b> Ring, ribs, lock, light and finishes are shared with the shower head.</li>
+          <li><b>Ring optional.</b> The hand shower works the same with the ring off.</li>
+        </ul>
+        <ul data-for="head">
           <li><b>Ribbed ring.</b> The ribs sit on the light ring only, in one of three patterns. Head and housing stay smooth.</li>
           <li><b>Crisp or flowing.</b> Round is crisp: ring and head share one flat top with a sharp edge, and the housing stands squarely on it. On Pebble and Soft square the ring continues the slope of the head, which sweeps up into the housing in one curve.</li>
           <li><b>Nothing on the outside.</b> The USB-C port sits on the inner wall of the ring, hidden by the head once the ring is on.</li>
@@ -265,6 +297,7 @@ li b { font-weight: 500; }
           <li><b>Battery.</b> Capacity, run time per charge, and whether it can be replaced in service.</li>
           <li><b>Filter.</b> Media volume and expected cartridge life at a typical flow rate.</li>
           <li><b>Ring lock.</b> Holding force and wear over repeated use, for the twist-lock, and the pull force of the magnets on the soft square: enough to hold the ring through a knock, light enough to pull off with wet hands.</li>
+          <li data-for="hand"><b>Hand shower.</b> Battery capacity and run time in the smaller ring, whether it can use the same LED board, and the weight of the hand shower with the ring on.</li>
           <li><b>Order.</b> Minimum order quantity, sample cost and sample timing.</li>
         </ul>
       </section>
@@ -324,6 +357,9 @@ scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 // The model is built at its first size (ring Ø 170 mm, written in cm) and shown SIZE times larger: the product
 // was scaled up as a whole, so the ring is now Ø 212 mm. Lengths in the code are the first size; multiply by SIZE.
 const SIZE = 1.25;
+// The hand shower uses the same head and ring at HS times that size (ring Ø 127 mm). KH is the length in cm of one
+// unit of its head and ring.
+const HS = 0.6, KH = SIZE * HS;
 
 const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 3000);
 const controls = new OrbitControls(camera, canvas);
@@ -435,7 +471,7 @@ const brushDone = new WeakSet();
 function brushAll(root) {
   root.traverse((o) => {
     const g = o.geometry;
-    if (!g || brushDone.has(g) || (o.material !== M.graphite && o.material !== M.plate && o.material !== M.logo)) return;
+    if (!g || brushDone.has(g) || (o.material !== M.graphite && o.material !== M.plate && o.material !== M.logo && o.material !== M.logoHand)) return;
     brushDone.add(g);
     if (g.attributes.brush) return;
     const p = g.attributes.position, b = new Float32Array(p.count);
@@ -643,8 +679,15 @@ function logoMaps(widthCm) {
 const root = new THREE.Group();
 root.scale.setScalar(SIZE);
 scene.add(root);
+// rig holds head and ring, each in a frame of its own, and the hand shower's handle. For the shower head the frames
+// do nothing. For the hand shower they turn head and ring to face forward and make them smaller; the ring's frame
+// lets go of the head when the ring goes off to charge. The rig itself only moves in the bathroom, where the hand
+// shower leans in its holder.
+const rig = new THREE.Group(), faceH = new THREE.Group(), faceR = new THREE.Group();
+root.add(rig);
+rig.add(faceH, faceR);
 const parts = {};
-function part(name) { const g = new THREE.Group(); root.add(g); parts[name] = g; return g; }
+function part(name, parent = root) { const g = new THREE.Group(); parent.add(g); parts[name] = g; return g; }
 
 // Shapes. The same product with a different outline or edge; the viewer switches between them.
 // n is the superellipse exponent of the outline (0 = circle), k scales it so the soft square is no bigger than the
@@ -700,31 +743,36 @@ function fit(mesh, shape) {
   return mesh;
 }
 const { RB, RT, RI } = RING;
-const head = part('head'), ring = part('ring');
+const head = part('head', faceH), ring = part('ring', faceR);
 
 // Shower head: soft edges and one sweep up into the housing. A short threaded stub on top takes the filter housing.
-function buildHead(shape) {
+// hand: the head of the hand shower. Its back closes in a short neck that runs into the top of the handle, and it
+// has fewer, larger nozzles.
+const BOSS_R = 2.2, BOSS_Y = 6.08; // radius of that neck, and how far behind the spray plate the handle's centre line is
+function buildHead(shape, hand = false) {
   const g = new THREE.Group();
   {
     const top = 2.45 + shape.rise; // a taller head body; the seam above stays put, so the neck gets shorter
+    const neckR = hand ? BOSS_R : NECK_R;
     const pts = [[0, 0, 0], [6.0, 0, 0.3], [6.0, top, shape.crisp ? 0.05 : 0.12]];
     // One long curve from the gently sloping top up to the vertical housing wall.
-    const p1 = [4.9, top + (6.0 - 4.9) * HEAD_SLOPE], pc = [NECK_R, top + (6.0 - NECK_R) * HEAD_SLOPE], p2 = [NECK_R, 4.7];
-    if (shape.crisp) pts.push([NECK_R, top, 0.05]); // flat top, then straight up: the housing stands on it with a sharp corner
+    const p1 = [4.9, top + (6.0 - 4.9) * HEAD_SLOPE], pc = [neckR, top + (6.0 - neckR) * HEAD_SLOPE], p2 = [neckR, hand ? 4.4 : 4.7];
+    if (shape.crisp) pts.push([neckR, top, 0.05]); // flat top, then straight up: the housing stands on it with a sharp corner
     else for (let i = 0; i <= 20; i++) {
       const t = i / 20, a = (1 - t) * (1 - t), b = 2 * (1 - t) * t, c = t * t;
       pts.push([a * p1[0] + b * pc[0] + c * p2[0], a * p1[1] + b * pc[1] + c * p2[1], 0]);
     }
-    pts.push([NECK_R, 4.9, 0.03], [2.95, 4.9, 0], [2.95, 5.5, 0.04], [2.55, 5.5, 0.04], [2.55, 4.3, 0.1], [0, 4.3, 0]);
+    if (hand) pts.push([neckR, BOSS_Y, 0]);
+    else pts.push([NECK_R, 4.9, 0.03], [2.95, 4.9, 0], [2.95, 5.5, 0.04], [2.55, 5.5, 0.04], [2.55, 4.3, 0.1], [0, 4.3, 0]);
     g.add(fit(lathe(pts, M.graphite), shape));
   }
   g.add(fit(disc(new THREE.CircleGeometry(5.3, 128), M.plate, -0.004), shape));
   g.add(fit(disc(new THREE.RingGeometry(5.31, 5.37, 160), M.seam, -0.006), shape));
-  for (const y of [5.12, 5.32]) {
-    const t = new THREE.Mesh(new THREE.TorusGeometry(2.96, 0.035, 8, 96), M.graphite);
-    t.rotation.x = Math.PI / 2; t.position.y = y; g.add(t);
-  }
-  {
+  if (!hand) {
+    for (const y of [5.12, 5.32]) {
+      const t = new THREE.Mesh(new THREE.TorusGeometry(2.96, 0.035, 8, 96), M.graphite);
+      t.rotation.x = Math.PI / 2; t.position.y = y; g.add(t);
+    }
     const o = new THREE.Mesh(new THREE.TorusGeometry(2.97, 0.05, 10, 96), M.silicone);
     o.rotation.x = Math.PI / 2; o.position.y = 4.95; g.add(o);
   }
@@ -759,27 +807,27 @@ function buildHead(shape) {
   {
     const holder = new THREE.Group();
     holder.rotation.y = A0;
-    const mark = disc(new THREE.CircleGeometry(0.1, 24), M.seam, 2.612 + shape.rise, true);
+    const mark = disc(new THREE.CircleGeometry(0.1, 24), M.seam, (shape.crisp ? 2.456 : 2.612) + shape.rise, true);
     mark.position.z = warpR(shape, 5.2, A0);
     holder.add(mark);
     g.add(holder);
   }
   const nozzles = [];
-  [0.9, 1.55, 2.2, 2.85, 3.5, 4.15, 4.8].forEach((rad, ri) => {
-    const n = Math.round((TAU * rad) / 0.52);
+  (hand ? [1.0, 1.9, 2.8, 3.7, 4.6] : [0.9, 1.55, 2.2, 2.85, 3.5, 4.15, 4.8]).forEach((rad, ri) => {
+    const n = Math.round((TAU * rad) / (hand ? 0.8 : 0.52));
     for (let i = 0; i < n; i++) {
       const a = (i / n) * TAU + (ri % 2) * (Math.PI / n), r = warpR(shape, rad, a);
       nozzles.push([Math.sin(a) * r, Math.cos(a) * r]);
     }
   });
   {
-    const inst = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.065, 0.085, 0.1, 14), M.silicone, nozzles.length);
+    const inst = new THREE.InstancedMesh(hand ? new THREE.CylinderGeometry(0.1, 0.13, 0.1, 14) : new THREE.CylinderGeometry(0.065, 0.085, 0.1, 14), M.silicone, nozzles.length);
     const m4 = new THREE.Matrix4();
     nozzles.forEach(([x, z], i) => { m4.makeTranslation(x, -0.04, z); inst.setMatrixAt(i, m4); });
     g.add(inst);
   }
   // Falling water: streaks from every nozzle.
-  const water = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.016, 0.016, 0.75, 6), M.water, nozzles.length * 2);
+  const water = new THREE.InstancedMesh(hand ? new THREE.CylinderGeometry(0.024, 0.024, 1.1, 6) : new THREE.CylinderGeometry(0.016, 0.016, 0.75, 6), M.water, nozzles.length * 2);
   const streamData = [], rnd = rng(5);
   for (let i = 0; i < nozzles.length * 2; i++) streamData.push({ n: nozzles[i % nozzles.length], p: rnd(), v: 0.55 + rnd() * 0.25 });
   water.frustumCulled = false;
@@ -799,7 +847,7 @@ const haloMat = new THREE.SpriteMaterial({ map: glowTexture, color: 0xff3a22, bl
 const LED_GEO = { dome: new THREE.SphereGeometry(0.5, 28, 14), cup: new THREE.RingGeometry(0.5, 0.64, 40), hot: new THREE.CircleGeometry(0.56, 32), pool: new THREE.CircleGeometry(1.5, 32) };
 
 // Light ring: flutes on the outer wall, open all the way through so it slides up over the head.
-function buildRing(shape) {
+function buildRing(shape, hand = false) {
   const g = new THREE.Group(), rise = shape.rise;
   // The outer skin is built per rib style the first time that style is shown (see showRibs).
   g.userData.shells = {};
@@ -839,7 +887,7 @@ function buildRing(shape) {
     holder.rotation.y = PIN_TH;
     const port = new THREE.Group();
     port.position.set(0, PORT_Y, warpR(shape, RI, PIN_TH) - 0.012);
-    port.scale.setScalar(1 / SIZE); // a USB-C port keeps its real size
+    port.scale.setScalar(hand ? 1 / KH : 1 / SIZE); // a USB-C port keeps its real size
     const rim = new THREE.Mesh(new THREE.CapsuleGeometry(0.21, 0.6, 8, 20), M.steel);
     rim.rotation.z = Math.PI / 2; rim.scale.z = 0.1;
     const hole = new THREE.Mesh(new THREE.CapsuleGeometry(0.14, 0.58, 8, 20), M.seam);
@@ -943,30 +991,32 @@ conn.add(disc(new THREE.CircleGeometry(1.02, 48), M.seam, 10.33, true));
 // flat with a cable plugged in from the inside, running over the wall to a USB-C charger with an EU plug.
 const FALL = 30; // how far the water streaks fall, in cm
 const CHARGE_Y = -30;
-function buildCharge(shape) {
+// u brings plug, cable and charger back to their real size next to the ring; parent is the group it all sits in.
+function buildCharge(shape, u = 1 / SIZE, parent = root) {
   const th = PIN_TH - TW * shape.twist; // where the port ends up once the ring has been twisted off
   const e = new THREE.Vector3(Math.sin(th), 0, Math.cos(th)), f = new THREE.Vector3(Math.cos(th), 0, -Math.sin(th));
   const rin = warpR(shape, RING.RI, PIN_TH), innerF = warpR(shape, RING.RI, PIN_TH + Math.PI / 2), outerF = warpR(shape, RING.RO, PIN_TH + Math.PI / 2);
   // The ring sits off-centre so that ring, cable and charger together fill the view.
   const pos = f.clone().multiplyScalar(-5.5).setY(CHARGE_Y);
-  const at = (u, v, y) => pos.clone().addScaledVector(e, u).addScaledVector(f, v).setY(CHARGE_Y + y);
+  const at = (a, b, y) => pos.clone().addScaledVector(e, a).addScaledVector(f, b).setY(CHARGE_Y + y);
   const g = new THREE.Group(), top = RT + shape.rise + 0.45;
+  const lie = RING.RB + 0.17 * u + 0.03, cy = 0.8 + 1.1 * (u - 0.8); // height of a cable lying flat, and of the charger's centre
   g.visible = false;
   const plug = new THREE.Mesh(new RoundedBoxGeometry(1.15, 0.6, 1.5, 4, 0.2), M.cable);
-  plug.position.copy(at(rin - 0.85, 0, PORT_Y));
-  plug.scale.setScalar(1 / SIZE); // plug, cable and charger keep their real size
+  plug.position.copy(at(rin - (0.25 + 0.75 * u), 0, PORT_Y));
+  plug.scale.setScalar(u); // plug, cable and charger keep their real size
   plug.rotation.y = th;
   g.add(plug);
   const path = new THREE.CatmullRomCurve3([
-    at(rin - 1.5, 0, PORT_Y), at(rin - 3.2, 0.2, PORT_Y + 0.1), at(1.2, 2.6, 2.0), at(0.3, innerF - 0.5, top - 0.05),
+    at(rin - (0.3 + 1.5 * u), 0, PORT_Y), at(rin - (1.6 + 2 * u), 0.2, PORT_Y + 0.1), at(1.2, 2.6, 2.0), at(0.3, innerF - 0.5, top - 0.05),
     at(0, (innerF + outerF) / 2, top), at(0, outerF + 0.2, top - 0.05), at(0, outerF + 0.75, top - 1.5), at(0, outerF + 1.0, 0.3),
-    at(0, outerF + 2.4, -0.13), at(0, outerF + 4.2, -0.05), at(0, outerF + 5.0, 0.8),
+    at(0, outerF + 2.4, lie), at(0, outerF + 4.2, lie + 0.08), at(0, outerF + 5.0, cy),
   ]);
-  g.add(new THREE.Mesh(new THREE.TubeGeometry(path, 140, 0.17 / SIZE, 10), M.cable));
+  g.add(new THREE.Mesh(new THREE.TubeGeometry(path, 140, 0.17 * u, 10), M.cable));
   // USB-C charger with an EU plug (two round pins).
   const charger = new THREE.Group();
-  charger.position.copy(at(0, outerF + 7.5, 0.8));
-  charger.scale.setScalar(1 / SIZE);
+  charger.position.copy(at(0, outerF + 5.02 + 3.1 * u, cy));
+  charger.scale.setScalar(u);
   charger.rotation.y = th + Math.PI / 2;
   charger.add(new THREE.Mesh(new RoundedBoxGeometry(3.8, 2.2, 4.4, 5, 0.55), M.cable));
   const relief = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.22, 0.9, 16), M.cable);
@@ -978,10 +1028,10 @@ function buildCharge(shape) {
     charger.add(pin);
   }
   g.add(charger);
-  root.add(g);
+  parent.add(g);
   const tags = {
     port: { at: at(rin - 0.8, 0, PORT_Y + 0.35), out: at(0, -(warpR(shape, RING.RO, PIN_TH - Math.PI / 2) + 0.8), PORT_Y + 0.35) },
-    charger: { at: at(0, outerF + 11.6, 0.8) },
+    charger: { at: at(0, outerF + 5.02 + 8.2 * u, cy) },
   };
   return { group: g, pos, theta: th + Math.PI + 0.2, tags };
 }
@@ -991,13 +1041,108 @@ const CHARGE_TAGS = [
   { key: 'charger', side: -1, name: 'EU plug', short: 'EU plug', detail: 'Any USB-C charger' },
 ];
 
-// Build every shape once; switching only changes which one is shown.
-const variants = {};
+// Build every shape once, for the shower head and for the hand shower; switching only changes which one is shown.
+// The hand shower's ring charges in a frame of its own, at the hand shower's size.
+const handCharge = new THREE.Group();
+handCharge.scale.setScalar(HS);
+handCharge.position.y = -7;
+root.add(handCharge);
+const variants = {}, handVariants = {}, SETS = { head: variants, hand: handVariants };
 for (const key in SHAPES) {
-  const shape = SHAPES[key];
-  const h = buildHead(shape);
-  const c = buildCharge(shape);
-  variants[key] = { shape, head: h, ring: buildRing(shape), charge: c.group, chargePos: c.pos, chargeTheta: c.theta, chargeTags: c.tags, water: h.water, streamData: h.streamData };
+  for (const isHand of [false, true]) {
+    const shape = SHAPES[key], h = buildHead(shape, isHand);
+    const c = buildCharge(shape, isHand ? 1 / KH : 1 / SIZE, isHand ? handCharge : root);
+    SETS[isHand ? 'hand' : 'head'][key] = { shape, head: h, ring: buildRing(shape, isHand), charge: c.group, chargePos: c.pos, chargeTheta: c.theta, chargeTags: c.tags, water: h.water, streamData: h.streamData };
+  }
+}
+// The variant on show.
+const cur = () => SETS[state.product][state.shape];
+
+// Hand shower. The same head and ring, smaller and facing forward, on the front of a slim handle. The filter
+// cartridge sits in the handle, which unscrews just below the elbow. Sizes in this part are real centimetres:
+// yh is the height of the head's centre, zs how far forward the spray plate is, r the handle's radius, collar the
+// height of the fixed part under the elbow, len the length of the handle.
+const HAND = { yh: 6.2, zs: 3.0, r: BOSS_R * KH, collar: 2.6, len: 15.0 };
+HAND.za = HAND.zs - BOSS_Y * KH;  // the handle's centre line, behind the spray plate
+HAND.top = HAND.yh - HAND.collar; // where the handle screws on
+const hand = new THREE.Group();
+hand.scale.setScalar(1 / SIZE);
+hand.visible = false;
+rig.add(hand);
+// Where head and ring sit on the hand shower: facing forward, and turned so the soft square stands upright.
+const FACE = { pos: new THREE.Vector3(0, HAND.yh / SIZE, HAND.zs / SIZE), rx: -Math.PI / 2, ry: -SQ_PHI };
+// Its place in the bathroom: leaning forward in a wall holder at about 1.75 m.
+const HBATH = { y: -36, z: -24, tilt: 0.45 };
+function handLogoMaps(arcCm, hCm, lenCm) {
+  const W = 768, H = Math.round((W * hCm) / arcCm), s = (W * lenCm) / arcCm / 271;
+  const draw = (bg, fg, blur) => (g) => {
+    g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    g.save();
+    g.filter = `blur(${blur}px)`;
+    g.translate(W / 2, H / 2); g.rotate(-Math.PI / 2); g.scale(s, s); g.translate(-271 / 2, -101 / 2); // reads upward
+    g.fillStyle = fg;
+    for (const d of LOGO) g.fill(new Path2D(d));
+    g.restore();
+  };
+  const map = canvasTex(W, H, draw('#ffffff', '#a39c95', 2.2)), bump = canvasTex(W, H, draw('#ffffff', '#000000', 6));
+  bump.colorSpace = THREE.NoColorSpace;
+  return { map, bump };
+}
+const handle = part('handle', hand), hcart = part('hcart', hand);
+{
+  const R = HAND.r, L = HAND.len, ring3 = (r, tube, y, mat, parent, dy = 0) => {
+    const t = new THREE.Mesh(new THREE.TorusGeometry(r, tube, 8, 96), mat);
+    t.rotation.x = Math.PI / 2; t.position.set(0, y + dy, parent === hand ? HAND.za : 0); parent.add(t);
+  };
+  // Elbow: the handle ends in a ball that the head's neck runs into. Below it a fixed collar with the thread for
+  // the handle and a spigot for the cartridge.
+  {
+    const pts = [[0, -3.9, 0], [1.0, -3.9, 0.05], [1.0, -3.5, 0], [R - 0.3, -3.5, 0.04], [R - 0.3, -HAND.collar, 0], [R, -HAND.collar, 0]];
+    for (let i = 0; i <= 18; i++) { const t = (i / 18) * (Math.PI / 2); pts.push([R * Math.cos(t), R * Math.sin(t), 0]); }
+    const elbow = lathe(pts, M.graphite, 128);
+    elbow.position.set(0, HAND.yh, HAND.za);
+    hand.add(elbow);
+    for (const y of [-2.86, -3.08, -3.3]) ring3(R - 0.3, 0.03, y, M.graphite, hand, HAND.yh);
+    ring3(R - 0.28, 0.05, -2.67, M.silicone, hand, HAND.yh);
+  }
+  // Handle: a straight tube, open at the top, rounded at the base, ending in the G½ thread for the hose.
+  handle.position.set(0, HAND.top, HAND.za);
+  const pts = [[0.8, -L - 1.2, 0], [1.05, -L - 1.2, 0.04], [1.05, -L, 0]];
+  for (let i = 1; i <= 16; i++) { const t = (i / 16) * (Math.PI / 2); pts.push([1.05 + (R - 1.05) * Math.sin(t), -L + 0.9 - 0.9 * Math.cos(t), 0]); }
+  pts.push([R, 0, 0], [R - 0.22, 0, 0], [R - 0.22, -1.4, 0]);
+  const body = lathe(pts, M.graphite, 128);
+  handle.add(body);
+  for (const y of [-0.3, -0.52, -0.74, -0.96]) ring3(1.05, 0.03, -L + y, M.graphite, handle);
+  ring3(R, 0.012, -0.004, M.seam, handle);
+  handle.add(disc(new THREE.CircleGeometry(R - 0.22, 48), M.seam, -1.4, true));
+  handle.add(disc(new THREE.CircleGeometry(0.8, 32), M.seam, -L - 1.19));
+  // Wordmark, debossed along the front of the handle and reading upward. It is a patch laid over the wall.
+  const arc = 2.6 / R, y0 = -11.6, y1 = -5.4;
+  const { map, bump } = handLogoMaps(2.6, y1 - y0, 4.6);
+  const logoMat = M.logoHand = brushed(M.graphite.clone());
+  logoMat.map = map; logoMat.bumpMap = bump; logoMat.bumpScale = 0.7;
+  logoMat.polygonOffset = true; logoMat.polygonOffsetFactor = -2; logoMat.polygonOffsetUnits = -2;
+  const geo = new THREE.CylinderGeometry(R + 0.004, R + 0.004, y1 - y0, 48, 1, true, -arc / 2, arc);
+  geo.translate(0, (y0 + y1) / 2, 0);
+  // The patch takes over the brushing lines of the wall under it, so no edge shows on a brushed finish.
+  const bb = body.geometry.attributes.brush, bp = body.geometry.attributes.position;
+  let c = 0;
+  for (let i = 0; i < bp.count; i++) if (Math.abs(Math.hypot(bp.getX(i), bp.getZ(i)) - R) < 1e-4 && bp.getY(i) > -L + 0.8) { c = bb.getX(i) - bp.getY(i); break; }
+  const pb = new Float32Array(geo.attributes.position.count);
+  for (let i = 0; i < pb.length; i++) pb[i] = c + geo.attributes.position.getY(i);
+  geo.setAttribute('brush', new THREE.BufferAttribute(pb, 1));
+  handle.add(new THREE.Mesh(geo, logoMat));
+  // Filter cartridge for the handle: the same three media in a slim stack. Water comes in at the bottom.
+  hcart.position.copy(handle.position);
+  for (const [a, b] of [[-1.45, -1.0], [-12.2, -11.75]]) {
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.3, b - a, 64), M.cap);
+    m.position.y = (a + b) / 2; hcart.add(m);
+  }
+  for (const [a, b, k] of [[-11.75, -11.6, 0], [-11.6, -8.5, 3], [-8.5, -4.7, 2], [-4.7, -1.6, 1], [-1.6, -1.45, 4]]) {
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, b - a, 64, 1, false), layers[k][2]);
+    m.position.y = (a + b) / 2; hcart.add(m);
+  }
+  hcart.add(new THREE.Mesh(new THREE.CylinderGeometry(1.28, 1.28, 10.3, 64, 1, true), M.shell).translateY(-6.6));
 }
 
 // Bathroom: a walk-in shower to judge the shower head in place. Two tiled walls, a floor with a drain, a glass
@@ -1010,6 +1155,9 @@ const BATH_TURN = -LOGO_TH;
 const bath = new THREE.Group();
 bath.visible = false;
 scene.add(bath);
+// What only the shower head needs in the room (its wall arm), and what only the hand shower needs (holder and hose).
+const bathOver = new THREE.Group(), bathHand = new THREE.Group();
+bath.add(bathOver, bathHand);
 {
   const tiles = (base, grout, tileW, tileH, w, h, seed) => {
     const t = canvasTex(256, Math.round((256 * tileH) / tileW), (g, cw, ch) => {
@@ -1074,12 +1222,12 @@ scene.add(bath);
   // Wall arm: out of the wall, then down into the neck of the shower head.
   const k = SIZE, armY = 17 * k;
   const arm = new THREE.CatmullRomCurve3([[0, armY, WALL_Z], [0, armY, -14 * k], [0, armY, -5.5 * k], [0, 15.6 * k, -1.4 * k], [0, 13.6 * k, 0], [0, 10.9 * k, 0]].map((p) => new THREE.Vector3(...p)));
-  bath.add(new THREE.Mesh(new THREE.TubeGeometry(arm, 90, 1.0 * k, 20), M.graphite));
+  bathOver.add(new THREE.Mesh(new THREE.TubeGeometry(arm, 90, 1.0 * k, 20), M.graphite));
   const flange = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 0.8, 48), M.graphite);
   flange.rotation.x = Math.PI / 2;
   flange.scale.setScalar(k);
   flange.position.set(0, armY, WALL_Z + 0.4);
-  bath.add(flange);
+  bathOver.add(flange);
   // Thermostat bar on the wall below.
   const bar = new THREE.Mesh(new THREE.CylinderGeometry(2.3, 2.3, 26, 40), M.graphite);
   bar.rotation.z = Math.PI / 2;
@@ -1097,6 +1245,30 @@ scene.add(bath);
     stub.position.set(dx, -100, WALL_Z + 2.75);
     bath.add(stub);
   }
+  // Hand shower: a holder cup on a short wall arm, a nut on the handle's thread, and the hose down to the thermostat.
+  // hw turns a point on the hand shower (real cm) into its place in the room.
+  const X = new THREE.Vector3(1, 0, 0), hw = (x, y, z) => new THREE.Vector3(x, y, z).applyAxisAngle(X, HBATH.tilt).add(new THREE.Vector3(0, HBATH.y, HBATH.z));
+  const hb = HAND.top - HAND.len; // the base of the handle
+  const R = HAND.r, cup = lathe([[1.4, hb - 0.55, 0], [R + 0.45, hb - 0.55, 0.25], [R + 0.45, hb + 2.1, 0.08], [R + 0.1, hb + 2.1, 0.05], [R + 0.1, hb + 0.85, 0.1], [1.4, hb - 0.35, 0]], M.graphite, 96);
+  cup.rotation.x = HBATH.tilt;
+  cup.position.copy(hw(0, 0, HAND.za));
+  const nut = new THREE.Mesh(new THREE.CylinderGeometry(1.32, 1.2, 1.9, 40), M.graphite);
+  nut.rotation.x = HBATH.tilt;
+  nut.position.copy(hw(0, hb - 1.1, HAND.za));
+  const grip = hw(0, hb + 0.9, HAND.za);
+  const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, grip.z - 1.9 - WALL_Z, 24), M.graphite);
+  rod.rotation.x = Math.PI / 2;
+  rod.position.set(0, grip.y, (grip.z - 1.9 + WALL_Z) / 2);
+  const plate = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, 0.7, 40), M.graphite);
+  plate.rotation.x = Math.PI / 2;
+  plate.position.set(0, grip.y, WALL_Z + 0.35);
+  const hose = new THREE.CatmullRomCurve3([
+    hw(0, hb - 2.0, HAND.za), hw(0, hb - 7, HAND.za), new THREE.Vector3(-0.2, -80, WALL_Z + 3.2), new THREE.Vector3(-1.5, -132, WALL_Z + 3.4),
+    new THREE.Vector3(-4.6, -167, WALL_Z + 3.8), new THREE.Vector3(-8.2, -138, WALL_Z + 4.6), new THREE.Vector3(-9, -110, WALL_Z + 5.5), new THREE.Vector3(-9, -102.2, WALL_Z + 5.5),
+  ]);
+  const outlet = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 2.2, 32), M.graphite);
+  outlet.position.set(-9, -103.2, WALL_Z + 5.5);
+  bathHand.add(cup, nut, rod, plate, new THREE.Mesh(new THREE.TubeGeometry(hose, 180, 0.7, 12), M.graphite), outlet);
 }
 
 const LABELS = [
@@ -1115,8 +1287,16 @@ const RING_TAGS = [
   { part: 'ring', at: polar(SQ_PHI - Math.PI / 2, warpR(SQ, RING.RI, SQ_PHI) - 0.1, MAGNET_Y), out: polar(SQ_VIEW - Math.PI / 2, warpR(SQ, RING.RO, SQ_VIEW) + 0.7, MAGNET_Y), side: -1, name: 'Steel plates', short: 'Plates', detail: 'Inside the ring, meet the magnets' },
   { part: 'head', at: polar(SQ_VIEW - Math.PI / 2, warpR(SQ, 6.0, SQ_VIEW) + 0.12, 2.45 + SQ.rise - 0.2), side: -1, name: 'Stop edge', short: 'Stop edge', detail: 'The ring seats against it' },
 ];
+// Exploded-view labels of the hand shower: a point on a part, and how far to the side the line starts (cm).
+const HAND_LABELS = [
+  { obj: parts.ring, at: new THREE.Vector3(0, 1.2, 0), r: 8.8 * KH, side: 1, name: 'Red light ring Ø 127', short: 'Ring Ø 127', detail: 'Twist-lock, 12 LED lenses' },
+  { obj: parts.head, at: new THREE.Vector3(0, 1.6, 3.6), r: 5.6 * KH, side: -1, name: 'Shower head Ø 90', short: 'Head Ø 90', detail: 'Fixed to the elbow' },
+  { obj: parts.hcart, at: new THREE.Vector3(0, -6.6, 0), r: 1.5, side: 1, name: 'Filter cartridge', short: 'Filter', detail: 'KDF-55, carbon, scale inhibitor' },
+  { obj: parts.handle, at: new THREE.Vector3(0, -3.2, 0), r: 1.9, side: -1, name: 'Handle Ø 33', short: 'Handle', detail: 'Unscrews for the filter' },
+  { obj: parts.handle, at: new THREE.Vector3(0, -HAND.len - 0.6, 0), r: 1.25, side: 1, name: 'G½ thread', short: 'G½ thread', detail: 'Fits any shower hose' },
+];
 const tagsEl = document.getElementById('tags');
-for (const L of [...LABELS, ...CHARGE_TAGS, ...RING_TAGS]) {
+for (const L of [...LABELS, ...CHARGE_TAGS, ...RING_TAGS, ...HAND_LABELS]) {
   const el = document.createElement('div');
   el.className = 'tag';
   el.innerHTML = `<span><b class="l">${L.name}</b><b class="s">${L.short}</b><small>${L.detail}</small></span>`;
@@ -1134,6 +1314,25 @@ const VIEW = {
   bath: { h: 60, w: 80, wn: 60, ty: -8, phi: 1.66, theta: 0.5 },
   charge: { h: 15, w: 41, wn: 41, ty: CHARGE_Y + 1.4, phi: 1.0 },
 };
+// The hand shower's framings, in real cm. It is tall, so it is framed with room above for the switches (hn: the
+// height to allow on a narrow screen, where they take up more). Its "from below" is a look straight at the spray plate.
+const HVIEW = {
+  assembled: { h: 33, hn: 40, w: 15, ty: 2.2, phi: 1.5 },
+  exploded: { h: 54, hn: 64, w: 30, wn: 30, ty: -4.3, phi: 1.5, theta: -0.85 },
+  ring: { h: 33, hn: 40, w: 24, ty: 2.2, phi: 1.42, theta: 1.05 },
+  filter: { h: 54, hn: 64, w: 22, ty: -4.3, phi: 1.5 },
+  below: { h: 33, hn: 40, w: 15, ty: 2.2, phi: Math.PI / 2, theta: 0 },
+  bath: { h: 62, w: 80, wn: 50, ty: HBATH.y - 3, phi: 1.6, theta: 0.6 },
+  charge: { h: 12, w: 32, wn: 32, ty: (handCharge.position.y + HS * (CHARGE_Y + 1.4)) * SIZE, phi: 1.0 },
+};
+const HINT_HAND = {
+  assembled: 'Working model, sizes in mm',
+  exploded: 'Working model, sizes in mm',
+  ring: 'Ring lock: twist the ring 20° and it comes off towards you. Magnets pull it back into place with a click.',
+  filter: 'Filter change: unscrew the handle. The cartridge sits inside: pull it off and push a new one on. The ring stays where it is.',
+  charge: 'Charging: take the ring off and plug a USB-C cable into the port on its inner wall. Any USB-C charger works.',
+  bath: 'Bathroom: the hand shower in its wall holder, with the hose to the thermostat. Zoom out to see the whole shower, and switch shape, ribs, light and water.',
+};
 const HINT = {
   assembled: 'Working model, sizes in mm',
   exploded: 'Working model, sizes in mm',
@@ -1142,28 +1341,35 @@ const HINT = {
   charge: 'Charging: take the ring off and plug a USB-C cable into the port on its inner wall. Any USB-C charger works.',
   bath: 'Bathroom: the shower head on a wall arm in a walk-in shower. Zoom out to see the whole shower, and switch shape, ribs, light and water.',
 };
-const state = { mode: 'assembled', bathRing: false, shape: 'round', ribs: 'fine', finish: 'gunmetal', pE: 0, pR: 0, pF: 0, pD: 0, light: 0, lightTo: 0, water: 0, waterTo: 0, below: false };
+const state = { product: 'head', mode: 'assembled', bathRing: false, shape: 'round', ribs: 'fine', finish: 'gunmetal', pE: 0, pR: 0, pF: 0, pD: 0, light: 0, lightTo: 0, water: 0, waterTo: 0, below: false };
 let userMoved = false, dirty = true, lastSig = '';
 
+const q4 = new THREE.Quaternion(), down = new THREE.Vector3(), tan3 = new THREE.Vector3(), one3 = new THREE.Vector3(), UP = new THREE.Vector3(0, 1, 0);
 const tmpS = new THREE.Spherical(), v3 = new THREE.Vector3(), camRight = new THREE.Vector3(), m4 = new THREE.Matrix4(), axis = new THREE.Vector3();
 // Framing for the current view. The product views are written at the model's first size, so they scale with SIZE;
 // the bathroom is a room in real centimetres and does not.
 function viewFor() {
   const v = viewBase();
-  return state.mode === 'bath' ? v : { ...v, h: v.h * SIZE, w: v.w * SIZE, wn: v.wn && v.wn * SIZE, ty: v.ty * SIZE };
+  return state.mode === 'bath' || state.product === 'hand' ? v : { ...v, h: v.h * SIZE, w: v.w * SIZE, wn: v.wn && v.wn * SIZE, ty: v.ty * SIZE };
 }
 function viewBase() {
+  if (state.product === 'hand') {
+    let base = HVIEW[state.mode];
+    if (state.mode === 'charge') base = { ...base, theta: cur().chargeTheta };
+    if (!state.below) return base;
+    return state.mode === 'assembled' ? HVIEW.below : { ...base, phi: Math.PI / 2, theta: 0 };
+  }
   let base = VIEW[state.mode];
   // The soft square's lock is easiest to read corner-on.
   if (state.mode === 'ring' && !SHAPES[state.shape].twist) base = { ...base, theta: SQ_VIEW, wn: 34, h: 24.5, ty: 2.3 };
-  if (state.mode === 'charge') base = { ...base, theta: variants[state.shape].chargeTheta }; // look across the ring at the port
+  if (state.mode === 'charge') base = { ...base, theta: cur().chargeTheta }; // look across the ring at the port
   if (!state.below) return base;
   return state.mode === 'assembled' ? VIEW.below : { ...base, phi: 2.5 };
 }
 function fitR(v) {
-  const w = camera.aspect < 0.9 && v.wn ? v.wn : v.w;
+  const narrow = camera.aspect < 0.9, w = narrow && v.wn ? v.wn : v.w, h = narrow && v.hn ? v.hn : v.h;
   const tan = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-  return Math.max(v.h / 2 / tan, w / 2 / (tan * camera.aspect)) * 1.1 + 5;
+  return Math.max(h / 2 / tan, w / 2 / (tan * camera.aspect)) * 1.1 + 5;
 }
 let camTween = null;
 function goCamera({ instant = false, keepPhi = false } = {}) {
@@ -1205,9 +1411,13 @@ function setMode(mode, instant = false) {
   hintEl.textContent = hintFor(mode);
   // The bathroom is a far bigger scene than the product on its own: let the camera step back, push the near plane
   // out so fine details do not flicker at a distance, and let the red light reach the floor.
-  const inBath = mode === 'bath';
+  const inBath = mode === 'bath', isHand = state.product === 'hand';
   bath.visible = inBath;
-  root.rotation.y = inBath ? BATH_TURN : 0;
+  bathOver.visible = !isHand; bathHand.visible = isHand;
+  root.rotation.y = inBath && !isHand ? BATH_TURN : 0;
+  // The hand shower leans forward in its holder.
+  if (inBath && isHand) { rig.position.set(0, HBATH.y / SIZE, HBATH.z / SIZE); rig.rotation.x = HBATH.tilt; }
+  else { rig.position.set(0, 0, 0); rig.rotation.x = 0; }
   if (!inBath) state.bathRing = false;
   controls.maxDistance = inBath ? 620 : 170 * SIZE;
   camera.near = inBath ? 4 : 0.5;
@@ -1232,23 +1442,46 @@ function setBelow(on, instant = false) {
 }
 // The soft square cannot turn, so its ring pushes straight on.
 function hintFor(mode) {
+  if (state.product === 'hand') {
+    const twist = SHAPES[state.shape].twist;
+    if (mode === 'bath' && state.bathRing) return (twist ? 'Ring off: a 20° twist and the ring comes off towards you.' : 'Ring off: pull the ring straight off the magnets.') + ' The hand shower works the same without it. Press Ring off again to put it back.';
+    if (mode === 'ring' && !twist) return 'Magnetic mount: push the ring over the head and the magnets pull it against the stop edge. Pull it straight off to remove it.';
+    return HINT_HAND[mode];
+  }
   if (mode === 'bath' && state.bathRing) return SHAPES[state.shape].twist ? 'Ring off: a 20° twist and the ring comes down. The shower head works the same without it. Press Ring off again to put it back.' : 'Ring off: pull the ring straight down off the magnets. The shower head works the same without it. Press Ring off again to put it back.';
   if (mode === 'ring' && !SHAPES[state.shape].twist) return 'Magnetic mount: lift the ring over the head and the magnets pull it up against the stop edge. Pull it straight down to take it off.';
   return HINT[mode];
 }
 function setShape(key) {
   state.shape = key;
-  for (const k in variants) { variants[k].head.group.visible = false; variants[k].ring.visible = false; variants[k].water.visible = false; }
-  const V = variants[key];
+  for (const set of [variants, handVariants]) for (const k in set) { set[k].head.group.visible = false; set[k].ring.visible = false; set[k].water.visible = false; }
+  const V = cur();
   V.head.group.visible = true; V.ring.visible = true;
   showRibs(V.ring, state.ribs);
   for (const k in SHAPES) document.getElementById('shape-' + k).setAttribute('aria-pressed', String(k === key));
-  document.getElementById('nozzle-count').textContent = V.head.nozzles.length;
+  document.getElementById('nozzle-count').textContent = variants[key].head.nozzles.length;
+  document.getElementById('nozzle-count-hand').textContent = handVariants[key].head.nozzles.length;
   hintEl.textContent = hintFor(state.mode);
   if (state.mode === 'ring' || state.mode === 'charge') goCamera();
   dirty = true;
 }
 for (const k in SHAPES) document.getElementById('shape-' + k).onclick = () => setShape(k);
+// Shower head or hand shower. The hand shower opens as Round with round ribs the first time.
+let handSeen = false;
+function setProduct(key, instant = false) {
+  const isHand = key === 'hand';
+  state.product = key;
+  hand.visible = isHand;
+  for (const n of ['housing', 'cartridge', 'connector']) parts[n].visible = !isHand;
+  document.getElementById('wrap').dataset.product = key;
+  for (const k in SETS) document.getElementById('product-' + k).setAttribute('aria-pressed', String(k === key));
+  btn.below.textContent = isHand ? 'From the front' : 'From below';
+  controls.minDistance = isHand ? 14 : 18 * SIZE;
+  if (isHand && !handSeen) { handSeen = true; state.shape = 'round'; setRibs('bold'); }
+  setShape(state.shape);
+  setMode(state.mode, instant);
+}
+for (const k in SETS) document.getElementById('product-' + k).onclick = () => setProduct(k);
 for (const m of MODES) btn[m].onclick = () => setMode(m);
 // In the bathroom, Ring off takes the ring off the head without leaving the room.
 btn.ring.onclick = () => {
@@ -1270,7 +1503,7 @@ function showRibs(ring, key) {
 function setRibs(key) {
   state.ribs = key;
   for (const k in RIBS) document.getElementById('ribs-' + k).setAttribute('aria-pressed', String(k === key));
-  showRibs(variants[state.shape].ring, key);
+  showRibs(cur().ring, key);
   dirty = true;
 }
 for (const k in RIBS) document.getElementById('ribs-' + k).onclick = () => setRibs(k);
@@ -1288,7 +1521,7 @@ function setFinish(key) {
   const f = FINISHES[key];
   state.finish = key;
   BRUSH.value = f.brushed ? 1 : 0;
-  for (const m of [M.graphite, M.logo]) { m.color.setHex(f.color); m.metalness = f.metal; m.roughness = f.rough; }
+  for (const m of [M.graphite, M.logo, M.logoHand]) { m.color.setHex(f.color); m.metalness = f.metal; m.roughness = f.rough; }
   M.plate.color.setHex(f.plate); M.plate.metalness = f.metal; M.plate.roughness = Math.min(1, f.rough + 0.12);
   for (const k in FINISHES) document.getElementById('finish-' + k).setAttribute('aria-pressed', String(k === key));
   dirty = true;
@@ -1316,6 +1549,8 @@ resize();
 // A shared link can name a shape and a view after the #, for example #square-charge or #pebble-ring-light.
 // Older links said dock; they now open the Charging view.
 const linkTokens = location.hash.slice(1).toLowerCase().split('-').map((t) => (t === 'dock' ? 'charge' : t));
+// ?product=hand or the #token hand opens the hand shower.
+if (params.get('product') === 'hand' || linkTokens.includes('hand')) setProduct('hand', true);
 setShape(SHAPES[params.get('shape')] ? params.get('shape') : linkTokens.find((t) => SHAPES[t]) || 'round');
 // Finish from the link: ?finish=gold or a #token (beige, aluminium, gold, copper, black).
 {
@@ -1331,7 +1566,7 @@ setShape(SHAPES[params.get('shape')] ? params.get('shape') : linkTokens.find((t)
 
 // Still views for exports: ?view=side|below|glow|night|exploded|ring|filter|charge|detail
 if (STILL) {
-  if (STILL === 'side') VIEW.assembled.phi = 1.6;
+  if (STILL === 'side') { VIEW.assembled.phi = 1.6; HVIEW.assembled.phi = 1.57; }
   if (STILL === 'detail') Object.assign(VIEW.assembled, { h: 6.5, w: 9, ty: 1.05, phi: 1.36 });
   if (STILL === 'exploded' || STILL === 'ring' || STILL === 'filter' || STILL === 'charge' || STILL === 'bath' || STILL === 'bathwide' || STILL === 'bathnight') setMode(STILL.startsWith('bath') ? 'bath' : STILL, true);
   if (STILL === 'bathwide') Object.assign(VIEW.bath, { h: 290, w: 300, ty: -85, phi: 1.55, theta: 0.5 });
@@ -1346,6 +1581,8 @@ if (STILL) {
   state.pF = state.mode === 'filter' ? 1 : 0;
   state.pD = state.mode === 'charge' ? 1 : 0;
   goCamera({ instant: true });
+  // &theta= turns the camera round the model for a still.
+  if (params.has('theta')) { tmpS.setFromVector3(v3.copy(camera.position).sub(controls.target)); tmpS.theta = +params.get('theta'); camera.position.copy(controls.target).add(v3.setFromSpherical(tmpS)); }
 }
 
 // Deep link: ?mode=ring or ?mode=filter opens the page on that animation.
@@ -1371,7 +1608,7 @@ function frame(now) {
   rafId = 0;
   if (!visible) return;
   rafId = requestAnimationFrame(frame); // queue the next frame first, so one bad frame cannot stop the viewer
-  const V = variants[state.shape], water = V.water, streamData = V.streamData, STREAMS = streamData.length;
+  const V = cur(), isHand = state.product === 'hand', water = V.water, streamData = V.streamData, STREAMS = streamData.length;
   const inBath = state.mode === 'bath', ringOff = state.mode === 'ring' || (inBath && state.bathRing);
   const dt = Math.max(0, Math.min(0.05, (now - last) / 1000)); // never negative: a frame stamped before the last one must not run animations backwards
   last = now; time += dt;
@@ -1385,24 +1622,38 @@ function frame(now) {
 
   // Layouts. Ring: twist, then drop. Filter: ring off, head quarter-turn and down with the cartridge in it, cartridge lifts out.
   const E = smooth(0, 1, state.pE), R = state.pR, F = state.pF;
-  const headDrop = -7 * smooth(0.5, 0.82, F);
+  const headDrop = isHand ? 0 : -7 * smooth(0.5, 0.82, F);
   parts.connector.position.y = 11.95 * E;
   parts.housing.position.y = 9 * E;
   parts.cartridge.position.y = 3.2 * E + headDrop + 2.4 * smooth(0.82, 1, F); // rides down in the head, then lifts out
   parts.head.position.y = headDrop;
-  parts.head.rotation.y = (-Math.PI / 2) * smooth(0.36, 0.56, F);
+  parts.head.rotation.y = isHand ? 0 : (-Math.PI / 2) * smooth(0.36, 0.56, F);
   // Charging: the ring comes off, moves down and aside, and the cable appears once it has settled.
   const D = state.pD, seat = smooth(0.22, 0.95, D);
   // The soft square has no twist: its ring is pulled straight down off the magnets.
-  const ringY = -5.5 * E - (inBath ? 13 : 5.5) * smooth(0.3, 1, R) - 12.5 * smooth(0.12, 0.48, F) - 6 * smooth(0.08, 0.3, D);
-  const twist = -TW * V.shape.twist * Math.min(1, smooth(0, 0.3, R) + smooth(0, 0.12, F) + smooth(0, 0.08, D));
+  // On the hand shower the ring comes off towards the front, and stays on for a filter change.
+  const ringY = isHand
+    ? -8 * E - (inBath ? 12 : 8) * smooth(0.3, 1, R) - 6 * smooth(0.08, 0.3, D)
+    : -5.5 * E - (inBath ? 13 : 5.5) * smooth(0.3, 1, R) - 12.5 * smooth(0.12, 0.48, F) - 6 * smooth(0.08, 0.3, D);
+  const twist = -TW * V.shape.twist * Math.min(1, smooth(0, 0.3, R) + (isHand ? 0 : smooth(0, 0.12, F)) + smooth(0, 0.08, D));
   parts.ring.position.set(0, ringY, 0).lerp(V.chargePos, seat);
   parts.ring.rotation.y = twist;
-  for (const k in variants) variants[k].charge.visible = k === state.shape && D > 0.96;
+  for (const p in SETS) for (const k in SETS[p]) SETS[p][k].charge.visible = p === state.product && k === state.shape && D > 0.96;
+  if (isHand) {
+    faceH.position.copy(FACE.pos); faceH.rotation.set(FACE.rx, FACE.ry, 0); faceH.scale.setScalar(HS);
+    // To charge, the ring's frame leaves the head and lies down flat.
+    faceR.position.lerpVectors(FACE.pos, handCharge.position, seat); faceR.rotation.set(FACE.rx * (1 - seat), FACE.ry * (1 - seat), 0); faceR.scale.setScalar(HS);
+    // Filter: the handle unscrews one turn and comes down, then the cartridge is pulled off its spigot.
+    parts.handle.position.y = HAND.top - 15.2 * E - 1.0 * smooth(0.05, 0.4, F) - 14.2 * smooth(0.4, 0.8, F);
+    parts.handle.rotation.y = -TAU * smooth(0.05, 0.4, F);
+    parts.hcart.position.y = HAND.top - 1.8 * E - 1.8 * smooth(0.82, 1, F);
+  } else {
+    for (const f of [faceH, faceR]) { f.position.set(0, 0, 0); f.rotation.set(0, 0, 0); f.scale.setScalar(1); }
+  }
 
   const Lt = state.light;
   // How squarely the camera faces the lenses, whichever way the ring is turned.
-  const lift = Math.abs(v3.copy(camera.position).sub(controls.target).normalize().dot(axis.set(0, 1, 0).applyQuaternion(parts.ring.quaternion)));
+  const lift = Math.abs(v3.copy(camera.position).sub(controls.target).normalize().dot(axis.set(0, 1, 0).applyQuaternion(parts.ring.getWorldQuaternion(q4))));
   const sideOn = 1 - smooth(0.2, 0.55, lift);
   M.lens.emissiveIntensity = 2.6 * Lt;
   hotMat.opacity = Lt;
@@ -1418,7 +1669,20 @@ function frame(now) {
   water.visible = Wt > 0.01;
   if (water.visible) {
     M.water.opacity = 0.5 * Wt;
-    for (let i = 0; i < STREAMS; i++) {
+    if (isHand) {
+      // The hand shower sprays forward, so its water leaves along the head and then curves down. down is "down"
+      // as the head sees it; G is how fast the streaks drop for a jet of about 4 m/s.
+      const G = 0.00225, fall = inBath ? 250 : FALL, speed = (inBath ? 230 : 26) / HS;
+      down.set(0, -1, 0).applyQuaternion(parts.head.getWorldQuaternion(q4).invert());
+      one3.set(inBath ? 2.4 : 1, inBath ? 6 : 1, inBath ? 2.4 : 1);
+      for (let i = 0; i < STREAMS; i++) {
+        const d = streamData[i], f = (time * d.v * speed + d.p * fall) % fall, spread = 1 + f * (inBath ? 0.004 : 0.012);
+        v3.set(d.n[0] * spread, -0.45 - f, d.n[1] * spread).addScaledVector(down, G * f * f);
+        tan3.set(0, -1, 0).addScaledVector(down, 2 * G * f).normalize().negate();
+        m4.compose(v3, q4.setFromUnitVectors(UP, tan3), one3);
+        water.setMatrixAt(i, m4);
+      }
+    } else for (let i = 0; i < STREAMS; i++) {
       const d = streamData[i];
       // In the bathroom the water falls all the way to the floor, in longer and faster streaks.
       const fall = inBath ? 200 / SIZE : FALL;
@@ -1434,7 +1698,7 @@ function frame(now) {
   const moved = controls.update();
 
   // Exploded-view labels follow the parts on screen.
-  const show = smooth(0.55, 0.95, state.pE);
+  const show = isHand ? 0 : smooth(0.55, 0.95, state.pE), showHand = isHand ? smooth(0.55, 0.95, state.pE) : 0;
   camRight.setFromMatrixColumn(camera.matrixWorld, 0);
   const W = stageEl.clientWidth, H = stageEl.clientHeight;
   for (const L of LABELS) {
@@ -1447,15 +1711,24 @@ function frame(now) {
     L.el.style.opacity = show;
   }
 
+  for (const L of HAND_LABELS) {
+    if (showHand < 0.01) { L.el.style.opacity = 0; continue; }
+    L.obj.localToWorld(v3.copy(L.at)).addScaledVector(camRight, L.side * L.r).project(camera);
+    const x = (v3.x * 0.5 + 0.5) * W, y = (-v3.y * 0.5 + 0.5) * H;
+    L.el.classList.toggle('left', L.side < 0);
+    L.el.style.transform = `translate(${L.side < 0 ? `calc(${x}px - 100%)` : `${x}px`}, calc(${y}px - 50%))`;
+    L.el.style.opacity = showHand;
+  }
+
   // Charging call-outs.
   const showCharge = smooth(0.96, 1, D);
   for (const L of CHARGE_TAGS) {
     if (showCharge < 0.01) { L.el.style.opacity = 0; continue; }
     const T = V.chargeTags[L.key];
-    v3.copy(T.at).multiplyScalar(SIZE).project(camera);
+    V.charge.parent.localToWorld(v3.copy(T.at)).project(camera);
     const x = (v3.x * 0.5 + 0.5) * W, y = (-v3.y * 0.5 + 0.5) * H;
     let lead = 28;
-    if (T.out) { v3.copy(T.out).multiplyScalar(SIZE).project(camera); lead = Math.max(16, Math.abs((v3.x * 0.5 + 0.5) * W - x)); }
+    if (T.out) { V.charge.parent.localToWorld(v3.copy(T.out)).project(camera); lead = Math.max(16, Math.abs((v3.x * 0.5 + 0.5) * W - x)); }
     L.el.style.setProperty('--lead', lead + 'px');
     L.el.classList.toggle('left', L.side < 0);
     L.el.style.transform = `translate(${L.side < 0 ? `calc(${x}px - 100%)` : `${x}px`}, calc(${y}px - 50%))`;
@@ -1463,7 +1736,7 @@ function frame(now) {
   }
 
   // Lock call-outs for the soft square, once its ring is off.
-  const showLock = inBath ? 0 : (1 - V.shape.twist) * smooth(0.8, 1, R);
+  const showLock = inBath || isHand ? 0 : (1 - V.shape.twist) * smooth(0.8, 1, R);
   for (const L of RING_TAGS) {
     if (showLock < 0.01) { L.el.style.opacity = 0; continue; }
     const dy = parts[L.part].position.y;
