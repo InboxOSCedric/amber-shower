@@ -1,0 +1,1214 @@
+<!doctype html>
+<html lang="en">
+<meta name="robots" content="noindex">
+<meta name="description" content="Amber: a filtered shower head with a red light ring that comes off and charges in its own dock. Interactive 3D concept.">
+<style>html{color-scheme:light dark}body{margin:0;font-size:14px}img{max-width:100%}</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Amber Red Light Shower</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;if(q.get("theme"))d.dataset.theme=q.get("theme");if(q.has("clean"))d.classList.add("clean-page");})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600&display=swap">
+<style>
+/* Layout: one wide product stage holding the live 3D model, then a spec sheet that reads like an engineering drawing's title block */
+:root {
+  --bg: #f1eee9;
+  --surface: #e7e3dc;
+  --fg: #23201e;
+  --muted: #6c655e;
+  --line: #d6d0c7;
+  --stage: #e8e4dd;
+  --red: #b8352b;
+  --chip: rgba(255, 255, 255, 0.72);
+  --chip-fg: #23201e;
+  --chip-on: #23201e;
+  --chip-on-fg: #f1eee9;
+  --night: #0f0d0c;
+  --night-fg: #ece7e0;
+  --night-chip: rgba(36, 32, 29, 0.82);
+  --night-chip-on: #ece7e0;
+  --night-chip-on-fg: #0f0d0c;
+  --font-display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161412; --surface: #1f1c1a; --fg: #ece7e0; --muted: #a0978e; --line: #34302c;
+    --stage: #1c1a18; --red: #ff6a58;
+    --chip: rgba(40, 36, 33, 0.8); --chip-fg: #ece7e0; --chip-on: #ece7e0; --chip-on-fg: #161412;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161412; --surface: #1f1c1a; --fg: #ece7e0; --muted: #a0978e; --line: #34302c;
+  --stage: #1c1a18; --red: #ff6a58;
+  --chip: rgba(40, 36, 33, 0.8); --chip-fg: #ece7e0; --chip-on: #ece7e0; --chip-on-fg: #161412;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px;
+}
+.wrap { max-width: 1240px; margin: 0 auto; display: grid; gap: 28px; }
+header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px 32px; }
+h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(30px, 4.4vw, 52px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin: 0;
+  text-wrap: balance;
+}
+.lede { margin: 0; max-width: 46ch; color: var(--muted); }
+.lede b { color: var(--fg); font-weight: 500; }
+
+.stage {
+  position: relative;
+  height: clamp(440px, 74vh, 860px);
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--stage);
+  transition: background-color 0.7s ease;
+  touch-action: none;
+}
+.stage.night { background: var(--night); }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.loading {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  color: var(--muted); font-family: var(--font-mono); font-size: 13px; margin: 0;
+}
+.controls {
+  position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%);
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+  width: max-content; max-width: calc(100% - 24px);
+}
+.seg { display: flex; flex-wrap: wrap; justify-content: center; padding: 3px; border-radius: 24px; background: var(--chip); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.controls button, .shapes button {
+  font: 500 14px/1 var(--font-body);
+  color: var(--chip-fg);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 15px;
+  cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+  white-space: nowrap;
+}
+.controls .solo { background: var(--chip); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 13px 17px; }
+.controls button[aria-pressed="true"], .shapes button[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-fg); }
+.controls button:focus-visible, .shapes button:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.shapes { position: absolute; top: 12px; right: 12px; }
+.stage.night .shapes button { color: var(--night-fg); }
+.stage.night .shapes button[aria-pressed="true"] { background: var(--night-chip-on); color: var(--night-chip-on-fg); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0.35; }
+button[aria-pressed="true"] .dot.red { background: #ff3b24; opacity: 1; box-shadow: 0 0 10px #ff3b24; }
+.stage.night .seg, .stage.night .controls .solo { background: var(--night-chip); }
+.stage.night .controls button { color: var(--night-fg); }
+.stage.night .controls button[aria-pressed="true"] { background: var(--night-chip-on); color: var(--night-chip-on-fg); }
+.hint {
+  position: absolute; top: 16px; left: 18px; margin: 0;
+  max-width: min(52ch, calc(100% - 340px));
+  font: 400 12px/1.5 var(--font-mono); color: var(--muted);
+  transition: color 0.7s ease;
+}
+.stage.night .hint { color: #8d847b; }
+
+.tag {
+  position: absolute; left: 0; top: 0;
+  display: flex; align-items: center; gap: 8px;
+  pointer-events: none; opacity: 0;
+  font-size: 13px; line-height: 1.25; color: var(--fg);
+  will-change: transform, opacity;
+}
+.tag::before { content: ""; width: var(--lead, 28px); height: 1px; background: currentColor; opacity: 0.5; flex: none; }
+.tag.left { flex-direction: row-reverse; text-align: right; }
+.tag span { display: grid; }
+.tag b { font-weight: 400; white-space: nowrap; }
+.tag .s { display: none; }
+.tag small { font: 400 11.5px/1.35 var(--font-mono); color: var(--muted); }
+.stage.night .tag { color: var(--night-fg); }
+.stage.night .tag small { color: #a0978e; }
+.clean .controls, .clean .hint, .clean .shapes { display: none; }
+.clean-page .stage { position: fixed; inset: 0; height: auto; border-radius: 0; z-index: 5; transition: none; }
+
+.share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: -12px; font-size: 14px; }
+.share label { color: var(--muted); }
+.share input { flex: 1 1 260px; min-width: 0; font: 400 13px/1 var(--font-mono); color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.share button { font: 500 14px/1 var(--font-body); color: var(--chip-on-fg); background: var(--chip-on); border: 0; border-radius: 999px; padding: 11px 16px; cursor: pointer; }
+.share button:focus-visible, .share input:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.share span { color: var(--muted); min-width: 9ch; }
+.clean-page .share { display: none; }
+.sheet { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.block { border-top: 1px solid var(--fg); padding-top: 14px; display: grid; gap: 14px; min-width: 0; }
+.block h2 { font: 500 20px/1.2 var(--font-display); letter-spacing: -0.015em; margin: 0; }
+dl { margin: 0; display: grid; grid-template-columns: minmax(110px, 0.42fr) minmax(0, 1fr); }
+dt, dd { margin: 0; padding: 10px 0; border-bottom: 1px solid var(--line); }
+dt { color: var(--muted); font-size: 14px; padding-right: 16px; }
+dd { font-size: 15px; }
+dd b { font-weight: 500; }
+.num { font-family: var(--font-mono); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.side { display: grid; gap: 28px; min-width: 0; }
+ul { margin: 0; padding: 0; list-style: none; display: grid; }
+li { padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+li b { font-weight: 500; }
+.swatch { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #4b4a49; vertical-align: -1px; margin-right: 6px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15); }
+.foot { color: var(--muted); font-size: 13px; margin: 0; }
+
+@media (max-width: 820px) {
+  .sheet { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .stage { border-radius: 16px; height: clamp(460px, 78vh, 700px); }
+  .controls { bottom: 12px; gap: 6px; }
+  .controls button, .shapes button { padding: 9px 11px; font-size: 13px; }
+  .shapes { top: 10px; right: auto; left: 50%; transform: translateX(-50%); width: max-content; max-width: calc(100% - 20px); }
+  .hint { top: 60px; left: 14px; max-width: calc(100% - 28px); }
+  .controls .solo { padding: 12px 14px; }
+  .tag small, .tag .l { display: none; }
+  .tag .s { display: inline; }
+  .tag::before { width: var(--lead, 16px); }
+  .tag { font-size: 12px; }
+  dl { grid-template-columns: minmax(0, 1fr); }
+  dt { border-bottom: 0; padding-bottom: 0; }
+  dd { padding-top: 2px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage, .hint { transition: none; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Amber red light shower</h1>
+    <p class="lede"><b>Concept 02.</b> A filtered shower head with a fluted red light ring that comes off and charges in its own dock, in gunmetal. Drag to turn it, scroll or pinch to zoom.</p>
+  </header>
+
+  <section class="stage" id="stage" aria-label="Interactive 3D model of the shower head">
+    <p class="loading" id="loading">Loading the 3D model</p>
+    <canvas id="gl" tabindex="0" aria-label="3D model, drag to rotate"></canvas>
+    <p class="hint" id="hint">Working model, sizes in mm</p>
+    <div class="seg shapes" role="group" aria-label="Shape">
+      <button type="button" id="shape-round" aria-pressed="true">Round</button>
+      <button type="button" id="shape-pebble" aria-pressed="false">Pebble</button>
+      <button type="button" id="shape-square" aria-pressed="false">Soft square</button>
+    </div>
+    <div id="tags"></div>
+    <div class="controls" role="toolbar" aria-label="Model controls">
+      <div class="seg" role="group" aria-label="Layout">
+        <button type="button" id="btn-assembled" aria-pressed="true">Assembled</button>
+        <button type="button" id="btn-exploded" aria-pressed="false">Exploded</button>
+        <button type="button" id="btn-ring" aria-pressed="false">Ring off</button>
+        <button type="button" id="btn-filter" aria-pressed="false">Filter</button>
+        <button type="button" id="btn-dock" aria-pressed="false">Dock</button>
+      </div>
+      <button type="button" class="solo" id="btn-light" aria-pressed="false"><i class="dot red"></i>Red light</button>
+      <button type="button" class="solo" id="btn-water" aria-pressed="false"><i class="dot"></i>Water</button>
+      <button type="button" class="solo" id="btn-below" aria-pressed="false">From below</button>
+      <button type="button" class="solo" id="btn-ribs" aria-pressed="true">Ribs</button>
+    </div>
+  </section>
+
+  <section class="share" aria-label="Link to this view">
+    <label for="share-link">Link to this view</label>
+    <input id="share-link" type="text" readonly value="https://claude.ai/artifact/UZUVGuAJRP7ubsExXjW6oV">
+    <button type="button" id="share-copy">Copy link</button>
+    <span id="share-status" role="status"></span>
+  </section>
+
+  <div class="sheet">
+    <section class="block">
+      <h2>Specification</h2>
+      <dl>
+        <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>, 160 fine flutes about <span class="num">3.3 mm</span> apart that run the height of the wall. On Round they run up to a sharp top edge; on the other shapes they fade into rounded shoulders. A smooth ring without ribs is the alternative, and the Ribs button switches between the two.</dd>
+        <dt>Shapes</dt><dd>Three versions of the same product, switched at the top of the model: <b>Round</b> (crisp: flat top, sharp upper edge on head and ring, rounded underside, housing set squarely on the head), <b>Pebble</b> (round, with a fully rounded ring edge and a flowing sweep into the housing) and <b>Soft square</b> (a rounded-square head and ring on the same round housing).</dd>
+        <dt>Ring lock</dt><dd>Slide the ring up over the head and twist it <span class="num">20°</span>. Three steel lugs on the head run into slots inside the ring, and magnets pull it home with a click. Twist back and it drops into your hand. </dd>
+        <dt>Magnetic mount</dt><dd>The soft square cannot turn, so it is held by magnets alone. Lift the ring over the head: eight magnets around the head, one in each corner and one in the middle of each side, pull it up against a stop edge and centre it. It fits in any of the four directions. To take it off, pull it straight down. There are no buttons, slots or catches.</dd>
+        <dt>Shower head</dt><dd><span class="num">Ø 120 mm</span>, smooth body that sweeps up into the housing in one short curve. The filter sits deep inside the head, which keeps the whole unit <span class="num">115 mm</span> tall. <span class="num" id="nozzle-count">241</span> easy-clean silicone nozzles</dd>
+        <dt>Filter change</dt><dd>Take the ring off and give the head a quarter-turn. It comes away with the cartridge sitting in it, so you lift the old one out and drop the new one in, without tools.</dd>
+        <dt>Fitting</dt><dd>Seat the cartridge in the head, screw the housing down over it, then screw the whole unit onto the shower arm by hand.</dd>
+        <dt>Filter housing</dt><dd><span class="num">Ø 64 × 50 mm</span>, Amber wordmark debossed <span class="num">0.4 mm</span> into the front</dd>
+        <dt>Connection</dt><dd>Ball joint with the ball hidden inside the dome, so the head still tilts. Only a short neck shows, in the same graphite as the body, with a <span class="num">G½</span> thread (<span class="num">½ inch, 1.27 cm</span>), the standard size that fits any shower arm.</dd>
+        <dt>Finish</dt><dd><span class="swatch" aria-hidden="true"></span>Anodised aluminium, bead-blasted satin, gunmetal <span class="num">#4B4A49</span></dd>
+        <dt>Light</dt><dd>12 round LED lenses, each with a <span class="num">630 nm</span> red and an <span class="num">850 nm</span> near-infrared chip</dd>
+        <dt>Power</dt><dd>Rechargeable battery, charged through magnetic pins on the inside of the ring, sealed to <span class="num">IPX7</span></dd>
+        <dt>Charging dock</dt><dd>The ring comes off and stands in a gunmetal charging dock, leaning back <span class="num">10°</span>. A tongue with charging contacts reaches through the ring to the pins on its inner wall. Three lights on the dock show the charge level. The dock comes with a cable and a USB-C charger with an EU plug (Type C, two round pins). The light works while it charges, so the ring doubles as a red light lamp for a desk, bedside or bath edge.</dd>
+        <dt>Filter</dt><dd>KDF-55, coconut-shell carbon and a polyphosphate scale inhibitor, cartridge swapped every 3 months</dd>
+      </dl>
+    </section>
+
+    <div class="side">
+      <section class="block">
+        <h2>Design intent</h2>
+        <ul>
+          <li><b>Fluted ring.</b> Fine ribs on the light ring only. Head and housing stay smooth.</li>
+          <li><b>Crisp or flowing.</b> Round is crisp: ring and head share one flat top with a sharp edge, and the housing stands squarely on it. On Pebble and Soft square the ring continues the slope of the head, which sweeps up into the housing in one curve.</li>
+          <li><b>Nothing on the outside.</b> Charging pins sit on the inner wall of the ring, and the dock reaches them through the opening.</li>
+          <li><b>Gunmetal</b> with the wordmark pressed into the metal instead of printed on it.</li>
+          <li><b>Three shapes</b> are under consideration: round, pebble and soft square.</li>
+        </ul>
+      </section>
+      <section class="block">
+        <h2>Questions for the manufacturer</h2>
+        <ul>
+          <li><b>Shape.</b> Which of the shapes can you tool, and what does each do to unit cost and lead time?</li>
+          <li><b>Light output.</b> Measured irradiance at 30 cm in mW/cm², for both wavelengths.</li>
+          <li><b>Sealing.</b> How the ring reaches IPX7, including at the charging pins.</li>
+          <li><b>Battery.</b> Capacity, run time per charge, and whether it can be replaced in service.</li>
+          <li><b>Filter.</b> Media volume and expected cartridge life at a typical flow rate.</li>
+          <li><b>Ring lock.</b> Holding force and wear over repeated use, for the twist-lock, and the pull force of the magnets on the soft square: enough to hold the ring through a knock, light enough to pull off with wet hands.</li>
+          <li><b>Order.</b> Minimum order quantity, sample cost and sample timing.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+  <p class="foot">Proportions and mechanisms are a working model for sampling discussions, not production drawings.</p>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const stageEl = document.getElementById('stage');
+const canvas = document.getElementById('gl');
+const loadingEl = document.getElementById('loading');
+const hintEl = document.getElementById('hint');
+const params = new URLSearchParams(location.search);
+const STILL = params.get('view');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (params.has('clean')) stageEl.classList.add('clean');
+
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: !!STILL });
+} catch (err) {
+  loadingEl.textContent = 'This browser could not start the 3D view.';
+  throw err;
+}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.setClearColor(0x000000, 0);
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 600);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.enablePan = false;
+controls.minDistance = 18;
+controls.maxDistance = 170;
+controls.autoRotate = !reduce && !STILL;
+controls.autoRotateSpeed = 0.55;
+
+const key = new THREE.DirectionalLight(0xfffaf2, 1.5);
+key.position.set(-20, 30, 25);
+scene.add(key);
+const rim = new THREE.DirectionalLight(0xffffff, 0.9);
+rim.position.set(25, 8, -30);
+scene.add(rim);
+const under = new THREE.DirectionalLight(0xffffff, 0.5);
+under.position.set(0, -30, 10);
+scene.add(under);
+
+const TAU = Math.PI * 2;
+// All sizes in cm. Ring: outer radius, inner radius, bottom, height of the inner top edge, flute count, flute depth.
+const RING = { RO: 8.5, RI: 6.06, RB: -0.3, RT: 2.44, N: 160, depth: 0.075 };
+const A0 = 0.3;                              // angle of the first locking lug
+const TW = THREE.MathUtils.degToRad(20);     // ring twist to lock
+const LOGO_TH = 0.42;                        // angle the wordmark faces
+
+// Materials. The body is gunmetal: a dark, near-neutral grey with a satin sheen.
+const M = {
+  graphite: new THREE.MeshPhysicalMaterial({ color: 0x4b4a49, metalness: 0.86, roughness: 0.44 }),
+  plate: new THREE.MeshPhysicalMaterial({ color: 0x424140, metalness: 0.8, roughness: 0.54 }),
+  silicone: new THREE.MeshStandardMaterial({ color: 0x24201e, roughness: 0.85 }),
+  seam: new THREE.MeshBasicMaterial({ color: 0x1a1715 }),
+  slot: new THREE.MeshStandardMaterial({ color: 0x1f1c1a, roughness: 0.8, metalness: 0.3, side: THREE.DoubleSide }),
+  steel: new THREE.MeshStandardMaterial({ color: 0xb9b6b1, metalness: 1, roughness: 0.3 }),
+  cable: new THREE.MeshStandardMaterial({ color: 0x1c1b1b, roughness: 0.72 }),
+  charge: new THREE.MeshBasicMaterial({ color: 0xffb454, toneMapped: false }),
+  inlet: new THREE.MeshStandardMaterial({ color: 0xd2d0cc, metalness: 1, roughness: 0.16 }),
+  gold: new THREE.MeshStandardMaterial({ color: 0xc9a46c, metalness: 1, roughness: 0.28 }),
+  cap: new THREE.MeshStandardMaterial({ color: 0xe4ded5, roughness: 0.55 }),
+  shell: new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.15, transparent: true, opacity: 0.22, depthWrite: false }), // plain see-through: real glass refraction doubled the work per frame
+  lens: new THREE.MeshPhysicalMaterial({ color: 0xc9b8b1, metalness: 0, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.08, emissive: 0xff1a08, emissiveIntensity: 0 }),
+  water: new THREE.MeshStandardMaterial({ color: 0xdbe7ea, metalness: 0, roughness: 0.05, transparent: true, opacity: 0, depthWrite: false }),
+};
+
+// Profile helper: polyline of [r, y, filletRadius] turned into smooth Vector2 points.
+function profile(pts, seg = 10) {
+  const out = [];
+  for (let i = 0; i < pts.length; i++) {
+    const [x, y, rr] = pts[i];
+    if (i === 0 || i === pts.length - 1 || !rr) { out.push(new THREE.Vector2(x, y)); continue; }
+    const P = new THREE.Vector2(x, y);
+    const A = new THREE.Vector2(pts[i - 1][0], pts[i - 1][1]);
+    const B = new THREE.Vector2(pts[i + 1][0], pts[i + 1][1]);
+    const da = A.clone().sub(P), db = B.clone().sub(P);
+    const ra = Math.min(rr, da.length() * 0.45), rb = Math.min(rr, db.length() * 0.45);
+    const p1 = P.clone().add(da.normalize().multiplyScalar(ra));
+    const p2 = P.clone().add(db.normalize().multiplyScalar(rb));
+    for (let k = 0; k <= seg; k++) {
+      const t = k / seg, a = (1 - t) * (1 - t), b = 2 * (1 - t) * t, c = t * t;
+      out.push(new THREE.Vector2(a * p1.x + b * P.x + c * p2.x, a * p1.y + b * P.y + c * p2.y));
+    }
+  }
+  return out;
+}
+// Points run so that an outer wall goes upward; normals then face away from the solid.
+function lathe(pts, mat, segments = 192) {
+  return new THREE.Mesh(new THREE.LatheGeometry(profile(pts), segments), mat);
+}
+
+// Ring shell as one continuous skin: flat underside, rounded shoulder, a band of straight fluted wall, a large
+// rounded shoulder, then a top that keeps the slope of the shower head so ring and head read as one surface.
+const HEAD_SLOPE = (3.0 - 2.45) / (6.0 - 2.7);
+// Height of the shared top surface at radius r. A crisp shape has a flat top instead of the gentle slope.
+function slopeOf(shape) { return shape && shape.crisp ? 0 : HEAD_SLOPE; }
+function ringTopY(r, shape) { return 2.45 - (r - 6.0) * slopeOf(shape); }
+function flutedRing(mat, shape, ribs = true) {
+  // Without ribs the same skin is built smooth, with far fewer columns.
+  const { RB, RI, RO, N } = RING, depth = ribs ? RING.depth : 0, segs = 6, M2 = ribs ? N * segs : 256, W = M2 + 1, K = 20, Q = Math.PI / 2;
+  const rb = shape.rb, rt = shape.rt, alpha = Math.atan(slopeOf(shape)), aMax = Q - alpha;
+  const rise = shape.rise, rc = RO - rt, yc = ringTopY(rc, shape) + rise - rt / Math.cos(alpha);
+  // Each row: radius of the smooth surface, height, and how deep the flutes cut at that height (0 to 1).
+  // The flutes are full depth on the wall and dissolve over both shoulders.
+  const rows = [[RI + 0.7, RB, 0]];
+  for (let i = 0; i <= K; i++) { const a = (i / K) * Q; rows.push([RO - rb * (1 - Math.sin(a)), RB + rb * (1 - Math.cos(a)), smooth(0.15, 0.95, a / Q)]); }
+  rows.push([RO, RB + rb + 0.03, 1], [RO, yc - 0.03, 1]); // short strips keep the straight wall shaded evenly
+  for (let i = 0; i <= K; i++) { const a = (i / K) * aMax; rows.push([rc + rt * Math.cos(a), yc + rt * Math.sin(a), 1 - smooth(0.05, 0.85, a / aMax)]); }
+  rows.push([RI + 0.7, ringTopY(RI + 0.7, shape) + rise, 0]);
+  // Flute cross-section: broad rounded ribs with narrower valleys.
+  const cut = new Float32Array(W), sin = new Float32Array(W), cos = new Float32Array(W);
+  for (let i = 0; i <= M2; i++) {
+    const th = (i / M2) * TAU;
+    cut[i] = depth * Math.pow((1 - Math.cos(N * th)) / 2, 1.4);
+    sin[i] = Math.sin(th); cos[i] = Math.cos(th);
+  }
+  const pos = [], idx = [];
+  for (const [r0, y, f] of rows) {
+    for (let i = 0; i <= M2; i++) { const r = warpR(shape, r0, (i / M2) * TAU) - f * cut[i]; pos.push(r * sin[i], y, r * cos[i]); }
+  }
+  for (let j = 0; j < rows.length - 1; j++) {
+    for (let i = 0; i < M2; i++) {
+      const a = j * W + i, b = a + 1, c = (j + 1) * W + i, d = c + 1;
+      idx.push(a, b, c, b, d, c);
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setIndex(idx);
+  geo.computeVertexNormals();
+  // The first and last column sit on the same line; give them one shared normal so no seam shows.
+  const n = geo.attributes.normal;
+  for (let j = 0; j < rows.length; j++) {
+    const p = j * W, q = p + M2;
+    const x = n.getX(p) + n.getX(q), y = n.getY(p) + n.getY(q), z = n.getZ(p) + n.getZ(q), l = Math.hypot(x, y, z) || 1;
+    n.setXYZ(p, x / l, y / l, z / l); n.setXYZ(q, x / l, y / l, z / l);
+  }
+  return new THREE.Mesh(geo, mat);
+}
+
+function disc(geo, mat, y, up = false) {
+  const m = new THREE.Mesh(geo, mat);
+  m.rotation.x = up ? -Math.PI / 2 : Math.PI / 2;
+  m.position.y = y;
+  return m;
+}
+function wallPatch(r, yA, yB, th0, th1, mat) {
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, yB - yA, 24, 1, true, th0, th1 - th0), mat);
+  m.position.y = (yA + yB) / 2;
+  return m;
+}
+function canvasTex(w, h, draw, repeatX = 1) {
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  draw(c.getContext('2d'), w, h);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = THREE.RepeatWrapping;
+  t.repeat.set(repeatX, 1);
+  t.anisotropy = 8;
+  return t;
+}
+function rng(seed) { let s = seed; return () => ((s = (s * 16807) % 2147483647) / 2147483647); }
+function granules(base, tones, minR, maxR, count, seed) {
+  return canvasTex(512, 256, (g, w, h) => {
+    const r = rng(seed);
+    g.fillStyle = base; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < count; i++) {
+      const x = r() * w, y = r() * h, rad = minR + r() * (maxR - minR);
+      const tone = tones[Math.floor(r() * tones.length)];
+      const grd = g.createRadialGradient(x - rad * 0.35, y - rad * 0.35, rad * 0.1, x, y, rad);
+      grd.addColorStop(0, tone[0]); grd.addColorStop(1, tone[1]);
+      g.fillStyle = grd;
+      g.beginPath();
+      g.ellipse(x, y, rad, rad * (0.7 + r() * 0.3), r() * Math.PI, 0, Math.PI * 2);
+      g.fill();
+    }
+  }, 3);
+}
+function radialTex(stops) {
+  return canvasTex(128, 128, (g, w, h) => {
+    const grd = g.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
+    for (const [at, col] of stops) grd.addColorStop(at, col);
+    g.fillStyle = grd; g.fillRect(0, 0, w, h);
+  });
+}
+
+// Amber wordmark, outlines taken from the supplied logo file (271 × 101 units).
+const LOGO = [
+  'M245.723 36.6347C249.129 30.8196 253.241 27.9121 258.06 27.9121C260.801 27.9121 262.836 28.7428 264.166 30.4043C265.495 31.9827 266.159 33.7687 266.159 35.7625C266.159 37.3408 265.744 38.6285 264.913 39.6253C264.166 40.6222 262.961 41.1206 261.3 41.1206C259.97 41.1206 258.973 40.8299 258.309 40.2484C257.727 39.5838 257.229 38.8361 256.814 38.0054C256.481 37.1747 256.066 36.4686 255.568 35.8871C255.069 35.2225 254.238 34.8902 253.075 34.8902C251.58 34.8902 250.168 35.804 248.839 37.6316C247.509 39.3761 246.388 41.7437 245.474 44.7343C244.643 47.7249 244.228 51.1309 244.228 54.9522V83.8614C244.228 85.6059 244.477 86.852 244.976 87.5997C245.557 88.3473 246.72 88.8042 248.465 88.9704L251.829 89.3442C252.743 89.5103 253.2 89.9672 253.2 90.7149C253.2 91.7118 252.577 92.2102 251.331 92.2102H230.272C229.026 92.2102 228.403 91.7533 228.403 90.8395C228.403 90.0919 228.943 89.5934 230.023 89.3442L231.518 89.095C233.263 88.7627 234.384 88.2643 234.882 87.5997C235.464 86.852 235.755 85.6059 235.755 83.8614V41.9929C235.755 40.4976 235.506 39.5007 235.007 39.0023C234.592 38.4208 233.803 38.047 232.64 37.8808L230.023 37.507C228.943 37.4239 228.403 36.967 228.403 36.1363C228.403 35.4717 229.067 35.0148 230.397 34.7656C232.972 34.3502 234.924 33.6856 236.253 32.7718C237.665 31.858 239.119 30.7366 240.614 29.4074C241.362 28.6598 241.985 28.2859 242.484 28.2859C243.231 28.2859 243.605 28.7844 243.605 29.7812V36.5101C243.605 37.0916 243.854 37.4654 244.353 37.6316C244.851 37.7147 245.308 37.3824 245.723 36.6347Z',
+  'M211.148 93.3317C207.161 93.3317 203.589 92.0025 200.432 89.3442C197.275 86.6859 194.741 82.9476 192.831 78.1294C191.003 73.2281 190.089 67.5792 190.089 61.1826C190.089 54.6199 191.045 48.8464 192.955 43.862C194.866 38.8777 197.483 34.9733 200.806 32.1488C204.129 29.3243 207.825 27.9121 211.896 27.9121C216.797 27.9121 220.743 29.9474 223.734 34.0179C226.807 38.0054 228.344 44.5266 228.344 53.5815C228.344 56.3229 227.306 57.6936 225.229 57.6936H201.553C199.892 57.6936 199.061 58.6489 199.061 60.5596C199.061 69.3653 200.349 75.9695 202.924 80.3724C205.499 84.7752 208.781 86.9766 212.768 86.9766C215.925 86.9766 218.5 85.8551 220.494 83.6122C222.488 81.3692 224.108 77.5894 225.354 72.2728C225.603 71.359 226.143 70.9021 226.974 70.9021C227.97 70.9021 228.344 71.7328 228.095 73.3943C226.766 80.7877 224.647 85.9798 221.74 88.9704C218.832 91.8779 215.302 93.3317 211.148 93.3317ZM201.18 54.5784H213.765C217.752 54.5784 219.746 52.5016 219.746 48.3479C219.746 42.9482 219.082 38.7115 217.752 35.6378C216.423 32.5642 214.43 31.0273 211.771 31.0273C208.531 31.0273 205.79 32.8965 203.547 36.6347C201.387 40.373 199.975 45.6896 199.31 52.5846C199.144 53.9138 199.767 54.5784 201.18 54.5784Z',
+  'M162.631 93.3319C159.225 93.3319 155.943 92.252 152.787 90.0921C150.959 88.846 149.298 89.1783 147.802 91.0889C146.972 92.0027 146.349 92.5843 145.933 92.8335C145.518 93.1658 145.103 93.3319 144.687 93.3319C143.773 93.3319 143.441 92.7504 143.69 91.5874C144.023 89.6767 144.272 87.2261 144.438 84.2355C144.604 81.2449 144.687 77.2574 144.687 72.273V12.4609C144.687 10.9656 144.438 9.96869 143.94 9.47026C143.524 8.88875 142.735 8.51493 141.572 8.34878L138.955 7.97495C138.041 7.80881 137.584 7.31037 137.584 6.47965C137.584 5.64892 138.041 5.15049 138.955 4.98434C141.281 4.48591 143.233 3.9044 144.812 3.23982C146.39 2.57524 147.719 1.91066 148.799 1.24608C150.128 0.415361 151.125 0 151.79 0C152.704 0 153.161 0.664578 153.161 1.99373V32.7721C153.161 33.4367 153.41 33.8936 153.908 34.1428C154.49 34.3089 155.113 34.0597 155.777 33.3951C159.349 29.7399 163.254 27.9123 167.491 27.9123C171.312 27.9123 174.676 29.2 177.584 31.7752C180.574 34.2674 182.9 37.7564 184.562 42.2423C186.306 46.7283 187.179 52.0034 187.179 58.0676C187.179 64.9627 186.099 71.0685 183.939 76.3851C181.779 81.7018 178.83 85.8554 175.092 88.846C171.437 91.8366 167.283 93.3319 162.631 93.3319ZM162.382 90.2167C167.034 90.2167 170.772 87.4753 173.596 81.9925C176.504 76.5097 177.958 69.1163 177.958 59.8122C177.958 51.2557 176.712 44.7345 174.219 40.2486C171.727 35.7627 168.197 33.5197 163.628 33.5197C160.803 33.5197 158.353 34.6827 156.276 37.0088C154.199 39.3348 153.161 42.5746 153.161 46.7283V78.1296C153.161 81.8679 153.991 84.817 155.653 86.9769C157.397 89.1367 159.64 90.2167 162.382 90.2167Z',
+  'M57.9473 92.2102C56.7012 92.2102 56.0781 91.7533 56.0781 90.8395C56.0781 90.0919 56.6181 89.5934 57.698 89.3442L59.1933 89.095C60.9379 88.7627 62.0593 88.2643 62.5578 87.5997C63.1393 86.852 63.43 85.6059 63.43 83.8614V41.9929C63.43 40.4976 63.1808 39.5007 62.6824 39.0023C62.267 38.4208 61.4778 38.047 60.3148 37.8808L57.698 37.507C56.6181 37.4239 56.0781 36.967 56.0781 36.1363C56.0781 35.4717 56.7427 35.0148 58.0719 34.7656C60.6471 34.3502 62.5993 33.6856 63.9285 32.7718C65.3407 31.858 66.7945 30.7366 68.2898 29.4074C69.0374 28.6598 69.6605 28.2859 70.1589 28.2859C70.9066 28.2859 71.2804 28.7844 71.2804 29.7812V35.3886C71.2804 35.9701 71.5296 36.427 72.028 36.7593C72.5265 37.0085 73.0664 36.8424 73.6479 36.2609C77.0539 33.0211 80.003 30.8196 82.4952 29.6566C85.0704 28.4936 87.6457 27.9121 90.2209 27.9121C92.63 27.9121 94.7484 28.5767 96.576 29.9059C98.4866 31.1519 99.8988 33.0626 100.813 35.6378C101.062 36.3024 101.477 36.7178 102.059 36.8839C102.723 36.967 103.346 36.7178 103.928 36.1363C107.334 32.9795 110.283 30.8196 112.775 29.6566C115.267 28.4936 117.801 27.9121 120.376 27.9121C123.865 27.9121 126.69 29.2413 128.85 31.8996C131.093 34.4748 132.214 38.2962 132.214 43.3636V83.8614C132.214 85.6059 132.463 86.852 132.962 87.5997C133.543 88.2643 134.706 88.7212 136.451 88.9704L139.192 89.3442C140.106 89.5103 140.563 90.0088 140.563 90.8395C140.563 91.7533 140.064 92.2102 139.068 92.2102H117.759C116.596 92.2102 116.015 91.7533 116.015 90.8395C116.015 90.0088 116.472 89.5103 117.386 89.3442L119.13 89.095C121.041 88.8458 122.287 88.3473 122.868 87.5997C123.45 86.852 123.741 85.6059 123.741 83.8614V44.7343C123.741 40.6637 122.993 37.7977 121.498 36.1363C120.085 34.4748 118.133 33.6441 115.641 33.6441C113.149 33.6441 110.864 34.4333 108.788 36.0117C106.794 37.507 105.174 39.5423 103.928 42.1175C102.682 44.6097 102.059 47.3926 102.059 50.4663V83.8614C102.059 85.6059 102.349 86.852 102.931 87.5997C103.513 88.2643 104.717 88.7212 106.545 88.9704L109.286 89.3442C110.2 89.5103 110.657 90.0088 110.657 90.8395C110.657 91.7533 110.158 92.2102 109.161 92.2102H87.978C86.8149 92.2102 86.2334 91.7533 86.2334 90.8395C86.2334 90.0088 86.6903 89.5103 87.6041 89.3442L89.3486 89.095C91.0932 88.8458 92.2146 88.3473 92.7131 87.5997C93.2946 86.852 93.5853 85.6059 93.5853 83.8614V44.7343C93.5853 40.6637 92.8377 37.7977 91.3424 36.1363C89.9302 34.4748 87.9779 33.6441 85.4858 33.6441C82.9936 33.6441 80.7091 34.4333 78.6323 36.0117C76.6386 37.507 75.0186 39.5423 73.7726 42.1175C72.5265 44.6097 71.9034 47.3926 71.9034 50.4663V83.8614C71.9034 85.6059 72.1526 86.852 72.6511 87.5997C73.2326 88.3473 74.3956 88.8042 76.1401 88.9704L79.5046 89.3442C80.4184 89.5103 80.8753 89.9672 80.8753 90.7149C80.8753 91.7118 80.2522 92.2102 79.0061 92.2102H57.9473Z',
+  'M1.86913 92.2104C0.623043 92.2104 0 91.7951 0 90.9643C0 90.1336 0.581507 89.5936 1.74452 89.3444L3.61365 88.9706C5.2751 88.6383 6.52119 87.8491 7.35191 86.603C8.18264 85.2739 8.88875 83.4463 9.47026 81.1203L28.7846 3.23983C28.9508 2.4091 29.2 1.86913 29.5323 1.61991C29.9476 1.3707 30.3214 1.24609 30.6537 1.24609C31.0691 1.24609 31.4429 1.3707 31.7752 1.61991C32.1906 1.86913 32.4813 2.4091 32.6475 3.23983L52.3356 82.2417C52.9172 84.5678 53.5817 86.1877 54.3294 87.1015C55.077 88.0153 56.2401 88.6383 57.8184 88.9706L59.6876 89.3444C60.8506 89.5936 61.4321 90.1336 61.4321 90.9643C61.4321 91.7951 60.809 92.2104 59.563 92.2104H38.2549C37.0919 92.2104 36.5103 91.7535 36.5103 90.8397C36.5103 89.9259 37.2165 89.4275 38.6287 89.3444L40.9963 89.0952C42.4085 88.9291 43.2808 88.4722 43.613 87.7245C44.0284 86.9769 44.0284 85.6892 43.613 83.8617L38.8779 64.5473C38.3795 62.3874 37.0088 61.3075 34.7658 61.3075H21.6819C19.522 61.3075 18.1513 62.3874 17.5698 64.5473L13.3331 81.2449C12.087 85.98 13.3331 88.5968 17.0714 89.0952L18.9405 89.3444C20.3528 89.5936 21.0589 90.0921 21.0589 90.8397C21.0589 91.7535 20.4774 92.2104 19.3143 92.2104H1.86913ZM21.3081 57.5692H35.015C36.3442 57.5692 36.8842 56.8631 36.635 55.4509L28.66 22.0557H28.037L19.6882 55.4509C19.439 56.8631 19.9789 57.5692 21.3081 57.5692Z',
+];
+// Deboss: a height map pushes the letters into the metal, a colour map darkens the floor of the recess.
+const NECK_R = 3.2, NECK_Y0 = 4.9, NECK_Y1 = 8.2;
+function logoMaps(widthCm) {
+  const W = 4096, H = Math.round((W * (NECK_Y1 - NECK_Y0)) / (TAU * NECK_R));
+  const lw = (W * widthCm) / (TAU * NECK_R), s = lw / 271;
+  const x0 = W / 2 - lw / 2, y0 = H * 0.32 - (101 * s) / 2;
+  const draw = (bg, fg, blur) => (g) => {
+    g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    g.save();
+    g.filter = `blur(${blur}px)`;
+    g.translate(x0, y0); g.scale(s, s);
+    g.fillStyle = fg;
+    for (const d of LOGO) g.fill(new Path2D(d));
+    g.restore();
+  };
+  const map = canvasTex(W, H, draw('#ffffff', '#a39c95', 1.2));
+  const bump = canvasTex(W, H, draw('#ffffff', '#000000', 2.6));
+  bump.colorSpace = THREE.NoColorSpace;
+  return { map, bump };
+}
+
+const root = new THREE.Group();
+scene.add(root);
+const parts = {};
+function part(name) { const g = new THREE.Group(); root.add(g); parts[name] = g; return g; }
+
+// Shapes. The same product with a different outline or edge; the viewer switches between them.
+// n is the superellipse exponent of the outline (0 = circle), k scales it so the soft square is no bigger than the
+// round one, rb and rt are the bottom and top edge radii of the ring, twist says whether the ring twist-locks,
+// crisp gives a flat top with a sharp upper edge and a housing that stands squarely on the head, with no sweep,
+// and rise makes the head body and ring that much taller (cm). The seam to the housing stays where it is, so the
+// neck of the head gets shorter by the same amount and the filter sits deeper inside the head.
+const SQ_PHI = LOGO_TH, PIN_TH = LOGO_TH + Math.PI;
+const MAGNET_Y = 1.7; // height of the soft square's magnets on the head and of the steel plates in the ring
+// Eight magnet positions: every corner and the middle of every side.
+const MAGNET_TH = Array.from({ length: 8 }, (_, k) => SQ_PHI + (k * Math.PI) / 4);
+const SHAPES = {
+  round: { label: 'Round', n: 0, k: 1, rb: 0.9, rt: 0.07, led: 7.0, twist: 1, rise: 0.7, crisp: true },
+  pebble: { label: 'Pebble', n: 0, k: 1, rb: 0.95, rt: 1.5, led: 6.9, twist: 1, rise: 0.7 },
+  square: { label: 'Soft square', n: 4, k: 0.94, rb: 0.55, rt: 0.9, led: 7.05, twist: 0, rise: 0.7 },
+};
+// Outline warp: leaves the housing round and pulls everything wider than it towards the outline.
+function warpR(shape, r, th) {
+  if (!shape.n) return r;
+  const a = th - SQ_PHI, sq = Math.pow(Math.pow(Math.abs(Math.cos(a)), shape.n) + Math.pow(Math.abs(Math.sin(a)), shape.n), -1 / shape.n);
+  return r * (1 + (shape.k * sq - 1) * smooth(3.4, 5.4, r));
+}
+// Applies the warp to a finished round mesh and rebuilds its shading.
+function fit(mesh, shape) {
+  if (!shape.n) return mesh;
+  mesh.updateMatrix();
+  const g = mesh.geometry;
+  g.applyMatrix4(mesh.matrix);
+  mesh.position.set(0, 0, 0); mesh.rotation.set(0, 0, 0); mesh.scale.set(1, 1, 1); mesh.updateMatrix();
+  const p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i), z = p.getZ(i), r = Math.hypot(x, z);
+    if (r < 1e-6) continue;
+    const k = warpR(shape, r, Math.atan2(x, z)) / r;
+    p.setX(i, x * k); p.setZ(i, z * k);
+  }
+  p.needsUpdate = true;
+  g.computeVertexNormals();
+  // Vertices that share a position share a normal, so the closing seam of a turned part stays invisible.
+  const n = g.attributes.normal, sums = new Map(), keys = [];
+  for (let i = 0; i < p.count; i++) {
+    const key = Math.round(p.getX(i) * 1e3) + ',' + Math.round(p.getY(i) * 1e3) + ',' + Math.round(p.getZ(i) * 1e3);
+    keys.push(key);
+    const t = sums.get(key) || [0, 0, 0];
+    t[0] += n.getX(i); t[1] += n.getY(i); t[2] += n.getZ(i);
+    sums.set(key, t);
+  }
+  for (let i = 0; i < p.count; i++) {
+    const t = sums.get(keys[i]), l = Math.hypot(t[0], t[1], t[2]) || 1;
+    n.setXYZ(i, t[0] / l, t[1] / l, t[2] / l);
+  }
+  return mesh;
+}
+const { RB, RT, RI } = RING;
+const head = part('head'), ring = part('ring');
+
+// Shower head: soft edges and one sweep up into the housing. A short threaded stub on top takes the filter housing.
+function buildHead(shape) {
+  const g = new THREE.Group();
+  {
+    const top = 2.45 + shape.rise; // a taller head body; the seam above stays put, so the neck gets shorter
+    const pts = [[0, 0, 0], [6.0, 0, 0.3], [6.0, top, shape.crisp ? 0.05 : 0.12]];
+    // One long curve from the gently sloping top up to the vertical housing wall.
+    const p1 = [4.9, top + (6.0 - 4.9) * HEAD_SLOPE], pc = [NECK_R, top + (6.0 - NECK_R) * HEAD_SLOPE], p2 = [NECK_R, 4.7];
+    if (shape.crisp) pts.push([NECK_R, top, 0.05]); // flat top, then straight up: the housing stands on it with a sharp corner
+    else for (let i = 0; i <= 20; i++) {
+      const t = i / 20, a = (1 - t) * (1 - t), b = 2 * (1 - t) * t, c = t * t;
+      pts.push([a * p1[0] + b * pc[0] + c * p2[0], a * p1[1] + b * pc[1] + c * p2[1], 0]);
+    }
+    pts.push([NECK_R, 4.9, 0.03], [2.95, 4.9, 0], [2.95, 5.5, 0.04], [2.55, 5.5, 0.04], [2.55, 4.3, 0.1], [0, 4.3, 0]);
+    g.add(fit(lathe(pts, M.graphite), shape));
+  }
+  g.add(fit(disc(new THREE.CircleGeometry(5.3, 128), M.plate, -0.004), shape));
+  g.add(fit(disc(new THREE.RingGeometry(5.31, 5.37, 160), M.seam, -0.006), shape));
+  for (const y of [5.12, 5.32]) {
+    const t = new THREE.Mesh(new THREE.TorusGeometry(2.96, 0.035, 8, 96), M.graphite);
+    t.rotation.x = Math.PI / 2; t.position.y = y; g.add(t);
+  }
+  {
+    const o = new THREE.Mesh(new THREE.TorusGeometry(2.97, 0.05, 10, 96), M.silicone);
+    o.rotation.x = Math.PI / 2; o.position.y = 4.95; g.add(o);
+  }
+  // Twist shapes: three steel lugs for the ring lock, and a mark that lines up with the ring when it is locked.
+  // Soft square: it cannot turn, so it is held by magnets alone. Eight magnets sit around the head, and a
+  // stop edge at the top of its side wall is what the ring seats against.
+  if (shape.twist) {
+    for (let k = 0; k < 3; k++) {
+      const th = A0 + (k * TAU) / 3, holder = new THREE.Group();
+      holder.rotation.y = th;
+      const lug = new THREE.Mesh(new THREE.CapsuleGeometry(0.17, 0.75, 6, 16), M.steel);
+      lug.rotation.z = Math.PI / 2;
+      lug.position.set(0, 1.25 + shape.rise / 2, warpR(shape, 5.99, th));
+      holder.add(lug);
+      g.add(holder);
+    }
+  } else {
+    const stop = new THREE.Mesh(new THREE.TorusGeometry(6.0, 0.07, 10, 192), M.graphite);
+    stop.rotation.x = Math.PI / 2;
+    stop.position.y = 2.45 + shape.rise - 0.2;
+    g.add(fit(stop, shape));
+    for (const th of MAGNET_TH) {
+      const holder = new THREE.Group();
+      holder.rotation.y = th;
+      const magnet = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.04, 28), M.steel);
+      magnet.rotation.x = Math.PI / 2;
+      magnet.position.set(0, MAGNET_Y, warpR(shape, 6.0, th));
+      holder.add(magnet);
+      g.add(holder);
+    }
+  }
+  {
+    const holder = new THREE.Group();
+    holder.rotation.y = A0;
+    const mark = disc(new THREE.CircleGeometry(0.1, 24), M.seam, 2.612 + shape.rise, true);
+    mark.position.z = warpR(shape, 5.2, A0);
+    holder.add(mark);
+    g.add(holder);
+  }
+  const nozzles = [];
+  [0.9, 1.55, 2.2, 2.85, 3.5, 4.15, 4.8].forEach((rad, ri) => {
+    const n = Math.round((TAU * rad) / 0.52);
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * TAU + (ri % 2) * (Math.PI / n), r = warpR(shape, rad, a);
+      nozzles.push([Math.sin(a) * r, Math.cos(a) * r]);
+    }
+  });
+  {
+    const inst = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.065, 0.085, 0.1, 14), M.silicone, nozzles.length);
+    const m4 = new THREE.Matrix4();
+    nozzles.forEach(([x, z], i) => { m4.makeTranslation(x, -0.04, z); inst.setMatrixAt(i, m4); });
+    g.add(inst);
+  }
+  // Falling water: streaks from every nozzle.
+  const water = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.016, 0.016, 0.75, 6), M.water, nozzles.length * 2);
+  const streamData = [], rnd = rng(5);
+  for (let i = 0; i < nozzles.length * 2; i++) streamData.push({ n: nozzles[i % nozzles.length], p: rnd(), v: 0.55 + rnd() * 0.25 });
+  water.frustumCulled = false;
+  water.visible = false;
+  g.add(water);
+  head.add(g);
+  return { group: g, nozzles, water, streamData };
+}
+
+// LED lenses: materials and shapes shared by every ring. Lit, each lens has a white-hot core that falls off into red.
+const LED_R = 7.05;
+const hotTex = radialTex([[0, 'rgba(255,247,238,1)'], [0.22, 'rgba(255,214,190,1)'], [0.5, 'rgba(255,70,40,1)'], [0.8, 'rgba(226,22,10,0.9)'], [1, 'rgba(190,10,4,0)']]);
+const glowTexture = radialTex([[0, 'rgba(255,255,255,1)'], [0.18, 'rgba(255,255,255,0.55)'], [0.5, 'rgba(255,255,255,0.12)'], [1, 'rgba(255,255,255,0)']]);
+const hotMat = new THREE.MeshBasicMaterial({ map: hotTex, transparent: true, opacity: 0, depthWrite: false, toneMapped: false });
+const poolMat = new THREE.MeshBasicMaterial({ map: glowTexture, color: 0xff2a14, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, opacity: 0 });
+const haloMat = new THREE.SpriteMaterial({ map: glowTexture, color: 0xff3a22, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, opacity: 0 });
+const LED_GEO = { dome: new THREE.SphereGeometry(0.5, 28, 14), cup: new THREE.RingGeometry(0.5, 0.64, 40), hot: new THREE.CircleGeometry(0.56, 32), pool: new THREE.CircleGeometry(1.5, 32) };
+
+// Light ring: flutes on the outer wall, open all the way through so it slides up over the head.
+function buildRing(shape) {
+  const g = new THREE.Group(), rise = shape.rise;
+  const ribbed = flutedRing(M.graphite, shape), plain = flutedRing(M.graphite, shape, false);
+  plain.visible = false;
+  g.add(ribbed, plain);
+  g.userData.shells = { ribbed, plain };
+  g.add(fit(lathe([[RI + 0.72, ringTopY(RI + 0.72, shape) + rise, 0], [RI, ringTopY(RI, shape) + rise, shape.crisp ? 0.05 : 0.12], [RI, RB, 0.15], [RI + 0.72, RB, 0]], M.graphite), shape));
+  // Twist shapes: L-shaped lock slots on the inner wall. The lug drops in from the top edge, then the ring turns 20°.
+  // Soft square: no slots and nothing on the outside. Eight steel plates on the inner wall meet the magnets.
+  if (shape.twist) {
+    for (let k = 0; k < 3; k++) {
+      const th = A0 + (k * TAU) / 3, hw = 0.115, r = RI - 0.008;
+      g.add(fit(wallPatch(r, 1.0 + rise / 2, RT + rise - 0.14, th + TW - hw, th + TW + hw, M.slot), shape));
+      g.add(fit(wallPatch(r, 1.0 + rise / 2, 1.5 + rise / 2, th - hw, th + TW + hw, M.slot), shape));
+    }
+  } else {
+    for (const th of MAGNET_TH) {
+      const holder = new THREE.Group();
+      holder.rotation.y = th;
+      const plate = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.03, 28), M.steel);
+      plate.rotation.x = Math.PI / 2;
+      plate.position.set(0, MAGNET_Y, warpR(shape, RI, th) - 0.012);
+      holder.add(plate);
+      g.add(holder);
+    }
+  }
+  {
+    const holder = new THREE.Group();
+    holder.rotation.y = A0;
+    const mark = disc(new THREE.CircleGeometry(0.1, 24), M.seam, ringTopY(6.9, shape) + rise + 0.006, true);
+    mark.position.z = warpR(shape, 6.9, A0);
+    mark.rotation.x += Math.atan(slopeOf(shape)); // lie flat on the top, sloping or not
+    holder.add(mark);
+    g.add(holder);
+  }
+  // Magnetic charging pins on the inner wall, out of sight once the ring is on.
+  for (const da of [-0.08, 0.08]) {
+    const th = PIN_TH + da, holder = new THREE.Group();
+    holder.rotation.y = th;
+    const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.06, 20), M.gold);
+    pin.rotation.x = Math.PI / 2;
+    pin.position.set(0, 0.45, warpR(shape, RI, th) - 0.02);
+    holder.add(pin);
+    g.add(holder);
+  }
+  // 12 round LED lenses on the underside.
+  for (let i = 0; i < 12; i++) {
+    const a = SQ_PHI + ((i + 0.5) / 12) * TAU, r = warpR(shape, shape.led, a), x = Math.sin(a) * r, z = Math.cos(a) * r;
+    const cup = disc(LED_GEO.cup, M.seam, RB - 0.003); cup.position.x = x; cup.position.z = z; g.add(cup);
+    const dome = new THREE.Mesh(LED_GEO.dome, M.lens); dome.scale.y = 0.3; dome.position.set(x, RB, z); g.add(dome);
+    const hot = disc(LED_GEO.hot, hotMat, RB - 0.16); hot.position.x = x; hot.position.z = z; g.add(hot);
+    const pool = disc(LED_GEO.pool, poolMat, RB - 0.006); pool.position.x = x; pool.position.z = z; g.add(pool);
+    const halo = new THREE.Sprite(haloMat); halo.position.set(x, RB - 0.15, z); halo.scale.setScalar(2.6); g.add(halo);
+  }
+  ring.add(g);
+  return g;
+}
+const spot = new THREE.SpotLight(0xff2a18, 0, 70, 0.95, 0.85, 1.6);
+spot.position.set(0, RB - 0.2, 0);
+spot.target.position.set(0, -40, 0);
+ring.add(spot, spot.target);
+const curtainTex = canvasTex(8, 256, (g, w, h) => {
+  const grd = g.createLinearGradient(0, 0, 0, h);
+  grd.addColorStop(0, 'rgba(255,255,255,1)');
+  grd.addColorStop(0.25, 'rgba(255,255,255,0.3)');
+  grd.addColorStop(0.6, 'rgba(255,255,255,0.06)');
+  grd.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = grd; g.fillRect(0, 0, w, h);
+});
+const curtain = new THREE.Mesh(
+  new THREE.CylinderGeometry(LED_R, 11.5, 30, 128, 1, true),
+  new THREE.MeshBasicMaterial({ color: 0xff2a14, alphaMap: curtainTex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })
+);
+curtain.position.y = RB - 15.1;
+ring.add(curtain);
+
+// Filter cartridge: frosted end caps, clear shell, three media layers between stainless meshes. Water runs top to bottom.
+const cart = part('cartridge');
+cart.add(lathe([[0, 4.45, 0], [2.4, 4.45, 0.1], [2.4, 4.85, 0], [0, 4.85, 0]], M.cap, 96));
+cart.add(lathe([[0, 7.95, 0], [2.4, 7.95, 0], [2.4, 8.35, 0.1], [0.65, 8.35, 0.05], [0.65, 8.7, 0.05], [0, 8.7, 0]], M.cap, 96));
+{
+  const o = new THREE.Mesh(new THREE.TorusGeometry(0.65, 0.07, 12, 48), M.silicone);
+  o.rotation.x = Math.PI / 2; o.position.y = 8.55; cart.add(o);
+}
+const mesh = canvasTex(512, 64, (g, w, h) => {
+  g.fillStyle = '#8f8b86'; g.fillRect(0, 0, w, h);
+  g.strokeStyle = 'rgba(40,38,36,0.55)'; g.lineWidth = 1;
+  for (let x = 0; x < w; x += 4) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke(); }
+  for (let y = 0; y < h; y += 4) { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); }
+}, 3);
+const layers = [
+  [4.85, 4.95, new THREE.MeshStandardMaterial({ map: mesh, metalness: 0.6, roughness: 0.4 })],
+  [4.95, 5.95, new THREE.MeshStandardMaterial({ map: granules('#d9d6d0', [['#ffffff', '#c9c5be'], ['#f4f2ee', '#b9b4ac'], ['#e9f0f2', '#aab4b8']], 3, 7, 2600, 7), roughness: 0.35 })],
+  [5.95, 7.0, new THREE.MeshStandardMaterial({ map: granules('#141312', [['#3a3734', '#0b0a0a'], ['#2a2826', '#060606']], 2.5, 6, 3200, 11), roughness: 0.8 })],
+  [7.0, 7.85, new THREE.MeshStandardMaterial({ map: granules('#8a6a35', [['#f3d796', '#8a6528'], ['#e7c37a', '#6e4e1d'], ['#d9b26a', '#5d421a']], 2, 4.5, 4200, 23), metalness: 0.55, roughness: 0.45 })],
+  [7.85, 7.95, new THREE.MeshStandardMaterial({ map: mesh, metalness: 0.6, roughness: 0.4 })],
+];
+for (const [a, b, mat] of layers) {
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(2.25, 2.25, b - a, 96, 1, false), mat);
+  m.position.y = (a + b) / 2; cart.add(m);
+}
+cart.add(new THREE.Mesh(new THREE.CylinderGeometry(2.38, 2.38, 3.1, 96, 1, true), M.shell).translateY(6.4));
+
+// Filter housing: plain cylinder carrying the debossed wordmark, closing in a dome that swallows the ball of the joint.
+const housing = part('housing');
+{
+  const { map, bump } = logoMaps(2.7);
+  const logoMat = M.graphite.clone();
+  logoMat.map = map; logoMat.bumpMap = bump; logoMat.bumpScale = 3;
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(NECK_R, NECK_R, NECK_Y1 - NECK_Y0, 192, 1, true), logoMat);
+  neck.position.y = (NECK_Y0 + NECK_Y1) / 2;
+  neck.rotation.y = LOGO_TH - Math.PI;
+  housing.add(neck);
+  const pts = [[NECK_R, NECK_Y1, 0]];
+  for (let i = 0; i <= 16; i++) { const t = (i / 16) * (Math.PI / 2); pts.push([1.5 + 1.7 * Math.cos(t), 8.43 + 1.5 * Math.sin(t), 0]); }
+  // The dome ends in a round opening; behind it is the socket that holds the ball.
+  pts.push([1.42, 9.93, 0.04], [1.42, 9.63, 0], [3.0, 8.6, 0.3], [3.0, NECK_Y0, 0], [NECK_R, NECK_Y0, 0]);
+  housing.add(lathe(pts, M.graphite));
+  housing.add(disc(new THREE.RingGeometry(1.3, 1.43, 96), M.seam, 9.83, true));
+  const seamRing = new THREE.Mesh(new THREE.TorusGeometry(NECK_R, 0.012, 6, 128), M.seam);
+  seamRing.rotation.x = Math.PI / 2; seamRing.position.y = NECK_Y0 - 0.004; housing.add(seamRing);
+}
+
+// Connector: a ball joint whose ball sits out of sight inside the dome. Only the neck with its G½ (half inch)
+// internal thread shows above the opening, in the same graphite as the body.
+const conn = part('connector');
+conn.add(new THREE.Mesh(new THREE.SphereGeometry(1.5, 64, 40, 0, TAU, 0, 2.3), M.graphite).translateY(9.45));
+conn.add(disc(new THREE.RingGeometry(0.7, 1.12, 64), M.graphite, 8.451));
+conn.add(disc(new THREE.CircleGeometry(0.7, 48), M.seam, 8.453));
+conn.add(lathe([[1.34, 9.88, 0], [1.25, 10.18, 0.22], [1.25, 11.23, 0.12], [1.02, 11.23, 0.05], [1.02, 9.93, 0]], M.graphite, 128));
+for (const y of [10.78, 10.93, 11.08]) {
+  const t = new THREE.Mesh(new THREE.TorusGeometry(1.02, 0.03, 8, 64), M.graphite);
+  t.rotation.x = Math.PI / 2; t.position.y = y; conn.add(t);
+}
+conn.add(disc(new THREE.CircleGeometry(1.02, 48), M.seam, 10.33, true));
+
+// Charging dock: a low pebble base with a tongue that reaches through the ring. The ring stands in it leaning
+// back 10 degrees, turned so the charging pins on its inner wall sit on the tongue. Lit, it works as a lamp.
+const FALL = 30; // how far the water streaks fall, in cm
+const DOCK_Y = -30, LEAN = THREE.MathUtils.degToRad(10);
+const DOCK_ROT_X = -(Math.PI / 2 + LEAN);          // ring axis from vertical to leaning back, lenses to the front
+const DOCK_TWIST = Math.PI - PIN_TH;               // brings the charging pins to the lowest point
+const boltTex = canvasTex(64, 64, (g) => {
+  g.fillStyle = '#e6e1d9';
+  g.beginPath();
+  for (const [x, y, i] of [[38, 4], [14, 36], [29, 36], [24, 60], [50, 26], [34, 26]].map((p, i) => [...p, i])) i ? g.lineTo(x, y) : g.moveTo(x, y);
+  g.closePath(); g.fill();
+});
+function buildDock(shape) {
+  // How far the ring's outer and inner wall sit from its centre at the point that rests in the dock.
+  const outer = warpR(shape, RING.RO, PIN_TH), inner = warpR(shape, RING.RI, PIN_TH);
+  const pos = new THREE.Vector3(0, DOCK_Y + 1.0 + outer * Math.cos(LEAN) + 0.186, 0.48 - outer * Math.sin(LEAN) + 1.054);
+  const g = new THREE.Group(), top = DOCK_Y + 1.6;
+  g.visible = false;
+  // Plinth with a dark cradle where the ring stands.
+  const plinth = new THREE.Mesh(new RoundedBoxGeometry(15, 1.6, 9.5, 6, 0.7), M.graphite);
+  plinth.position.set(0, DOCK_Y + 0.8, 0.2);
+  g.add(plinth);
+  const cradle = disc(new THREE.CircleGeometry(1, 48), M.seam, top + 0.004, true);
+  cradle.scale.set(3.9, 1.8, 1);
+  cradle.position.z = 0.6;
+  g.add(cradle);
+  // Charging symbol and three charge lights on the front of the plinth.
+  const bolt = disc(new THREE.PlaneGeometry(0.75, 0.75), new THREE.MeshBasicMaterial({ map: boltTex, transparent: true, depthWrite: false, toneMapped: false }), top + 0.006, true);
+  bolt.position.x = -6.25; bolt.position.z = 3.85;
+  g.add(bolt);
+  for (let i = 0; i < 3; i++) {
+    const light = disc(new THREE.CircleGeometry(0.11, 20), M.charge, top + 0.006, true);
+    light.position.x = -5.55 + i * 0.42; light.position.z = 3.85;
+    g.add(light);
+  }
+  // Tongue and back rest are built in the frame of the docked ring, so they follow its lean exactly.
+  const frame = new THREE.Group();
+  frame.position.copy(pos);
+  frame.rotation.x = DOCK_ROT_X;
+  g.add(frame);
+  const tongue = new THREE.Mesh(new RoundedBoxGeometry(3.6, 3.9 + shape.rise, 1.3, 5, 0.55), M.graphite);
+  tongue.position.set(0, 1.85 + shape.rise / 2, -(inner - 0.65));
+  frame.add(tongue);
+  const rest = new THREE.Mesh(new RoundedBoxGeometry(5.2, 1.3, 4.4, 5, 0.55), M.graphite);
+  rest.position.set(0, 3.45 + shape.rise, -(outer - 2.0));
+  frame.add(rest);
+  // Cable out of the back, to a USB-C charger with an EU plug (two round pins).
+  const at = (x, y, z) => new THREE.Vector3(x, DOCK_Y + y, z);
+  const path = new THREE.CatmullRomCurve3([at(0, 0.7, -4.3), at(0, 0.3, -6.2), at(2.5, 0.2, -7.7), at(7, 0.2, -7.5), at(10.2, 0.3, -5.8), at(10.8, 1.1, -4.0)]);
+  g.add(new THREE.Mesh(new THREE.TubeGeometry(path, 90, 0.17, 10), M.cable));
+  const plug = new THREE.Group();
+  plug.position.copy(at(10.8, 1.1, -1.7));
+  plug.add(new THREE.Mesh(new RoundedBoxGeometry(3.8, 2.2, 4.4, 5, 0.55), M.cable));
+  const relief = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.22, 0.9, 16), M.cable);
+  relief.rotation.x = Math.PI / 2; relief.position.z = -2.5;
+  plug.add(relief);
+  for (const dx of [-0.95, 0.95]) {
+    const pin = new THREE.Mesh(new THREE.CapsuleGeometry(0.2, 1.7, 6, 16), M.steel);
+    pin.rotation.x = Math.PI / 2; pin.position.set(dx, 0, 3.15);
+    plug.add(pin);
+  }
+  g.add(plug);
+  root.add(g);
+  return { group: g, pos };
+}
+// Call-outs shown in the dock view, each anchored to a point on the dock.
+const DOCK_TAGS = [
+  { at: new THREE.Vector3(12.9, DOCK_Y + 1.2, 1.2), side: 1, name: 'EU plug', short: 'EU plug', detail: 'USB-C charger and cable' },
+  { at: new THREE.Vector3(-6.75, DOCK_Y + 1.6, 3.85), side: -1, name: 'Charge lights', short: 'Charging', detail: 'Three steps to full' },
+  { at: new THREE.Vector3(-3.4, DOCK_Y + 5.7, 0.9), side: 1, name: 'Charging contacts', short: 'Contacts', detail: 'On the tongue below' },
+];
+
+// Build every shape once; switching only changes which one is shown.
+const variants = {};
+for (const key in SHAPES) {
+  const shape = SHAPES[key];
+  const h = buildHead(shape);
+  const d = buildDock(shape);
+  variants[key] = { shape, head: h, ring: buildRing(shape), dock: d.group, dockPos: d.pos, water: h.water, streamData: h.streamData };
+}
+
+const LABELS = [
+  { part: 'connector', y: 10.6, r: 1.4, side: 1, name: 'Ball joint, G½ thread', short: 'Ball joint', detail: 'Ball hides inside the dome' },
+  { part: 'housing', y: 7.2, r: 3.3, side: -1, name: 'Filter housing', short: 'Housing', detail: 'Debossed wordmark' },
+  { part: 'cartridge', y: 6.4, r: 2.55, side: 1, name: 'Filter cartridge', short: 'Filter', detail: 'KDF-55, carbon, scale inhibitor' },
+  { part: 'head', y: 1.3, r: 6.1, side: -1, name: 'Shower head Ø 120', short: 'Head Ø 120', detail: 'Quarter-turn to open' },
+  { part: 'ring', y: 1.0, r: 8.6, side: 1, name: 'Red light ring Ø 170', short: 'Ring Ø 170', detail: 'Twist-lock, 12 LED lenses' },
+];
+// Call-outs for the soft square's magnetic mount, shown in the Ring off view. `out` is where the text starts, so the line
+// reaches from the detail to clear background.
+const SQ = SHAPES.square, polar = (th, r, y) => new THREE.Vector3(Math.sin(th) * r, y, Math.cos(th) * r);
+const SQ_VIEW = SQ_PHI + Math.PI / 4; // the camera looks at a corner, so magnets on two sides are in view
+const RING_TAGS = [
+  { part: 'head', at: polar(SQ_VIEW + Math.PI / 2, warpR(SQ, 6.0, SQ_VIEW) + 0.1, MAGNET_Y), side: 1, name: 'Magnets', short: 'Magnets', detail: 'Eight around the head' },
+  { part: 'ring', at: polar(SQ_PHI - Math.PI / 2, warpR(SQ, RING.RI, SQ_PHI) - 0.1, MAGNET_Y), out: polar(SQ_VIEW - Math.PI / 2, warpR(SQ, RING.RO, SQ_VIEW) + 0.7, MAGNET_Y), side: -1, name: 'Steel plates', short: 'Plates', detail: 'Inside the ring, meet the magnets' },
+  { part: 'head', at: polar(SQ_VIEW - Math.PI / 2, warpR(SQ, 6.0, SQ_VIEW) + 0.12, 2.45 + SQ.rise - 0.2), side: -1, name: 'Stop edge', short: 'Stop edge', detail: 'The ring seats against it' },
+];
+const tagsEl = document.getElementById('tags');
+for (const L of [...LABELS, ...DOCK_TAGS, ...RING_TAGS]) {
+  const el = document.createElement('div');
+  el.className = 'tag';
+  el.innerHTML = `<span><b class="l">${L.name}</b><b class="s">${L.short}</b><small>${L.detail}</small></span>`;
+  tagsEl.appendChild(el);
+  L.el = el;
+}
+
+// Each layout has its own framing: visible height and width in cm, look-at height, and camera pitch.
+const VIEW = {
+  assembled: { h: 14.5, w: 21, ty: 5.4, phi: 1.72 },
+  exploded: { h: 31.5, w: 24, wn: 37, ty: 8.7, phi: 1.62 },
+  ring: { h: 20.5, w: 22, ty: 2.8, phi: 1.28 },
+  filter: { h: 27.5, w: 22, ty: -0.8, phi: 1.42 },
+  below: { h: 21, w: 21, ty: 2.5, phi: 2.55 },
+  dock: { h: 22, w: 30, wn: 30, ty: DOCK_Y + 9.0, phi: 1.46, theta: 0.42 },
+};
+const HINT = {
+  assembled: 'Working model, sizes in mm',
+  exploded: 'Working model, sizes in mm',
+  ring: 'Ring lock: twist the ring 20° and it drops off. Magnets pull it back into place with a click.',
+  filter: 'Filter change: ring off, quarter-turn the head. The cartridge comes down with it and lifts out.',
+  dock: 'Charging dock: the ring stands on the charging contacts. The dock plugs into the wall with an EU plug, and the ring can stay lit while it charges.',
+};
+const state = { mode: 'assembled', shape: 'round', ribs: true, pE: 0, pR: 0, pF: 0, pD: 0, light: 0, lightTo: 0, water: 0, waterTo: 0, below: false };
+let userMoved = false, dirty = true, lastSig = '';
+
+const tmpS = new THREE.Spherical(), v3 = new THREE.Vector3(), camRight = new THREE.Vector3(), m4 = new THREE.Matrix4(), axis = new THREE.Vector3();
+function viewFor() {
+  let base = VIEW[state.mode];
+  // The soft square's lock is easiest to read corner-on.
+  if (state.mode === 'ring' && !SHAPES[state.shape].twist) base = { ...base, theta: SQ_VIEW, wn: 34, h: 24.5, ty: 2.3 };
+  if (!state.below) return base;
+  return state.mode === 'assembled' ? VIEW.below : { ...base, phi: 2.5 };
+}
+function fitR(v) {
+  const w = camera.aspect < 0.9 && v.wn ? v.wn : v.w;
+  const tan = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+  return Math.max(v.h / 2 / tan, w / 2 / (tan * camera.aspect)) * 1.1 + 5;
+}
+let camTween = null;
+function goCamera({ instant = false, keepPhi = false } = {}) {
+  const v = viewFor();
+  tmpS.setFromVector3(v3.copy(camera.position).sub(controls.target));
+  const turn = v.theta == null || keepPhi ? null : Math.atan2(Math.sin(v.theta - tmpS.theta), Math.cos(v.theta - tmpS.theta));
+  const to = { ty: v.ty, r: fitR(v), phi: keepPhi ? tmpS.phi : v.phi, theta: turn == null ? null : tmpS.theta + turn };
+  if (instant || reduce) {
+    controls.target.y = to.ty; tmpS.radius = to.r; tmpS.phi = to.phi;
+    if (to.theta != null) tmpS.theta = to.theta;
+    camera.position.copy(controls.target).add(v3.setFromSpherical(tmpS));
+    camTween = null;
+  } else {
+    camTween = { t: 0, from: { ty: controls.target.y, r: tmpS.radius, phi: tmpS.phi, theta: tmpS.theta }, to };
+  }
+}
+function stepCam(dt) {
+  if (!camTween) return;
+  camTween.t = Math.min(1, camTween.t + dt / 1.2);
+  const t = camTween.t, k = t < 0.5 ? 4 * t ** 3 : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const L = THREE.MathUtils.lerp;
+  tmpS.setFromVector3(v3.copy(camera.position).sub(controls.target));
+  controls.target.y = L(camTween.from.ty, camTween.to.ty, k);
+  tmpS.radius = L(camTween.from.r, camTween.to.r, k);
+  tmpS.phi = L(camTween.from.phi, camTween.to.phi, k);
+  if (camTween.to.theta != null) tmpS.theta = L(camTween.from.theta, camTween.to.theta, k);
+  camera.position.copy(controls.target).add(v3.setFromSpherical(tmpS));
+  if (camTween.t >= 1) camTween = null;
+}
+
+const btn = {};
+for (const id of ['assembled', 'exploded', 'ring', 'filter', 'dock', 'light', 'water', 'below', 'ribs']) btn[id] = document.getElementById('btn-' + id);
+const MODES = ['assembled', 'exploded', 'ring', 'filter', 'dock'];
+function setMode(mode, instant = false) {
+  state.mode = mode;
+  for (const m of MODES) btn[m].setAttribute('aria-pressed', String(m === mode));
+  hintEl.textContent = hintFor(mode);
+  updateShare();
+  goCamera({ instant });
+}
+function setLight(on) {
+  state.lightTo = on ? 1 : 0;
+  btn.light.setAttribute('aria-pressed', String(on));
+  stageEl.classList.toggle('night', on);
+  updateShare();
+}
+function setWater(on) {
+  state.waterTo = on ? 1 : 0;
+  btn.water.setAttribute('aria-pressed', String(on));
+}
+function setBelow(on, instant = false) {
+  state.below = on;
+  btn.below.setAttribute('aria-pressed', String(on));
+  updateShare();
+  goCamera({ instant });
+}
+// Link to the current view. The page cannot change its own address, so it shows the link to copy instead.
+// Inside Claude the page sits in a frame and cannot see its own address, so it uses the artifact link. Hosted as
+// a normal web page it uses its own address, and keeps the address bar in step with the view.
+const STANDALONE = window.top === window.self && !/claude/.test(location.hostname);
+const SHARE_URL = STANDALONE ? location.href.split('#')[0].split('?')[0] : 'https://claude.ai/artifact/UZUVGuAJRP7ubsExXjW6oV';
+const shareInput = document.getElementById('share-link'), shareStatus = document.getElementById('share-status');
+function updateShare() {
+  const token = [state.shape !== 'round' ? state.shape : '', state.mode !== 'assembled' ? state.mode : '', state.lightTo ? 'light' : '', state.below ? 'below' : '', state.ribs ? '' : 'smooth'].filter(Boolean).join('-');
+  shareInput.value = SHARE_URL + (token ? '#' + token : '');
+  if (STANDALONE) try { history.replaceState(null, '', token ? '#' + token : location.pathname + location.search); } catch (err) { /* address bar stays as it is */ }
+  shareStatus.textContent = '';
+}
+document.getElementById('share-copy').onclick = () => {
+  const done = () => { shareStatus.textContent = 'Copied'; };
+  const manual = () => { shareInput.focus(); shareInput.select(); shareStatus.textContent = 'Press copy'; };
+  try { navigator.clipboard.writeText(shareInput.value).then(done, manual); } catch (err) { manual(); }
+};
+// The soft square cannot turn, so its ring pushes straight on.
+function hintFor(mode) {
+  if (mode === 'ring' && !SHAPES[state.shape].twist) return 'Magnetic mount: lift the ring over the head and the magnets pull it up against the stop edge. Pull it straight down to take it off.';
+  return HINT[mode];
+}
+function setShape(key) {
+  state.shape = key;
+  for (const k in variants) { variants[k].head.group.visible = false; variants[k].ring.visible = false; variants[k].water.visible = false; }
+  const V = variants[key];
+  V.head.group.visible = true; V.ring.visible = true;
+  for (const k in SHAPES) document.getElementById('shape-' + k).setAttribute('aria-pressed', String(k === key));
+  document.getElementById('nozzle-count').textContent = V.head.nozzles.length;
+  hintEl.textContent = hintFor(state.mode);
+  if (state.mode === 'ring') goCamera();
+  dirty = true;
+  updateShare();
+}
+for (const k in SHAPES) document.getElementById('shape-' + k).onclick = () => setShape(k);
+for (const m of MODES) btn[m].onclick = () => setMode(m);
+btn.light.onclick = () => setLight(state.lightTo === 0);
+btn.water.onclick = () => setWater(state.waterTo === 0);
+btn.below.onclick = () => setBelow(!state.below);
+// Ribs on or off: every ring has a fluted and a smooth skin, and only one is shown.
+function setRibs(on) {
+  state.ribs = on;
+  btn.ribs.setAttribute('aria-pressed', String(on));
+  for (const k in variants) { const sh = variants[k].ring.userData.shells; sh.ribbed.visible = on; sh.plain.visible = !on; }
+  dirty = true;
+  updateShare();
+}
+btn.ribs.onclick = () => setRibs(!state.ribs);
+controls.addEventListener('start', () => { userMoved = true; controls.autoRotate = false; camTween = null; });
+
+function resize() {
+  const w = stageEl.clientWidth, h = stageEl.clientHeight;
+  if (!w || !h) return;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  dirty = true;
+  if (!userMoved) goCamera({ instant: true, keepPhi: true });
+}
+
+// Initial view: three-quarter from slightly below, wordmark towards the camera.
+controls.target.set(0, VIEW.assembled.ty, 0);
+tmpS.set(40, VIEW.assembled.phi, 0.62);
+camera.position.copy(controls.target).add(v3.setFromSpherical(tmpS));
+new ResizeObserver(resize).observe(stageEl);
+resize();
+
+// A shared link can name a shape and a view after the #, for example #square-dock or #pebble-ring-light.
+const linkTokens = location.hash.slice(1).toLowerCase().split('-');
+setShape(SHAPES[params.get('shape')] ? params.get('shape') : linkTokens.find((t) => SHAPES[t]) || 'round');
+if (params.get('ribs') === '0' || linkTokens.includes('smooth')) setRibs(false);
+
+// Still views for exports: ?view=side|below|glow|night|exploded|ring|filter|dock|dockglow|detail
+if (STILL) {
+  if (STILL === 'side') VIEW.assembled.phi = 1.6;
+  if (STILL === 'detail') Object.assign(VIEW.assembled, { h: 6.5, w: 9, ty: 1.05, phi: 1.36 });
+  if (STILL === 'exploded' || STILL === 'ring' || STILL === 'filter' || STILL === 'dock') setMode(STILL, true);
+  if (STILL === 'dockglow') setMode('dock', true);
+  if (STILL === 'glow' || STILL === 'night' || STILL === 'dockglow') { state.light = 1; setLight(true); }
+  if (STILL === 'night') { state.water = 1; setWater(true); }
+  if (STILL === 'below' || STILL === 'glow') setBelow(true, true);
+  state.pE = state.mode === 'exploded' ? 1 : 0;
+  state.pR = state.mode === 'ring' ? 1 : 0;
+  state.pF = state.mode === 'filter' ? 1 : 0;
+  state.pD = state.mode === 'dock' ? 1 : 0;
+  goCamera({ instant: true });
+}
+
+// Deep link: ?mode=ring or ?mode=filter opens the page on that animation.
+if (!STILL) {
+  const startMode = MODES.includes(params.get('mode')) ? params.get('mode') : linkTokens.find((t) => MODES.includes(t));
+  // Opened from a link, the view is shown as it ends up, without playing the animation first.
+  if (startMode) { setMode(startMode, true); state.pE = +(startMode === 'exploded'); state.pR = +(startMode === 'ring'); state.pF = +(startMode === 'filter'); state.pD = +(startMode === 'dock'); }
+  if (linkTokens.includes('light')) setLight(true);
+  if (linkTokens.includes('below')) setBelow(true, true);
+}
+
+function ease(cur, to, dt, rate) { return cur + (to - cur) * (1 - Math.exp(-dt * rate)); }
+function toward(cur, to, step) { return cur < to ? Math.min(to, cur + step) : Math.max(to, cur - step); }
+function smooth(a, b, x) { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
+
+let visible = true, last = performance.now(), time = 0, rafId = 0;
+// One animation loop, paused while the stage is scrolled out of view.
+function kick() { if (!rafId && visible) { last = performance.now(); rafId = requestAnimationFrame(frame); } }
+new IntersectionObserver(([en]) => { visible = en.isIntersecting; kick(); }).observe(stageEl);
+
+function frame(now) {
+  rafId = 0;
+  if (!visible) return;
+  rafId = requestAnimationFrame(frame); // queue the next frame first, so one bad frame cannot stop the viewer
+  const V = variants[state.shape], water = V.water, streamData = V.streamData, STREAMS = streamData.length;
+  const dt = Math.max(0, Math.min(0.05, (now - last) / 1000)); // never negative: a frame stamped before the last one must not run animations backwards
+  last = now; time += dt;
+  const jump = reduce ? 1 : 0;
+  state.pE = toward(state.pE, state.mode === 'exploded' ? 1 : 0, jump || dt / 0.9);
+  state.pR = toward(state.pR, state.mode === 'ring' ? 1 : 0, jump || dt / 1.6);
+  state.pF = toward(state.pF, state.mode === 'filter' ? 1 : 0, jump || dt / 3.0);
+  state.pD = toward(state.pD, state.mode === 'dock' ? 1 : 0, jump || dt / 2.6);
+  state.light = ease(state.light, state.lightTo, dt, reduce ? 60 : 3.5);
+  state.water = ease(state.water, state.waterTo, dt, reduce ? 60 : 3);
+
+  // Layouts. Ring: twist, then drop. Filter: ring off, head quarter-turn and down with the cartridge in it, cartridge lifts out.
+  const E = smooth(0, 1, state.pE), R = state.pR, F = state.pF;
+  const headDrop = -7 * smooth(0.5, 0.82, F);
+  parts.connector.position.y = 11.95 * E;
+  parts.housing.position.y = 9 * E;
+  parts.cartridge.position.y = 3.2 * E + headDrop + 2.4 * smooth(0.82, 1, F); // rides down in the head, then lifts out
+  parts.head.position.y = headDrop;
+  parts.head.rotation.y = (-Math.PI / 2) * smooth(0.36, 0.56, F);
+  // Dock: the ring twists off, drops, then tips up and settles into the dock.
+  const D = state.pD, seat = smooth(0.22, 0.95, D);
+  // The soft square has no twist: its ring is pulled straight down off the magnets.
+  const ringY = -5.5 * E - 5.5 * smooth(0.3, 1, R) - 12.5 * smooth(0.12, 0.48, F) - 6 * smooth(0.08, 0.3, D);
+  const twist = -TW * V.shape.twist * Math.min(1, smooth(0, 0.3, R) + smooth(0, 0.12, F) + smooth(0, 0.08, D));
+  parts.ring.position.set(0, ringY, 0).lerp(V.dockPos, seat);
+  parts.ring.rotation.x = DOCK_ROT_X * seat;
+  parts.ring.rotation.y = twist + (DOCK_TWIST - twist) * seat;
+  for (const k in variants) variants[k].dock.visible = k === state.shape && D > 0.02;
+
+  const Lt = state.light;
+  // How squarely the camera faces the lenses, whichever way the ring is turned.
+  const lift = Math.abs(v3.copy(camera.position).sub(controls.target).normalize().dot(axis.set(0, 1, 0).applyQuaternion(parts.ring.quaternion)));
+  const sideOn = 1 - smooth(0.2, 0.55, lift);
+  M.lens.emissiveIntensity = 2.6 * Lt;
+  hotMat.opacity = Lt;
+  poolMat.opacity = 0.9 * Lt;
+  haloMat.opacity = Lt * sideOn;
+  spot.intensity = 900 * Lt;
+  curtain.material.opacity = 0.09 * Lt * (0.2 + 0.8 * sideOn) * (1 - 0.85 * seat);
+  scene.environmentIntensity = 1 - 0.72 * Lt;
+  key.intensity = 1.5 * (1 - 0.7 * Lt);
+  rim.intensity = 0.9 * (1 - 0.4 * Lt);
+
+  const Wt = state.water;
+  water.visible = Wt > 0.01;
+  if (water.visible) {
+    M.water.opacity = 0.5 * Wt;
+    for (let i = 0; i < STREAMS; i++) {
+      const d = streamData[i];
+      const f = (time * d.v * 26 + d.p * FALL) % FALL;
+      const spread = 1 + f * 0.012;
+      m4.makeTranslation(d.n[0] * spread, -0.45 - f, d.n[1] * spread);
+      water.setMatrixAt(i, m4);
+    }
+    water.instanceMatrix.needsUpdate = true;
+  }
+
+  stepCam(dt);
+  const moved = controls.update();
+
+  // Exploded-view labels follow the parts on screen.
+  const show = smooth(0.55, 0.95, state.pE);
+  camRight.setFromMatrixColumn(camera.matrixWorld, 0);
+  const W = stageEl.clientWidth, H = stageEl.clientHeight;
+  for (const L of LABELS) {
+    if (show < 0.01) { L.el.style.opacity = 0; continue; }
+    v3.set(0, L.y + parts[L.part].position.y, 0).addScaledVector(camRight, L.side * L.r).project(camera);
+    const x = (v3.x * 0.5 + 0.5) * W, y = (-v3.y * 0.5 + 0.5) * H;
+    L.el.classList.toggle('left', L.side < 0);
+    const tx = L.side < 0 ? `calc(${x}px - 100%)` : `${x}px`;
+    L.el.style.transform = `translate(${tx}, calc(${y}px - 50%))`;
+    L.el.style.opacity = show;
+  }
+
+  // Dock call-outs follow the dock on screen.
+  const showDock = smooth(0.8, 1, D);
+  for (const L of DOCK_TAGS) {
+    if (showDock < 0.01) { L.el.style.opacity = 0; continue; }
+    v3.copy(L.at).project(camera);
+    const x = (v3.x * 0.5 + 0.5) * W, y = (-v3.y * 0.5 + 0.5) * H;
+    L.el.classList.toggle('left', L.side < 0);
+    L.el.style.transform = `translate(${L.side < 0 ? `calc(${x}px - 100%)` : `${x}px`}, calc(${y}px - 50%))`;
+    L.el.style.opacity = showDock;
+  }
+
+  // Lock call-outs for the soft square, once its ring is off.
+  const showLock = (1 - V.shape.twist) * smooth(0.8, 1, R);
+  for (const L of RING_TAGS) {
+    if (showLock < 0.01) { L.el.style.opacity = 0; continue; }
+    const dy = parts[L.part].position.y;
+    v3.copy(L.at); v3.y += dy; v3.project(camera);
+    const x = (v3.x * 0.5 + 0.5) * W, y = (-v3.y * 0.5 + 0.5) * H;
+    let lead = 28;
+    if (L.out) { v3.copy(L.out); v3.y += dy; v3.project(camera); lead = Math.max(16, Math.abs((v3.x * 0.5 + 0.5) * W - x)); }
+    L.el.style.setProperty('--lead', lead + 'px');
+    L.el.classList.toggle('left', L.side < 0);
+    L.el.style.transform = `translate(${L.side < 0 ? `calc(${x}px - 100%)` : `${x}px`}, calc(${y}px - 50%))`;
+    L.el.style.opacity = showLock;
+  }
+
+  // Only draw when something changed: the camera, an animation, the light or the water.
+  const sig = [state.pE, state.pR, state.pF, state.pD, state.light, state.water].map((x) => x.toFixed(4)).join();
+  if (moved || dirty || sig !== lastSig || state.water > 0.01) renderer.render(scene, camera);
+  dirty = false; lastSig = sig;
+}
+loadingEl.hidden = true;
+frame(performance.now()); // draw the first frame straight away, then keep looping
+</script>
