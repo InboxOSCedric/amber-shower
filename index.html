@@ -841,7 +841,7 @@ function buildCharge(shape) {
 // Call-outs shown in the Charging view.
 const CHARGE_TAGS = [
   { key: 'port', side: 1, name: 'USB-C port', short: 'USB-C port', detail: 'On the inside of the ring' },
-  { key: 'charger', side: -1, name: 'USB-C charger, EU plug', short: 'EU plug', detail: 'Any USB-C charger and cable work' },
+  { key: 'charger', side: -1, name: 'EU plug', short: 'EU plug', detail: 'Any USB-C charger' },
 ];
 
 // Build every shape once; switching only changes which one is shown.
@@ -885,7 +885,7 @@ const VIEW = {
   ring: { h: 20.5, w: 22, ty: 2.8, phi: 1.28 },
   filter: { h: 27.5, w: 22, ty: -0.8, phi: 1.42 },
   below: { h: 21, w: 21, ty: 2.5, phi: 2.55 },
-  charge: { h: 15, w: 36, wn: 36, ty: CHARGE_Y + 1.4, phi: 1.0 },
+  charge: { h: 15, w: 41, wn: 41, ty: CHARGE_Y + 1.4, phi: 1.0 },
 };
 const HINT = {
   assembled: 'Working model, sizes in mm',
