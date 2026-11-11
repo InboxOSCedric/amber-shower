@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Amber Red Light Shower</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="amber-build" content="11 Nov 2026, 10:59">
+<meta name="amber-build" content="11 Nov 2026, 11:05">
 <script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;if(q.get("theme"))d.dataset.theme=q.get("theme");if(q.has("clean"))d.classList.add("clean-page");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -215,7 +215,7 @@ li b { font-weight: 500; }
       <h2>Specification</h2>
       <dl>
         <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">3.3 mm</span> apart), <b>Round ribs</b> (56 fully round rods, <span class="num">Ø 9 mm</span>, standing side by side around the ring; their domed ends stick out <span class="num">3 mm</span> above and below it), <b>Pleats</b> (90 very shallow pleats, <span class="num">5.9 mm</span> apart and <span class="num">0.3 mm</span> deep, and <b>Smooth</b>. On Round the pleats fade in from the underside and stop just under the sharp top edge; on Pebble and Soft square they run on over the rounded edges, top and bottom.</dd>
-        <dt>Bathroom view</dt><dd>The Bathroom button hangs the shower head on a wall arm in a walk-in shower, at about <span class="num">2 m</span>, so each shape and rib finish can be judged in place. Red light and water work there too.</dd>
+        <dt>Bathroom view</dt><dd>The Bathroom button hangs the shower head on a wall arm in a walk-in shower, at about <span class="num">2 m</span>, so each shape and rib finish can be judged in place. Red light and water work there too, and Ring off takes the ring off the head in the room. In this view the head is drawn <span class="num">25%</span> larger than the sizes in this list.</dd>
         <dt>Shapes</dt><dd>Three versions of the same product, switched at the top of the model: <b>Round</b> (crisp: flat top, sharp upper edge on head and ring, rounded underside, housing set squarely on the head), <b>Pebble</b> (round, with a fully rounded ring edge and a flowing sweep into the housing) and <b>Soft square</b> (a rounded-square head and ring on the same round housing).</dd>
         <dt>Ring lock</dt><dd>Slide the ring up over the head and twist it <span class="num">20°</span>. Three steel lugs on the head run into slots inside the ring, and magnets pull it home with a click. Twist back and it drops into your hand. </dd>
         <dt>Magnetic mount</dt><dd>The soft square cannot turn, so it is held by magnets alone. Lift the ring over the head: eight magnets around the head, one in each corner and one in the middle of each side, pull it up against a stop edge and centre it. It fits in any of the four directions. To take it off, pull it straight down. There are no buttons, slots or catches.</dd>
@@ -920,6 +920,9 @@ for (const key in SHAPES) {
 // screen, a wall arm that the head screws onto, and a thermostat below. Sizes in cm; the head hangs at about 2 m.
 // The walls only show from inside the room, so you can orbit round the outside and still look in.
 const FLOOR_Y = -205, WALL_Z = -38, SIDE_X = -85, CEIL_Y = 55, GLASS_X = 78;
+// In the bathroom the shower head is shown larger than in the other views (BATH_SCALE times), and turned so that
+// the wordmark and the sides of the soft square sit square to the wall.
+const BATH_SCALE = 1.25, BATH_TURN = -LOGO_TH;
 const bath = new THREE.Group();
 bath.visible = false;
 scene.add(bath);
@@ -985,11 +988,13 @@ scene.add(bath);
   channel.position.set(GLASS_X, FLOOR_Y + 105, WALL_Z + 0.7);
   bath.add(glass, rail, channel);
   // Wall arm: out of the wall, then down into the neck of the shower head.
-  const arm = new THREE.CatmullRomCurve3([[0, 17, WALL_Z], [0, 17, -14], [0, 17, -5.5], [0, 15.6, -1.4], [0, 13.6, 0], [0, 10.9, 0]].map((p) => new THREE.Vector3(...p)));
-  bath.add(new THREE.Mesh(new THREE.TubeGeometry(arm, 90, 1.05, 20), M.graphite));
+  const k = BATH_SCALE, armY = 17 * k;
+  const arm = new THREE.CatmullRomCurve3([[0, armY, WALL_Z], [0, armY, -14 * k], [0, armY, -5.5 * k], [0, 15.6 * k, -1.4 * k], [0, 13.6 * k, 0], [0, 10.9 * k, 0]].map((p) => new THREE.Vector3(...p)));
+  bath.add(new THREE.Mesh(new THREE.TubeGeometry(arm, 90, 1.0 * k, 20), M.graphite));
   const flange = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 0.8, 48), M.graphite);
   flange.rotation.x = Math.PI / 2;
-  flange.position.set(0, 17, WALL_Z + 0.4);
+  flange.scale.setScalar(k);
+  flange.position.set(0, armY, WALL_Z + 0.4);
   bath.add(flange);
   // Thermostat bar on the wall below.
   const bar = new THREE.Mesh(new THREE.CylinderGeometry(2.3, 2.3, 26, 40), M.graphite);
@@ -1042,7 +1047,7 @@ const VIEW = {
   ring: { h: 20.5, w: 22, ty: 2.8, phi: 1.28 },
   filter: { h: 27.5, w: 22, ty: -0.8, phi: 1.42 },
   below: { h: 21, w: 21, ty: 2.5, phi: 2.55 },
-  bath: { h: 64, w: 84, wn: 64, ty: -10, phi: 1.66, theta: 0.55 },
+  bath: { h: 60, w: 80, wn: 60, ty: -8, phi: 1.66, theta: 0.5 },
   charge: { h: 15, w: 41, wn: 41, ty: CHARGE_Y + 1.4, phi: 1.0 },
 };
 const HINT = {
@@ -1053,7 +1058,7 @@ const HINT = {
   charge: 'Charging: take the ring off and plug a USB-C cable into the port on its inner wall. Any USB-C charger works.',
   bath: 'Bathroom: the shower head on a wall arm in a walk-in shower. Zoom out to see the whole shower, and switch shape, ribs, light and water.',
 };
-const state = { mode: 'assembled', shape: 'round', ribs: 'fine', pE: 0, pR: 0, pF: 0, pD: 0, light: 0, lightTo: 0, water: 0, waterTo: 0, below: false };
+const state = { mode: 'assembled', bathRing: false, shape: 'round', ribs: 'fine', pE: 0, pR: 0, pF: 0, pD: 0, light: 0, lightTo: 0, water: 0, waterTo: 0, below: false };
 let userMoved = false, dirty = true, lastSig = '';
 
 const tmpS = new THREE.Spherical(), v3 = new THREE.Vector3(), camRight = new THREE.Vector3(), m4 = new THREE.Matrix4(), axis = new THREE.Vector3();
@@ -1104,12 +1109,17 @@ for (const id of ['assembled', 'exploded', 'ring', 'filter', 'charge', 'bath', '
 const MODES = ['assembled', 'exploded', 'ring', 'filter', 'charge', 'bath'];
 function setMode(mode, instant = false) {
   state.mode = mode;
-  for (const m of MODES) btn[m].setAttribute('aria-pressed', String(m === mode));
+  if (mode !== 'bath') state.bathRing = false;
+  // In the bathroom the Ring off button stays lit while the ring is off.
+  for (const m of MODES) btn[m].setAttribute('aria-pressed', String(m === mode || (m === 'ring' && mode === 'bath' && state.bathRing)));
   hintEl.textContent = hintFor(mode);
   // The bathroom is a far bigger scene than the product on its own: let the camera step back, push the near plane
   // out so fine details do not flicker at a distance, and let the red light reach the floor.
   const inBath = mode === 'bath';
   bath.visible = inBath;
+  root.scale.setScalar(inBath ? BATH_SCALE : 1);
+  root.rotation.y = inBath ? BATH_TURN : 0;
+  if (!inBath) state.bathRing = false;
   controls.maxDistance = inBath ? 620 : 170;
   camera.near = inBath ? 4 : 0.5;
   camera.updateProjectionMatrix();
@@ -1133,6 +1143,7 @@ function setBelow(on, instant = false) {
 }
 // The soft square cannot turn, so its ring pushes straight on.
 function hintFor(mode) {
+  if (mode === 'bath' && state.bathRing) return SHAPES[state.shape].twist ? 'Ring off: a 20° twist and the ring comes down. The shower head works the same without it. Press Ring off again to put it back.' : 'Ring off: pull the ring straight down off the magnets. The shower head works the same without it. Press Ring off again to put it back.';
   if (mode === 'ring' && !SHAPES[state.shape].twist) return 'Magnetic mount: lift the ring over the head and the magnets pull it up against the stop edge. Pull it straight down to take it off.';
   return HINT[mode];
 }
@@ -1150,6 +1161,14 @@ function setShape(key) {
 }
 for (const k in SHAPES) document.getElementById('shape-' + k).onclick = () => setShape(k);
 for (const m of MODES) btn[m].onclick = () => setMode(m);
+// In the bathroom, Ring off takes the ring off the head without leaving the room.
+btn.ring.onclick = () => {
+  if (state.mode !== 'bath') return setMode('ring');
+  state.bathRing = !state.bathRing;
+  btn.ring.setAttribute('aria-pressed', String(state.bathRing));
+  hintEl.textContent = hintFor('bath');
+  dirty = true;
+};
 btn.light.onclick = () => setLight(state.lightTo === 0);
 btn.water.onclick = () => setWater(state.waterTo === 0);
 btn.below.onclick = () => setBelow(!state.below);
@@ -1208,7 +1227,8 @@ if (STILL) {
   if (STILL === 'night') { state.water = 1; setWater(true); }
   if (STILL === 'below' || STILL === 'glow') setBelow(true, true);
   state.pE = state.mode === 'exploded' ? 1 : 0;
-  state.pR = state.mode === 'ring' ? 1 : 0;
+  if (STILL === 'bathring') { setMode('bath', true); state.bathRing = true; }
+  state.pR = state.mode === 'ring' || state.bathRing ? 1 : 0;
   state.pF = state.mode === 'filter' ? 1 : 0;
   state.pD = state.mode === 'charge' ? 1 : 0;
   goCamera({ instant: true });
@@ -1221,6 +1241,7 @@ if (!STILL) {
   if (startMode) { setMode(startMode, true); state.pE = +(startMode === 'exploded'); state.pR = +(startMode === 'ring'); state.pF = +(startMode === 'filter'); state.pD = +(startMode === 'charge'); }
   if (linkTokens.includes('light')) setLight(true);
   if (linkTokens.includes('below')) setBelow(true, true);
+  if (state.mode === 'bath' && linkTokens.includes('ringoff')) btn.ring.onclick();
 }
 
 function ease(cur, to, dt, rate) { return cur + (to - cur) * (1 - Math.exp(-dt * rate)); }
@@ -1237,11 +1258,12 @@ function frame(now) {
   if (!visible) return;
   rafId = requestAnimationFrame(frame); // queue the next frame first, so one bad frame cannot stop the viewer
   const V = variants[state.shape], water = V.water, streamData = V.streamData, STREAMS = streamData.length;
+  const inBath = state.mode === 'bath', ringOff = state.mode === 'ring' || (inBath && state.bathRing);
   const dt = Math.max(0, Math.min(0.05, (now - last) / 1000)); // never negative: a frame stamped before the last one must not run animations backwards
   last = now; time += dt;
   const jump = reduce ? 1 : 0;
   state.pE = toward(state.pE, state.mode === 'exploded' ? 1 : 0, jump || dt / 0.9);
-  state.pR = toward(state.pR, state.mode === 'ring' ? 1 : 0, jump || dt / 1.6);
+  state.pR = toward(state.pR, ringOff ? 1 : 0, jump || dt / 1.6);
   state.pF = toward(state.pF, state.mode === 'filter' ? 1 : 0, jump || dt / 3.0);
   state.pD = toward(state.pD, state.mode === 'charge' ? 1 : 0, jump || dt / 2.6);
   state.light = ease(state.light, state.lightTo, dt, reduce ? 60 : 3.5);
@@ -1258,14 +1280,13 @@ function frame(now) {
   // Charging: the ring comes off, moves down and aside, and the cable appears once it has settled.
   const D = state.pD, seat = smooth(0.22, 0.95, D);
   // The soft square has no twist: its ring is pulled straight down off the magnets.
-  const ringY = -5.5 * E - 5.5 * smooth(0.3, 1, R) - 12.5 * smooth(0.12, 0.48, F) - 6 * smooth(0.08, 0.3, D);
+  const ringY = -5.5 * E - (inBath ? 13 : 5.5) * smooth(0.3, 1, R) - 12.5 * smooth(0.12, 0.48, F) - 6 * smooth(0.08, 0.3, D);
   const twist = -TW * V.shape.twist * Math.min(1, smooth(0, 0.3, R) + smooth(0, 0.12, F) + smooth(0, 0.08, D));
   parts.ring.position.set(0, ringY, 0).lerp(V.chargePos, seat);
   parts.ring.rotation.y = twist;
   for (const k in variants) variants[k].charge.visible = k === state.shape && D > 0.96;
 
   const Lt = state.light;
-  const inBath = state.mode === 'bath';
   // How squarely the camera faces the lenses, whichever way the ring is turned.
   const lift = Math.abs(v3.copy(camera.position).sub(controls.target).normalize().dot(axis.set(0, 1, 0).applyQuaternion(parts.ring.quaternion)));
   const sideOn = 1 - smooth(0.2, 0.55, lift);
@@ -1286,7 +1307,7 @@ function frame(now) {
     for (let i = 0; i < STREAMS; i++) {
       const d = streamData[i];
       // In the bathroom the water falls all the way to the floor, in longer and faster streaks.
-      const fall = inBath ? 200 : FALL;
+      const fall = inBath ? 200 / BATH_SCALE : FALL;
       const f = (time * d.v * (inBath ? 230 : 26) + d.p * fall) % fall;
       const spread = 1 + f * (inBath ? 0.004 : 0.012);
       m4.makeScale(inBath ? 2.4 : 1, inBath ? 6 : 1, inBath ? 2.4 : 1).setPosition(d.n[0] * spread, -0.45 - f, d.n[1] * spread);
@@ -1328,7 +1349,7 @@ function frame(now) {
   }
 
   // Lock call-outs for the soft square, once its ring is off.
-  const showLock = (1 - V.shape.twist) * smooth(0.8, 1, R);
+  const showLock = inBath ? 0 : (1 - V.shape.twist) * smooth(0.8, 1, R);
   for (const L of RING_TAGS) {
     if (showLock < 0.01) { L.el.style.opacity = 0; continue; }
     const dy = parts[L.part].position.y;
