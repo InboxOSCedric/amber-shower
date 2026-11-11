@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Amber Red Light Shower</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="amber-build" content="11 Nov 2026, 10:45">
 <script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;if(q.get("theme"))d.dataset.theme=q.get("theme");if(q.has("clean"))d.classList.add("clean-page");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -212,7 +213,7 @@ li b { font-weight: 500; }
     <section class="block">
       <h2>Specification</h2>
       <dl>
-        <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">3.3 mm</span> apart), <b>Round ribs</b> (48 rounded ribs that touch, <span class="num">11 mm</span> apart and <span class="num">3.5 mm</span> deep; the ring then has a straight wall with square edges, and the ribs run from edge to edge, cut off flat at the top and the bottom), <b>Pleats</b> (90 very shallow pleats, <span class="num">5.9 mm</span> apart and <span class="num">0.3 mm</span> deep, fading in from the underside and stopping just under the top edge) and <b>Smooth</b>.</dd>
+        <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">3.3 mm</span> apart), <b>Round ribs</b> (56 fully round rods, <span class="num">Ø 9 mm</span>, standing side by side around the ring; their domed ends stick out <span class="num">3 mm</span> above and below it), <b>Pleats</b> (90 very shallow pleats, <span class="num">5.9 mm</span> apart and <span class="num">0.3 mm</span> deep, fading in from the underside and stopping just under the top edge) and <b>Smooth</b>.</dd>
         <dt>Shapes</dt><dd>Three versions of the same product, switched at the top of the model: <b>Round</b> (crisp: flat top, sharp upper edge on head and ring, rounded underside, housing set squarely on the head), <b>Pebble</b> (round, with a fully rounded ring edge and a flowing sweep into the housing) and <b>Soft square</b> (a rounded-square head and ring on the same round housing).</dd>
         <dt>Ring lock</dt><dd>Slide the ring up over the head and twist it <span class="num">20°</span>. Three steel lugs on the head run into slots inside the ring, and magnets pull it home with a click. Twist back and it drops into your hand. </dd>
         <dt>Magnetic mount</dt><dd>The soft square cannot turn, so it is held by magnets alone. Lift the ring over the head: eight magnets around the head, one in each corner and one in the middle of each side, pull it up against a stop edge and centre it. It fits in any of the four directions. To take it off, pull it straight down. There are no buttons, slots or catches.</dd>
@@ -254,7 +255,7 @@ li b { font-weight: 500; }
       </section>
     </div>
   </div>
-  <p class="foot">Proportions and mechanisms are a working model for sampling discussions, not production drawings.</p>
+  <p class="foot">Proportions and mechanisms are a working model for sampling discussions, not production drawings. Last updated <span class="num" id="build"></span>.</p>
 </div>
 
 <script type="importmap">
@@ -269,6 +270,16 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
+// When the page was last updated. Hosted on its own, the page checks whether a newer version has been put online
+// and reloads once, so a stale copy from the browser's cache is never shown for long.
+const BUILD = document.querySelector('meta[name="amber-build"]').content;
+document.getElementById('build').textContent = BUILD;
+if (window.top === window.self && /github\.io$/.test(location.hostname)) {
+  fetch('version.txt?' + Date.now(), { cache: 'no-store' }).then((r) => (r.ok ? r.text() : '')).then((latest) => {
+    const tag = encodeURIComponent(latest.trim());
+    if (tag && latest.trim() !== BUILD && !location.search.includes('v=' + tag)) location.replace(location.pathname + '?v=' + tag + location.hash);
+  }).catch(() => {});
+}
 const stageEl = document.getElementById('stage');
 const canvas = document.getElementById('gl');
 const loadingEl = document.getElementById('loading');
@@ -372,31 +383,29 @@ function ringTopY(r, shape) { return 2.45 - (r - 6.0) * slopeOf(shape); }
 // Rib styles for the ring wall. n is how many ribs go round, depth how far the valleys cut in (cm), segs how many
 // columns of the mesh each rib gets, and cut gives the depth across one rib, from 0 on the crest to 1 in the valley.
 //   fine: narrow flutes cut into the wall, dissolving over the ring's rounded edges.
-//   bold: rounded ribs that touch (after a ribbed lantern). straight: the ring gets a straight wall with square
-//         edges, and the ribs run from edge to edge, cut off flat at the top and the bottom.
+//   bold: fully round rods standing side by side around the ring, with domed ends that stick out a little above
+//         and below it (after a ribbed lantern). Built by roddedRing, not as a cut into the wall.
 //   wave: very shallow pleats, like folded fabric (after a pleated speaker body). soft: they fade in slowly from the
 //         underside and stop just under the top edge, which stays a clean line.
 //   none: a smooth wall.
-const ARC = 0.32, ARC_R = (0.25 + ARC * ARC) / (2 * ARC); // rib bulge as a share of its width, and the arc radius that gives
 const RIBS = {
   fine: { n: 160, depth: 0.075, segs: 6, cut: (p) => Math.pow((1 - Math.cos(p)) / 2, 1.4) },
-  bold: { n: 48, depth: 0.355, segs: 20, straight: true, cut: (p) => { const x = ((p / TAU) % 1) - 0.5; return (ARC_R - Math.sqrt(ARC_R * ARC_R - x * x)) / ARC; } },
+  bold: { n: 56, rods: true }, // 56 keeps the rods clear of the LED lenses on the underside
   wave: { n: 90, depth: 0.028, segs: 8, soft: true, cut: (p) => (1 - Math.cos(p + 0.35 * Math.sin(p))) / 2 },
   none: { n: 0, depth: 0, segs: 0, cut: () => 0 },
 };
 // Ring shell as one continuous skin: flat underside, bottom edge, wall, top edge, top.
-function flutedRing(mat, shape, style = RIBS.fine) {
+// wall: build a plain ring with square edges and this outer radius instead, as the core behind the round rods.
+function flutedRing(mat, shape, style = RIBS.fine, wall = 0) {
   // A smooth wall needs far fewer columns than a ribbed one.
-  const { RB, RI, RO } = RING, N = style.n, segs = style.segs, M2 = N ? N * segs : 256, W = M2 + 1, K = 20, Q = Math.PI / 2;
-  // Straight ribs replace the ring's rounded edges with square ones, so the ribs themselves make the edge.
-  const rb = style.straight ? 0.05 : shape.rb, rt = style.straight ? 0.05 : shape.rt;
+  const { RB, RI } = RING, RO = wall || RING.RO, N = wall ? 0 : style.n, segs = style.segs, M2 = N ? N * segs : 256, W = M2 + 1, K = 20, Q = Math.PI / 2;
+  const rb = wall ? 0.05 : shape.rb, rt = wall ? 0.05 : shape.rt;
   const alpha = Math.atan(slopeOf(shape)), aMax = Q - alpha;
   const rise = shape.rise, rc = RO - rt, yc = ringTopY(rc, shape) + rise - rt / Math.cos(alpha);
   // How strongly the ribs show (0 to 1) at a point of the profile: zone is bottom edge, wall or top edge, t runs
   // 0 to 1 along a rounded edge, y is the height.
   const show = (zone, t, y) => {
     if (!N) return 0;
-    if (style.straight) return 1;
     if (style.soft) {
       if (zone === 'top') return 0; // the top edge stays plain, sharp or rounded
       const fromBelow = smooth(RB + 0.4 * rb, Math.min(RB + rb + 0.9, yc - 0.35), y);
@@ -440,6 +449,33 @@ function flutedRing(mat, shape, style = RIBS.fine) {
     n.setXYZ(p, x / l, y / l, z / l); n.setXYZ(q, x / l, y / l, z / l);
   }
   return new THREE.Mesh(geo, mat);
+}
+
+// Round rods: full cylinders with domed ends, touching each other all the way round. They stand on the outline of
+// the ring, spaced evenly along it, so they also follow the soft square. The outside size of the ring stays the same.
+const ROD_OUT = 0.3; // how far the rods stick out above and below the ring (cm)
+function roddedRing(mat, shape) {
+  const g = new THREE.Group(), n0 = RIBS.bold.n, Rc = RING.RO / (1 + Math.PI / n0);
+  // Outline through the rod centres, and its length.
+  const S = 1440, px = [], pz = [], acc = [0];
+  for (let i = 0; i <= S; i++) { const th = (i / S) * TAU, r = warpR(shape, Rc, th); px.push(r * Math.sin(th)); pz.push(r * Math.cos(th)); }
+  for (let i = 1; i <= S; i++) acc[i] = acc[i - 1] + Math.hypot(px[i] - px[i - 1], pz[i] - pz[i - 1]);
+  const L = acc[S], N = Math.round(L / ((2 * Math.PI * Rc) / n0)), rodR = L / (2 * N);
+  // The core of the ring sits behind the rods.
+  const wall = Rc - 0.35 * rodR;
+  g.add(flutedRing(mat, shape, RIBS.none, wall));
+  const yTop = ringTopY(wall, shape) + shape.rise + ROD_OUT, yBottom = RING.RB - ROD_OUT;
+  const rods = new THREE.InstancedMesh(new THREE.CapsuleGeometry(rodR, yTop - yBottom - 2 * rodR, 10, 24), mat, N);
+  const m4 = new THREE.Matrix4();
+  for (let k = 0, j = 1; k < N; k++) {
+    const at = ((k + 0.5) / N) * L;
+    while (acc[j] < at) j++;
+    const t = (at - acc[j - 1]) / (acc[j] - acc[j - 1]);
+    m4.makeTranslation(px[j - 1] + (px[j] - px[j - 1]) * t, (yTop + yBottom) / 2, pz[j - 1] + (pz[j] - pz[j - 1]) * t);
+    rods.setMatrixAt(k, m4);
+  }
+  g.add(rods);
+  return g;
 }
 
 function disc(geo, mat, y, up = false) {
@@ -1009,7 +1045,7 @@ btn.below.onclick = () => setBelow(!state.below);
 // Rib style: each ring builds its outer skin for a style the first time it is shown, then only switches visibility.
 function showRibs(ring, key) {
   const shells = ring.userData.shells;
-  if (!shells[key]) { shells[key] = flutedRing(M.graphite, ring.userData.shape, RIBS[key]); ring.add(shells[key]); }
+  if (!shells[key]) { shells[key] = RIBS[key].rods ? roddedRing(M.graphite, ring.userData.shape) : flutedRing(M.graphite, ring.userData.shape, RIBS[key]); ring.add(shells[key]); }
   for (const k in shells) shells[k].visible = k === key;
 }
 function setRibs(key) {
