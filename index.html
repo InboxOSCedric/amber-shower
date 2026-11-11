@@ -212,7 +212,7 @@ li b { font-weight: 500; }
     <section class="block">
       <h2>Specification</h2>
       <dl>
-        <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">3.3 mm</span> apart), <b>Round ribs</b> (48 rounded ribs that touch, <span class="num">11 mm</span> apart and <span class="num">3.5 mm</span> deep), <b>Pleats</b> (44 wide, shallow pleats, <span class="num">12 mm</span> apart and <span class="num">1 mm</span> deep) and <b>Smooth</b>. The ribs grow out of the rounded underside and run up the wall. On Round, the round ribs and pleats run straight through the sharp top edge, so its outline is scalloped; on the other shapes they fade into the rounded shoulder.</dd>
+        <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">3.3 mm</span> apart), <b>Round ribs</b> (48 rounded ribs that touch, <span class="num">11 mm</span> apart and <span class="num">3.5 mm</span> deep; the ring then has a straight wall with square edges, and the ribs run from edge to edge, cut off flat at the top and the bottom), <b>Pleats</b> (90 very shallow pleats, <span class="num">5.9 mm</span> apart and <span class="num">0.3 mm</span> deep, fading in from the underside and stopping just under the top edge) and <b>Smooth</b>.</dd>
         <dt>Shapes</dt><dd>Three versions of the same product, switched at the top of the model: <b>Round</b> (crisp: flat top, sharp upper edge on head and ring, rounded underside, housing set squarely on the head), <b>Pebble</b> (round, with a fully rounded ring edge and a flowing sweep into the housing) and <b>Soft square</b> (a rounded-square head and ring on the same round housing).</dd>
         <dt>Ring lock</dt><dd>Slide the ring up over the head and twist it <span class="num">20°</span>. Three steel lugs on the head run into slots inside the ring, and magnets pull it home with a click. Twist back and it drops into your hand. </dd>
         <dt>Magnetic mount</dt><dd>The soft square cannot turn, so it is held by magnets alone. Lift the ring over the head: eight magnets around the head, one in each corner and one in the middle of each side, pull it up against a stop edge and centre it. It fits in any of the four directions. To take it off, pull it straight down. There are no buttons, slots or catches.</dd>
@@ -371,36 +371,45 @@ function slopeOf(shape) { return shape && shape.crisp ? 0 : HEAD_SLOPE; }
 function ringTopY(r, shape) { return 2.45 - (r - 6.0) * slopeOf(shape); }
 // Rib styles for the ring wall. n is how many ribs go round, depth how far the valleys cut in (cm), segs how many
 // columns of the mesh each rib gets, and cut gives the depth across one rib, from 0 on the crest to 1 in the valley.
-// through: the ribs run right through a sharp top edge, so the top outline is scalloped. from: where on the rounded
-// bottom edge the ribs start (0 = at the underside, 1 = at the wall).
-//   fine: narrow flutes cut into the wall.
-//   bold: wide, softly rounded ribs that touch, with only a hairline groove between them (after a ribbed lantern).
-//   wave: wide, shallow pleats, like folded fabric (after a pleated speaker body).
+//   fine: narrow flutes cut into the wall, dissolving over the ring's rounded edges.
+//   bold: rounded ribs that touch (after a ribbed lantern). straight: the ring gets a straight wall with square
+//         edges, and the ribs run from edge to edge, cut off flat at the top and the bottom.
+//   wave: very shallow pleats, like folded fabric (after a pleated speaker body). soft: they fade in slowly from the
+//         underside and stop just under the top edge, which stays a clean line.
 //   none: a smooth wall.
 const ARC = 0.32, ARC_R = (0.25 + ARC * ARC) / (2 * ARC); // rib bulge as a share of its width, and the arc radius that gives
 const RIBS = {
-  fine: { n: 160, depth: 0.075, segs: 6, from: 0.15, cut: (p) => Math.pow((1 - Math.cos(p)) / 2, 1.4) },
-  bold: { n: 48, depth: 0.355, segs: 20, from: 0.5, through: true, cut: (p) => { const x = ((p / TAU) % 1) - 0.5; return (ARC_R - Math.sqrt(ARC_R * ARC_R - x * x)) / ARC; } },
-  wave: { n: 44, depth: 0.1, segs: 12, from: 0.1, through: true, cut: (p) => (1 - Math.cos(p + 0.35 * Math.sin(p))) / 2 },
-  none: { n: 0, depth: 0, segs: 0, from: 0.15, cut: () => 0 },
+  fine: { n: 160, depth: 0.075, segs: 6, cut: (p) => Math.pow((1 - Math.cos(p)) / 2, 1.4) },
+  bold: { n: 48, depth: 0.355, segs: 20, straight: true, cut: (p) => { const x = ((p / TAU) % 1) - 0.5; return (ARC_R - Math.sqrt(ARC_R * ARC_R - x * x)) / ARC; } },
+  wave: { n: 90, depth: 0.028, segs: 8, soft: true, cut: (p) => (1 - Math.cos(p + 0.35 * Math.sin(p))) / 2 },
+  none: { n: 0, depth: 0, segs: 0, cut: () => 0 },
 };
-// Ring shell as one continuous skin: flat underside, rounded bottom edge, wall, top edge (sharp or rounded), top.
+// Ring shell as one continuous skin: flat underside, bottom edge, wall, top edge, top.
 function flutedRing(mat, shape, style = RIBS.fine) {
   // A smooth wall needs far fewer columns than a ribbed one.
   const { RB, RI, RO } = RING, N = style.n, segs = style.segs, M2 = N ? N * segs : 256, W = M2 + 1, K = 20, Q = Math.PI / 2;
-  const rb = shape.rb, rt = shape.rt, alpha = Math.atan(slopeOf(shape)), aMax = Q - alpha;
+  // Straight ribs replace the ring's rounded edges with square ones, so the ribs themselves make the edge.
+  const rb = style.straight ? 0.05 : shape.rb, rt = style.straight ? 0.05 : shape.rt;
+  const alpha = Math.atan(slopeOf(shape)), aMax = Q - alpha;
   const rise = shape.rise, rc = RO - rt, yc = ringTopY(rc, shape) + rise - rt / Math.cos(alpha);
-  const sharpTop = rt * aMax < 0.4, through = style.through && sharpTop;
-  // Profile rows: radius of the smooth surface, height, and how strongly the ribs show at that height (0 to 1).
-  // The ribs grow out of the rounded bottom edge and are full depth on the wall. At a sharp top edge the bold ribs
-  // and pleats run straight through it; over a rounded top edge every style dissolves.
+  // How strongly the ribs show (0 to 1) at a point of the profile: zone is bottom edge, wall or top edge, t runs
+  // 0 to 1 along a rounded edge, y is the height.
+  const show = (zone, t, y) => {
+    if (!N) return 0;
+    if (style.straight) return 1;
+    if (style.soft) {
+      if (zone === 'top') return 0; // the top edge stays plain, sharp or rounded
+      const fromBelow = smooth(RB + 0.4 * rb, Math.min(RB + rb + 0.9, yc - 0.35), y);
+      return fromBelow * (1 - smooth(yc - 0.3, yc - 0.04, y));
+    }
+    return zone === 'bottom' ? smooth(0.15, 0.97, t) : zone === 'top' ? 1 - smooth(0.05, 0.85, t) : 1;
+  };
+  // Profile rows: radius of the smooth surface, height, rib strength.
   const rows = [[RI + 0.7, RB, 0]];
-  for (let i = 0; i <= K; i++) { const a = (i / K) * Q; rows.push([RO - rb * (1 - Math.sin(a)), RB + rb * (1 - Math.cos(a)), smooth(style.from, 0.97, a / Q)]); }
-  rows.push([RO, RB + rb + 0.03, 1], [RO, yc - 0.03, 1]); // short strips keep the straight wall shaded evenly
-  for (let i = 0; i <= K; i++) {
-    const a = (i / K) * aMax, t = a / aMax;
-    rows.push([rc + rt * Math.cos(a), yc + rt * Math.sin(a), through ? 1 : 1 - (style.through ? smooth(0.35, 1, t) : smooth(0.05, 0.85, t))]);
-  }
+  for (let i = 0; i <= K; i++) { const a = (i / K) * Q, y = RB + rb * (1 - Math.cos(a)); rows.push([RO - rb * (1 - Math.sin(a)), y, show('bottom', i / K, y)]); }
+  const wallRows = style.soft ? 16 : 1; // soft pleats need rows up the wall to fade in and out
+  for (let i = 0; i <= wallRows; i++) { const y = RB + rb + 0.03 + (i / wallRows) * (yc - 0.03 - (RB + rb + 0.03)); rows.push([RO, y, show('wall', 0, y)]); }
+  for (let i = 0; i <= K; i++) { const a = (i / K) * aMax, y = yc + rt * Math.sin(a); rows.push([rc + rt * Math.cos(a), y, show('top', i / K, y)]); }
   rows.push([RI + 0.7, ringTopY(RI + 0.7, shape) + rise, 0]);
   // Rib cross-section, sampled once around the ring.
   const cut = new Float32Array(W), ang = new Float32Array(W), sin = new Float32Array(W), cos = new Float32Array(W);
