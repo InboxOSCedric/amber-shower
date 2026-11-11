@@ -98,6 +98,7 @@ h1 {
 .controls button[aria-pressed="true"], .shapes button[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-fg); }
 .controls button:focus-visible, .shapes button:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 .shapes { position: absolute; top: 12px; right: 12px; }
+.shapes.ribs { top: 64px; }
 .stage.night .shapes button { color: var(--night-fg); }
 .stage.night .shapes button[aria-pressed="true"] { background: var(--night-chip-on); color: var(--night-chip-on-fg); }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0.35; }
@@ -155,7 +156,8 @@ li b { font-weight: 500; }
   .controls { bottom: 12px; gap: 6px; }
   .controls button, .shapes button { padding: 9px 11px; font-size: 13px; }
   .shapes { top: 10px; right: auto; left: 50%; transform: translateX(-50%); width: max-content; max-width: calc(100% - 20px); }
-  .hint { top: 60px; left: 14px; max-width: calc(100% - 28px); }
+  .shapes.ribs { top: 56px; }
+  .hint { top: 106px; left: 14px; max-width: calc(100% - 28px); }
   .controls .solo { padding: 12px 14px; }
   .tag small, .tag .l { display: none; }
   .tag .s { display: inline; }
@@ -185,6 +187,12 @@ li b { font-weight: 500; }
       <button type="button" id="shape-pebble" aria-pressed="false">Pebble</button>
       <button type="button" id="shape-square" aria-pressed="false">Soft square</button>
     </div>
+    <div class="seg shapes ribs" role="group" aria-label="Ribs">
+      <button type="button" id="ribs-fine" aria-pressed="true">Fine ribs</button>
+      <button type="button" id="ribs-bold" aria-pressed="false">Round ribs</button>
+      <button type="button" id="ribs-wave" aria-pressed="false">Pleats</button>
+      <button type="button" id="ribs-none" aria-pressed="false">Smooth</button>
+    </div>
     <div id="tags"></div>
     <div class="controls" role="toolbar" aria-label="Model controls">
       <div class="seg" role="group" aria-label="Layout">
@@ -197,7 +205,6 @@ li b { font-weight: 500; }
       <button type="button" class="solo" id="btn-light" aria-pressed="false"><i class="dot red"></i>Red light</button>
       <button type="button" class="solo" id="btn-water" aria-pressed="false"><i class="dot"></i>Water</button>
       <button type="button" class="solo" id="btn-below" aria-pressed="false">From below</button>
-      <button type="button" class="solo" id="btn-ribs" aria-pressed="true">Ribs</button>
     </div>
   </section>
 
@@ -205,7 +212,7 @@ li b { font-weight: 500; }
     <section class="block">
       <h2>Specification</h2>
       <dl>
-        <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>, 160 fine flutes about <span class="num">3.3 mm</span> apart that run the height of the wall. On Round they run up to a sharp top edge; on the other shapes they fade into rounded shoulders. A smooth ring without ribs is the alternative, and the Ribs button switches between the two.</dd>
+        <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">3.3 mm</span> apart), <b>Round ribs</b> (56 half-round rods side by side, <span class="num">9.5 mm</span> apart, with rounded ends that stop short of the edges), <b>Pleats</b> (72 soft, even pleats, <span class="num">7.4 mm</span> apart, running straight into the top edge) and <b>Smooth</b>.</dd>
         <dt>Shapes</dt><dd>Three versions of the same product, switched at the top of the model: <b>Round</b> (crisp: flat top, sharp upper edge on head and ring, rounded underside, housing set squarely on the head), <b>Pebble</b> (round, with a fully rounded ring edge and a flowing sweep into the housing) and <b>Soft square</b> (a rounded-square head and ring on the same round housing).</dd>
         <dt>Ring lock</dt><dd>Slide the ring up over the head and twist it <span class="num">20°</span>. Three steel lugs on the head run into slots inside the ring, and magnets pull it home with a click. Twist back and it drops into your hand. </dd>
         <dt>Magnetic mount</dt><dd>The soft square cannot turn, so it is held by magnets alone. Lift the ring over the head: eight magnets around the head, one in each corner and one in the middle of each side, pull it up against a stop edge and centre it. It fits in any of the four directions. To take it off, pull it straight down. There are no buttons, slots or catches.</dd>
@@ -226,7 +233,7 @@ li b { font-weight: 500; }
       <section class="block">
         <h2>Design intent</h2>
         <ul>
-          <li><b>Fluted ring.</b> Fine ribs on the light ring only. Head and housing stay smooth.</li>
+          <li><b>Ribbed ring.</b> The ribs sit on the light ring only, in one of three patterns. Head and housing stay smooth.</li>
           <li><b>Crisp or flowing.</b> Round is crisp: ring and head share one flat top with a sharp edge, and the housing stands squarely on it. On Pebble and Soft square the ring continues the slope of the head, which sweeps up into the housing in one curve.</li>
           <li><b>Nothing on the outside.</b> The USB-C port sits on the inner wall of the ring, hidden by the head once the ring is on.</li>
           <li><b>Gunmetal</b> with the wordmark pressed into the metal instead of printed on it.</li>
@@ -236,7 +243,7 @@ li b { font-weight: 500; }
       <section class="block">
         <h2>Questions for the manufacturer</h2>
         <ul>
-          <li><b>Shape.</b> Which of the shapes can you tool, and what does each do to unit cost and lead time?</li>
+          <li><b>Shape and ribs.</b> Which of the shapes and rib patterns can you tool, and what does each do to unit cost and lead time?</li>
           <li><b>Light output.</b> Measured irradiance at 30 cm in mW/cm², for both wavelengths.</li>
           <li><b>Sealing.</b> How the ring reaches IPX7, including at the USB-C port: a waterproof-rated port, a silicone plug, or both.</li>
           <li><b>Battery.</b> Capacity, run time per charge, and whether it can be replaced in service.</li>
@@ -357,35 +364,88 @@ function lathe(pts, mat, segments = 192) {
   return new THREE.Mesh(new THREE.LatheGeometry(profile(pts), segments), mat);
 }
 
-// Ring shell as one continuous skin: flat underside, rounded shoulder, a band of straight fluted wall, a large
-// rounded shoulder, then a top that keeps the slope of the shower head so ring and head read as one surface.
+// The gentle slope of the head's top. On the flowing shapes the ring's top continues it.
 const HEAD_SLOPE = (3.0 - 2.45) / (6.0 - 2.7);
 // Height of the shared top surface at radius r. A crisp shape has a flat top instead of the gentle slope.
 function slopeOf(shape) { return shape && shape.crisp ? 0 : HEAD_SLOPE; }
 function ringTopY(r, shape) { return 2.45 - (r - 6.0) * slopeOf(shape); }
-function flutedRing(mat, shape, ribs = true) {
-  // Without ribs the same skin is built smooth, with far fewer columns.
-  const { RB, RI, RO, N } = RING, depth = ribs ? RING.depth : 0, segs = 6, M2 = ribs ? N * segs : 256, W = M2 + 1, K = 20, Q = Math.PI / 2;
+// Rib styles for the ring wall. n is how many ribs go round, segs how many columns of the mesh each rib gets.
+//   fine: narrow flutes cut into the wall.
+//   bold: half-round rods standing side by side, with rounded ends that stop short of the edges (after a ribbed lantern).
+//   wave: soft, even pleats that run straight into the top edge (after a pleated speaker body).
+//   none: a smooth wall.
+const RIBS = {
+  fine: { n: 160, depth: 0.075, segs: 6, cut: (p) => Math.pow((1 - Math.cos(p)) / 2, 1.4) },
+  bold: { n: 56, segs: 28, rods: true },
+  wave: { n: 72, depth: 0.14, segs: 10, cut: (p) => (1 - Math.cos(p)) / 2, late: true },
+  none: { n: 0, depth: 0, segs: 0, cut: () => 0 },
+};
+// Ring shell as one continuous skin: flat underside, rounded shoulder, wall, shoulder or sharp edge, top.
+function flutedRing(mat, shape, style = RIBS.fine) {
+  // A smooth wall needs far fewer columns than a ribbed one.
+  const { RB, RI } = RING, N = style.n, segs = style.segs, M2 = N ? N * segs : 256, W = M2 + 1, K = 20, Q = Math.PI / 2;
+  // Rods stand proud of the wall. The wall steps in by one rod radius, so the outside diameter stays the same.
+  const rodR = style.rods ? (Math.PI * RING.RO) / (N + Math.PI) : 0, RO = RING.RO - rodR;
   const rb = shape.rb, rt = shape.rt, alpha = Math.atan(slopeOf(shape)), aMax = Q - alpha;
   const rise = shape.rise, rc = RO - rt, yc = ringTopY(rc, shape) + rise - rt / Math.cos(alpha);
-  // Each row: radius of the smooth surface, height, and how deep the flutes cut at that height (0 to 1).
-  // The flutes are full depth on the wall and dissolve over both shoulders.
-  const rows = [[RI + 0.7, RB, 0]];
+  // Profile rows: radius of the smooth surface, height, and how strongly the ribs show at that height (0 to 1).
+  // Flutes and pleats are full depth on the wall and dissolve over the shoulders; pleats hold on longer at the top.
+  let rows = [[RI + 0.7, RB, 0]];
   for (let i = 0; i <= K; i++) { const a = (i / K) * Q; rows.push([RO - rb * (1 - Math.sin(a)), RB + rb * (1 - Math.cos(a)), smooth(0.15, 0.95, a / Q)]); }
   rows.push([RO, RB + rb + 0.03, 1], [RO, yc - 0.03, 1]); // short strips keep the straight wall shaded evenly
-  for (let i = 0; i <= K; i++) { const a = (i / K) * aMax; rows.push([rc + rt * Math.cos(a), yc + rt * Math.sin(a), 1 - smooth(0.05, 0.85, a / aMax)]); }
+  for (let i = 0; i <= K; i++) { const a = (i / K) * aMax; rows.push([rc + rt * Math.cos(a), yc + rt * Math.sin(a), 1 - (style.late ? smooth(0.6, 1, a / aMax) : smooth(0.05, 0.85, a / aMax))]); }
   rows.push([RI + 0.7, ringTopY(RI + 0.7, shape) + rise, 0]);
-  // Flute cross-section: broad rounded ribs with narrower valleys.
-  const cut = new Float32Array(W), sin = new Float32Array(W), cos = new Float32Array(W);
+
+  // Where each column sits across its rib (u from 0 to 1) and around the ring.
+  const us = new Float32Array(W), sin = new Float32Array(W), cos = new Float32Array(W);
   for (let i = 0; i <= M2; i++) {
-    const th = (i / M2) * TAU;
-    cut[i] = depth * Math.pow((1 - Math.cos(N * th)) / 2, 1.4);
+    let th = (i / M2) * TAU;
+    if (N) {
+      const m = i % segs, k = Math.floor(i / segs);
+      us[i] = m / segs;
+      th = ((k + us[i]) / N) * TAU;
+    }
     sin[i] = Math.sin(th); cos[i] = Math.cos(th);
   }
-  const pos = [], idx = [];
-  for (const [r0, y, f] of rows) {
-    for (let i = 0; i <= M2; i++) { const r = warpR(shape, r0, (i / M2) * TAU) - f * cut[i]; pos.push(r * sin[i], y, r * cos[i]); }
+  const pos = [];
+  const angleOf = (i) => Math.atan2(sin[i], cos[i]);
+  if (style.rods) {
+    // Arc length along the profile, then an even resampling so the rounded rod ends come out smooth.
+    const sAt = [0];
+    for (let j = 1; j < rows.length; j++) sAt[j] = sAt[j - 1] + Math.hypot(rows[j][0] - rows[j - 1][0], rows[j][1] - rows[j - 1][1]);
+    const sWallBottom = sAt[K + 1], sWallTop = sAt[K + 4], last = rows.length - 1;
+    // The rods start part-way down the bottom shoulder. They end just under a sharp top edge, or part-way over a round one.
+    const s0 = sWallBottom - Math.min(0.45 * rb * Q, 0.7);
+    const s1 = rt * aMax < 0.4 ? sWallTop - 0.1 : sWallTop + Math.min(0.45 * rt * aMax, 0.9);
+    const dense = [];
+    const sample = (sv) => {
+      let j = 1; while (j < last && sAt[j] < sv) j++;
+      const t = (sv - sAt[j - 1]) / Math.max(sAt[j] - sAt[j - 1], 1e-9), A = rows[j - 1], B = rows[j];
+      const dr = B[0] - A[0], dy = B[1] - A[1], len = Math.hypot(dr, dy) || 1;
+      return { r: A[0] + dr * t, y: A[1] + dy * t, nr: dy / len, ny: -dr / len, s: sv }; // normal points out of the ring
+    };
+    dense.push(sample(0));
+    for (let sv = sAt[1]; sv < sAt[last - 1]; sv += 0.035) dense.push(sample(sv));
+    dense.push(sample(sAt[last - 1]), sample(sAt[last]));
+    const rr = rodR * 0.97, pitch = 2 * rodR;
+    for (const d of dense) {
+      const t = Math.min(d.s - s0, s1 - d.s);
+      const rho = t <= 0 ? 0 : t >= rr ? rr : Math.sqrt(rr * rr - (rr - t) * (rr - t)); // rod radius, shrinking into a round end
+      for (let i = 0; i <= M2; i++) {
+        const x = (us[i] - 0.5) * pitch, h = rho > Math.abs(x) ? Math.sqrt(rho * rho - x * x) : 0;
+        const r = warpR(shape, d.r + d.nr * h, angleOf(i));
+        pos.push(r * sin[i], d.y + d.ny * h, r * cos[i]);
+      }
+    }
+    rows = dense;
+  } else {
+    const cut = new Float32Array(W);
+    for (let i = 0; i <= M2; i++) cut[i] = N ? style.depth * style.cut(us[i] * TAU) : 0;
+    for (const [r0, y, f] of rows) {
+      for (let i = 0; i <= M2; i++) { const r = warpR(shape, r0, angleOf(i)) - f * cut[i]; pos.push(r * sin[i], y, r * cos[i]); }
+    }
   }
+  const idx = [];
   for (let j = 0; j < rows.length - 1; j++) {
     for (let i = 0; i < M2; i++) {
       const a = j * W + i, b = a + 1, c = (j + 1) * W + i, d = c + 1;
@@ -642,10 +702,9 @@ const LED_GEO = { dome: new THREE.SphereGeometry(0.5, 28, 14), cup: new THREE.Ri
 // Light ring: flutes on the outer wall, open all the way through so it slides up over the head.
 function buildRing(shape) {
   const g = new THREE.Group(), rise = shape.rise;
-  const ribbed = flutedRing(M.graphite, shape), plain = flutedRing(M.graphite, shape, false);
-  plain.visible = false;
-  g.add(ribbed, plain);
-  g.userData.shells = { ribbed, plain };
+  // The outer skin is built per rib style the first time that style is shown (see showRibs).
+  g.userData.shells = {};
+  g.userData.shape = shape;
   g.add(fit(lathe([[RI + 0.72, ringTopY(RI + 0.72, shape) + rise, 0], [RI, ringTopY(RI, shape) + rise, shape.crisp ? 0.05 : 0.12], [RI, RB, 0.15], [RI + 0.72, RB, 0]], M.graphite), shape));
   // Twist shapes: L-shaped lock slots on the inner wall. The lug drops in from the top edge, then the ring turns 20°.
   // Soft square: no slots and nothing on the outside. Eight steel plates on the inner wall meet the magnets.
@@ -880,7 +939,7 @@ const HINT = {
   filter: 'Filter change: ring off, quarter-turn the head. The cartridge comes down with it and lifts out.',
   charge: 'Charging: take the ring off and plug a USB-C cable into the port on its inner wall. Any USB-C charger works.',
 };
-const state = { mode: 'assembled', shape: 'round', ribs: true, pE: 0, pR: 0, pF: 0, pD: 0, light: 0, lightTo: 0, water: 0, waterTo: 0, below: false };
+const state = { mode: 'assembled', shape: 'round', ribs: 'fine', pE: 0, pR: 0, pF: 0, pD: 0, light: 0, lightTo: 0, water: 0, waterTo: 0, below: false };
 let userMoved = false, dirty = true, lastSig = '';
 
 const tmpS = new THREE.Spherical(), v3 = new THREE.Vector3(), camRight = new THREE.Vector3(), m4 = new THREE.Matrix4(), axis = new THREE.Vector3();
@@ -927,7 +986,7 @@ function stepCam(dt) {
 }
 
 const btn = {};
-for (const id of ['assembled', 'exploded', 'ring', 'filter', 'charge', 'light', 'water', 'below', 'ribs']) btn[id] = document.getElementById('btn-' + id);
+for (const id of ['assembled', 'exploded', 'ring', 'filter', 'charge', 'light', 'water', 'below']) btn[id] = document.getElementById('btn-' + id);
 const MODES = ['assembled', 'exploded', 'ring', 'filter', 'charge'];
 function setMode(mode, instant = false) {
   state.mode = mode;
@@ -959,6 +1018,7 @@ function setShape(key) {
   for (const k in variants) { variants[k].head.group.visible = false; variants[k].ring.visible = false; variants[k].water.visible = false; }
   const V = variants[key];
   V.head.group.visible = true; V.ring.visible = true;
+  showRibs(V.ring, state.ribs);
   for (const k in SHAPES) document.getElementById('shape-' + k).setAttribute('aria-pressed', String(k === key));
   document.getElementById('nozzle-count').textContent = V.head.nozzles.length;
   hintEl.textContent = hintFor(state.mode);
@@ -970,14 +1030,19 @@ for (const m of MODES) btn[m].onclick = () => setMode(m);
 btn.light.onclick = () => setLight(state.lightTo === 0);
 btn.water.onclick = () => setWater(state.waterTo === 0);
 btn.below.onclick = () => setBelow(!state.below);
-// Ribs on or off: every ring has a fluted and a smooth skin, and only one is shown.
-function setRibs(on) {
-  state.ribs = on;
-  btn.ribs.setAttribute('aria-pressed', String(on));
-  for (const k in variants) { const sh = variants[k].ring.userData.shells; sh.ribbed.visible = on; sh.plain.visible = !on; }
+// Rib style: each ring builds its outer skin for a style the first time it is shown, then only switches visibility.
+function showRibs(ring, key) {
+  const shells = ring.userData.shells;
+  if (!shells[key]) { shells[key] = flutedRing(M.graphite, ring.userData.shape, RIBS[key]); ring.add(shells[key]); }
+  for (const k in shells) shells[k].visible = k === key;
+}
+function setRibs(key) {
+  state.ribs = key;
+  for (const k in RIBS) document.getElementById('ribs-' + k).setAttribute('aria-pressed', String(k === key));
+  showRibs(variants[state.shape].ring, key);
   dirty = true;
 }
-btn.ribs.onclick = () => setRibs(!state.ribs);
+for (const k in RIBS) document.getElementById('ribs-' + k).onclick = () => setRibs(k);
 controls.addEventListener('start', () => { userMoved = true; controls.autoRotate = false; camTween = null; });
 
 function resize() {
@@ -1001,7 +1066,12 @@ resize();
 // Older links said dock; they now open the Charging view.
 const linkTokens = location.hash.slice(1).toLowerCase().split('-').map((t) => (t === 'dock' ? 'charge' : t));
 setShape(SHAPES[params.get('shape')] ? params.get('shape') : linkTokens.find((t) => SHAPES[t]) || 'round');
-if (params.get('ribs') === '0' || linkTokens.includes('smooth')) setRibs(false);
+// Rib style from the link: ?ribs=fine|bold|wave|none, or a #token (bold, wave, smooth).
+{
+  const q = params.get('ribs'), t = linkTokens.find((x) => x === 'bold' || x === 'wave' || x === 'smooth' || x === 'none');
+  const key = q === '0' ? 'none' : RIBS[q] ? q : t === 'smooth' ? 'none' : t;
+  if (key) setRibs(key);
+}
 
 // Still views for exports: ?view=side|below|glow|night|exploded|ring|filter|charge|detail
 if (STILL) {
