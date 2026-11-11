@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
 <meta name="robots" content="noindex">
-<meta name="description" content="Amber: a filtered shower head with a red light ring that comes off and charges in its own dock. Interactive 3D concept.">
-<style>html{color-scheme:light dark}body{margin:0;font-size:14px}img{max-width:100%}</style>
+<meta name="description" content="Amber: a filtered shower head with a red light ring that comes off to charge over USB-C. Interactive 3D concept.">
+<style>html{color-scheme:light}body{margin:0;font-size:14px}img{max-width:100%}</style>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Amber Red Light Shower</title>
@@ -34,20 +34,8 @@
   --font-body: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #161412; --surface: #1f1c1a; --fg: #ece7e0; --muted: #a0978e; --line: #34302c;
-    --stage: #1c1a18; --red: #ff6a58;
-    --chip: rgba(40, 36, 33, 0.8); --chip-fg: #ece7e0; --chip-on: #ece7e0; --chip-on-fg: #161412;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #161412; --surface: #1f1c1a; --fg: #ece7e0; --muted: #a0978e; --line: #34302c;
-  --stage: #1c1a18; --red: #ff6a58;
-  --chip: rgba(40, 36, 33, 0.8); --chip-fg: #ece7e0; --chip-on: #ece7e0; --chip-on-fg: #161412;
-  color-scheme: dark;
-}
+/* One look: the page is always light, whatever the viewer's system setting. */
+:root { color-scheme: light; }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 body {
@@ -192,7 +180,7 @@ li b { font-weight: 500; }
 <div class="wrap">
   <header>
     <h1>Amber red light shower</h1>
-    <p class="lede"><b>Concept 02.</b> A filtered shower head with a fluted red light ring that comes off and charges in its own dock, in gunmetal. Drag to turn it, scroll or pinch to zoom.</p>
+    <p class="lede"><b>Concept 02.</b> A filtered shower head with a fluted red light ring that comes off to charge over USB-C, in gunmetal. Drag to turn it, scroll or pinch to zoom.</p>
   </header>
 
   <section class="stage" id="stage" aria-label="Interactive 3D model of the shower head">
@@ -211,7 +199,7 @@ li b { font-weight: 500; }
         <button type="button" id="btn-exploded" aria-pressed="false">Exploded</button>
         <button type="button" id="btn-ring" aria-pressed="false">Ring off</button>
         <button type="button" id="btn-filter" aria-pressed="false">Filter</button>
-        <button type="button" id="btn-dock" aria-pressed="false">Dock</button>
+        <button type="button" id="btn-charge" aria-pressed="false">Charging</button>
       </div>
       <button type="button" class="solo" id="btn-light" aria-pressed="false"><i class="dot red"></i>Red light</button>
       <button type="button" class="solo" id="btn-water" aria-pressed="false"><i class="dot"></i>Water</button>
@@ -242,8 +230,8 @@ li b { font-weight: 500; }
         <dt>Connection</dt><dd>Ball joint with the ball hidden inside the dome, so the head still tilts. Only a short neck shows, in the same graphite as the body, with a <span class="num">G½</span> thread (<span class="num">½ inch, 1.27 cm</span>), the standard size that fits any shower arm.</dd>
         <dt>Finish</dt><dd><span class="swatch" aria-hidden="true"></span>Anodised aluminium, bead-blasted satin, gunmetal <span class="num">#4B4A49</span></dd>
         <dt>Light</dt><dd>12 round LED lenses, each with a <span class="num">630 nm</span> red and an <span class="num">850 nm</span> near-infrared chip</dd>
-        <dt>Power</dt><dd>Rechargeable battery, charged through magnetic pins on the inside of the ring, sealed to <span class="num">IPX7</span></dd>
-        <dt>Charging dock</dt><dd>The ring comes off and stands in a gunmetal charging dock, leaning back <span class="num">10°</span>. A tongue with charging contacts reaches through the ring to the pins on its inner wall. Three lights on the dock show the charge level. The dock comes with a cable and a USB-C charger with an EU plug (Type C, two round pins). The light works while it charges, so the ring doubles as a red light lamp for a desk, bedside or bath edge.</dd>
+        <dt>Power</dt><dd>Rechargeable battery in the ring, sealed to <span class="num">IPX7</span></dd>
+        <dt>Charging</dt><dd>A USB-C port on the inner wall of the ring. Take the ring off and plug in any USB-C charger. On the shower the port is covered by the head, so it is out of sight and out of the spray. No charging stand or special cable is needed.</dd>
         <dt>Filter</dt><dd>KDF-55, coconut-shell carbon and a polyphosphate scale inhibitor, cartridge swapped every 3 months</dd>
       </dl>
     </section>
@@ -254,7 +242,7 @@ li b { font-weight: 500; }
         <ul>
           <li><b>Fluted ring.</b> Fine ribs on the light ring only. Head and housing stay smooth.</li>
           <li><b>Crisp or flowing.</b> Round is crisp: ring and head share one flat top with a sharp edge, and the housing stands squarely on it. On Pebble and Soft square the ring continues the slope of the head, which sweeps up into the housing in one curve.</li>
-          <li><b>Nothing on the outside.</b> Charging pins sit on the inner wall of the ring, and the dock reaches them through the opening.</li>
+          <li><b>Nothing on the outside.</b> The USB-C port sits on the inner wall of the ring, hidden by the head once the ring is on.</li>
           <li><b>Gunmetal</b> with the wordmark pressed into the metal instead of printed on it.</li>
           <li><b>Three shapes</b> are under consideration: round, pebble and soft square.</li>
         </ul>
@@ -264,7 +252,7 @@ li b { font-weight: 500; }
         <ul>
           <li><b>Shape.</b> Which of the shapes can you tool, and what does each do to unit cost and lead time?</li>
           <li><b>Light output.</b> Measured irradiance at 30 cm in mW/cm², for both wavelengths.</li>
-          <li><b>Sealing.</b> How the ring reaches IPX7, including at the charging pins.</li>
+          <li><b>Sealing.</b> How the ring reaches IPX7, including at the USB-C port: a waterproof-rated port, a silicone plug, or both.</li>
           <li><b>Battery.</b> Capacity, run time per charge, and whether it can be replaced in service.</li>
           <li><b>Filter.</b> Media volume and expected cartridge life at a typical flow rate.</li>
           <li><b>Ring lock.</b> Holding force and wear over repeated use, for the twist-lock, and the pull force of the magnets on the soft square: enough to hold the ring through a knock, light enough to pull off with wet hands.</li>
@@ -342,8 +330,8 @@ const LOGO_TH = 0.42;                        // angle the wordmark faces
 
 // Materials. The body is gunmetal: a dark, near-neutral grey with a satin sheen.
 const M = {
-  graphite: new THREE.MeshPhysicalMaterial({ color: 0x4b4a49, metalness: 0.86, roughness: 0.44 }),
-  plate: new THREE.MeshPhysicalMaterial({ color: 0x424140, metalness: 0.8, roughness: 0.54 }),
+  graphite: new THREE.MeshPhysicalMaterial({ color: 0x64666a, metalness: 1, roughness: 0.3 }),
+  plate: new THREE.MeshPhysicalMaterial({ color: 0x55575b, metalness: 1, roughness: 0.42 }),
   silicone: new THREE.MeshStandardMaterial({ color: 0x24201e, roughness: 0.85 }),
   seam: new THREE.MeshBasicMaterial({ color: 0x1a1715 }),
   slot: new THREE.MeshStandardMaterial({ color: 0x1f1c1a, roughness: 0.8, metalness: 0.3, side: THREE.DoubleSide }),
@@ -520,6 +508,7 @@ function part(name) { const g = new THREE.Group(); root.add(g); parts[name] = g;
 // and rise makes the head body and ring that much taller (cm). The seam to the housing stays where it is, so the
 // neck of the head gets shorter by the same amount and the filter sits deeper inside the head.
 const SQ_PHI = LOGO_TH, PIN_TH = LOGO_TH + Math.PI;
+const PORT_Y = 0.9;   // height of the USB-C port on the ring's inner wall
 const MAGNET_Y = 1.7; // height of the soft square's magnets on the head and of the steel plates in the ring
 // Eight magnet positions: every corner and the middle of every side.
 const MAGNET_TH = Array.from({ length: 8 }, (_, k) => SQ_PHI + (k * Math.PI) / 4);
@@ -700,14 +689,18 @@ function buildRing(shape) {
     holder.add(mark);
     g.add(holder);
   }
-  // Magnetic charging pins on the inner wall, out of sight once the ring is on.
-  for (const da of [-0.08, 0.08]) {
-    const th = PIN_TH + da, holder = new THREE.Group();
-    holder.rotation.y = th;
-    const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.06, 20), M.gold);
-    pin.rotation.x = Math.PI / 2;
-    pin.position.set(0, 0.45, warpR(shape, RI, th) - 0.02);
-    holder.add(pin);
+  // USB-C charging port on the inner wall: out of sight, and out of the spray, once the ring is on the head.
+  {
+    const holder = new THREE.Group();
+    holder.rotation.y = PIN_TH;
+    const port = new THREE.Group();
+    port.position.set(0, PORT_Y, warpR(shape, RI, PIN_TH) - 0.012);
+    const rim = new THREE.Mesh(new THREE.CapsuleGeometry(0.21, 0.6, 8, 20), M.steel);
+    rim.rotation.z = Math.PI / 2; rim.scale.z = 0.1;
+    const hole = new THREE.Mesh(new THREE.CapsuleGeometry(0.14, 0.58, 8, 20), M.seam);
+    hole.rotation.z = Math.PI / 2; hole.scale.z = 0.17;
+    port.add(rim, hole);
+    holder.add(port);
     g.add(holder);
   }
   // 12 round LED lenses on the underside.
@@ -801,76 +794,54 @@ for (const y of [10.78, 10.93, 11.08]) {
 }
 conn.add(disc(new THREE.CircleGeometry(1.02, 48), M.seam, 10.33, true));
 
-// Charging dock: a low pebble base with a tongue that reaches through the ring. The ring stands in it leaning
-// back 10 degrees, turned so the charging pins on its inner wall sit on the tongue. Lit, it works as a lamp.
+// Charging: the ring comes off and charges through the USB-C port on its inner wall. In the Charging view it lies
+// flat with a cable plugged in from the inside, running over the wall to a USB-C charger with an EU plug.
 const FALL = 30; // how far the water streaks fall, in cm
-const DOCK_Y = -30, LEAN = THREE.MathUtils.degToRad(10);
-const DOCK_ROT_X = -(Math.PI / 2 + LEAN);          // ring axis from vertical to leaning back, lenses to the front
-const DOCK_TWIST = Math.PI - PIN_TH;               // brings the charging pins to the lowest point
-const boltTex = canvasTex(64, 64, (g) => {
-  g.fillStyle = '#e6e1d9';
-  g.beginPath();
-  for (const [x, y, i] of [[38, 4], [14, 36], [29, 36], [24, 60], [50, 26], [34, 26]].map((p, i) => [...p, i])) i ? g.lineTo(x, y) : g.moveTo(x, y);
-  g.closePath(); g.fill();
-});
-function buildDock(shape) {
-  // How far the ring's outer and inner wall sit from its centre at the point that rests in the dock.
-  const outer = warpR(shape, RING.RO, PIN_TH), inner = warpR(shape, RING.RI, PIN_TH);
-  const pos = new THREE.Vector3(0, DOCK_Y + 1.0 + outer * Math.cos(LEAN) + 0.186, 0.48 - outer * Math.sin(LEAN) + 1.054);
-  const g = new THREE.Group(), top = DOCK_Y + 1.6;
+const CHARGE_Y = -30;
+function buildCharge(shape) {
+  const th = PIN_TH - TW * shape.twist; // where the port ends up once the ring has been twisted off
+  const e = new THREE.Vector3(Math.sin(th), 0, Math.cos(th)), f = new THREE.Vector3(Math.cos(th), 0, -Math.sin(th));
+  const rin = warpR(shape, RING.RI, PIN_TH), innerF = warpR(shape, RING.RI, PIN_TH + Math.PI / 2), outerF = warpR(shape, RING.RO, PIN_TH + Math.PI / 2);
+  // The ring sits off-centre so that ring, cable and charger together fill the view.
+  const pos = f.clone().multiplyScalar(-5.5).setY(CHARGE_Y);
+  const at = (u, v, y) => pos.clone().addScaledVector(e, u).addScaledVector(f, v).setY(CHARGE_Y + y);
+  const g = new THREE.Group(), top = RT + shape.rise + 0.45;
   g.visible = false;
-  // Plinth with a dark cradle where the ring stands.
-  const plinth = new THREE.Mesh(new RoundedBoxGeometry(15, 1.6, 9.5, 6, 0.7), M.graphite);
-  plinth.position.set(0, DOCK_Y + 0.8, 0.2);
-  g.add(plinth);
-  const cradle = disc(new THREE.CircleGeometry(1, 48), M.seam, top + 0.004, true);
-  cradle.scale.set(3.9, 1.8, 1);
-  cradle.position.z = 0.6;
-  g.add(cradle);
-  // Charging symbol and three charge lights on the front of the plinth.
-  const bolt = disc(new THREE.PlaneGeometry(0.75, 0.75), new THREE.MeshBasicMaterial({ map: boltTex, transparent: true, depthWrite: false, toneMapped: false }), top + 0.006, true);
-  bolt.position.x = -6.25; bolt.position.z = 3.85;
-  g.add(bolt);
-  for (let i = 0; i < 3; i++) {
-    const light = disc(new THREE.CircleGeometry(0.11, 20), M.charge, top + 0.006, true);
-    light.position.x = -5.55 + i * 0.42; light.position.z = 3.85;
-    g.add(light);
-  }
-  // Tongue and back rest are built in the frame of the docked ring, so they follow its lean exactly.
-  const frame = new THREE.Group();
-  frame.position.copy(pos);
-  frame.rotation.x = DOCK_ROT_X;
-  g.add(frame);
-  const tongue = new THREE.Mesh(new RoundedBoxGeometry(3.6, 3.9 + shape.rise, 1.3, 5, 0.55), M.graphite);
-  tongue.position.set(0, 1.85 + shape.rise / 2, -(inner - 0.65));
-  frame.add(tongue);
-  const rest = new THREE.Mesh(new RoundedBoxGeometry(5.2, 1.3, 4.4, 5, 0.55), M.graphite);
-  rest.position.set(0, 3.45 + shape.rise, -(outer - 2.0));
-  frame.add(rest);
-  // Cable out of the back, to a USB-C charger with an EU plug (two round pins).
-  const at = (x, y, z) => new THREE.Vector3(x, DOCK_Y + y, z);
-  const path = new THREE.CatmullRomCurve3([at(0, 0.7, -4.3), at(0, 0.3, -6.2), at(2.5, 0.2, -7.7), at(7, 0.2, -7.5), at(10.2, 0.3, -5.8), at(10.8, 1.1, -4.0)]);
-  g.add(new THREE.Mesh(new THREE.TubeGeometry(path, 90, 0.17, 10), M.cable));
-  const plug = new THREE.Group();
-  plug.position.copy(at(10.8, 1.1, -1.7));
-  plug.add(new THREE.Mesh(new RoundedBoxGeometry(3.8, 2.2, 4.4, 5, 0.55), M.cable));
+  const plug = new THREE.Mesh(new RoundedBoxGeometry(1.15, 0.6, 1.5, 4, 0.2), M.cable);
+  plug.position.copy(at(rin - 0.85, 0, PORT_Y));
+  plug.rotation.y = th;
+  g.add(plug);
+  const path = new THREE.CatmullRomCurve3([
+    at(rin - 1.5, 0, PORT_Y), at(rin - 3.2, 0.2, PORT_Y + 0.1), at(1.2, 2.6, 2.0), at(0.3, innerF - 0.5, top - 0.05),
+    at(0, (innerF + outerF) / 2, top), at(0, outerF + 0.2, top - 0.05), at(0, outerF + 0.75, top - 1.5), at(0, outerF + 1.0, 0.3),
+    at(0, outerF + 2.4, -0.13), at(0, outerF + 4.2, -0.05), at(0, outerF + 5.0, 0.8),
+  ]);
+  g.add(new THREE.Mesh(new THREE.TubeGeometry(path, 140, 0.17, 10), M.cable));
+  // USB-C charger with an EU plug (two round pins).
+  const charger = new THREE.Group();
+  charger.position.copy(at(0, outerF + 7.5, 0.8));
+  charger.rotation.y = th + Math.PI / 2;
+  charger.add(new THREE.Mesh(new RoundedBoxGeometry(3.8, 2.2, 4.4, 5, 0.55), M.cable));
   const relief = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.22, 0.9, 16), M.cable);
   relief.rotation.x = Math.PI / 2; relief.position.z = -2.5;
-  plug.add(relief);
+  charger.add(relief);
   for (const dx of [-0.95, 0.95]) {
     const pin = new THREE.Mesh(new THREE.CapsuleGeometry(0.2, 1.7, 6, 16), M.steel);
     pin.rotation.x = Math.PI / 2; pin.position.set(dx, 0, 3.15);
-    plug.add(pin);
+    charger.add(pin);
   }
-  g.add(plug);
+  g.add(charger);
   root.add(g);
-  return { group: g, pos };
+  const tags = {
+    port: { at: at(rin - 0.8, 0, PORT_Y + 0.35), out: at(0, -(warpR(shape, RING.RO, PIN_TH - Math.PI / 2) + 0.8), PORT_Y + 0.35) },
+    charger: { at: at(0, outerF + 11.6, 0.8) },
+  };
+  return { group: g, pos, theta: th + Math.PI + 0.2, tags };
 }
-// Call-outs shown in the dock view, each anchored to a point on the dock.
-const DOCK_TAGS = [
-  { at: new THREE.Vector3(12.9, DOCK_Y + 1.2, 1.2), side: 1, name: 'EU plug', short: 'EU plug', detail: 'USB-C charger and cable' },
-  { at: new THREE.Vector3(-6.75, DOCK_Y + 1.6, 3.85), side: -1, name: 'Charge lights', short: 'Charging', detail: 'Three steps to full' },
-  { at: new THREE.Vector3(-3.4, DOCK_Y + 5.7, 0.9), side: 1, name: 'Charging contacts', short: 'Contacts', detail: 'On the tongue below' },
+// Call-outs shown in the Charging view.
+const CHARGE_TAGS = [
+  { key: 'port', side: 1, name: 'USB-C port', short: 'USB-C port', detail: 'On the inside of the ring' },
+  { key: 'charger', side: -1, name: 'USB-C charger, EU plug', short: 'EU plug', detail: 'Any USB-C charger and cable work' },
 ];
 
 // Build every shape once; switching only changes which one is shown.
@@ -878,8 +849,8 @@ const variants = {};
 for (const key in SHAPES) {
   const shape = SHAPES[key];
   const h = buildHead(shape);
-  const d = buildDock(shape);
-  variants[key] = { shape, head: h, ring: buildRing(shape), dock: d.group, dockPos: d.pos, water: h.water, streamData: h.streamData };
+  const c = buildCharge(shape);
+  variants[key] = { shape, head: h, ring: buildRing(shape), charge: c.group, chargePos: c.pos, chargeTheta: c.theta, chargeTags: c.tags, water: h.water, streamData: h.streamData };
 }
 
 const LABELS = [
@@ -899,7 +870,7 @@ const RING_TAGS = [
   { part: 'head', at: polar(SQ_VIEW - Math.PI / 2, warpR(SQ, 6.0, SQ_VIEW) + 0.12, 2.45 + SQ.rise - 0.2), side: -1, name: 'Stop edge', short: 'Stop edge', detail: 'The ring seats against it' },
 ];
 const tagsEl = document.getElementById('tags');
-for (const L of [...LABELS, ...DOCK_TAGS, ...RING_TAGS]) {
+for (const L of [...LABELS, ...CHARGE_TAGS, ...RING_TAGS]) {
   const el = document.createElement('div');
   el.className = 'tag';
   el.innerHTML = `<span><b class="l">${L.name}</b><b class="s">${L.short}</b><small>${L.detail}</small></span>`;
@@ -914,14 +885,14 @@ const VIEW = {
   ring: { h: 20.5, w: 22, ty: 2.8, phi: 1.28 },
   filter: { h: 27.5, w: 22, ty: -0.8, phi: 1.42 },
   below: { h: 21, w: 21, ty: 2.5, phi: 2.55 },
-  dock: { h: 22, w: 30, wn: 30, ty: DOCK_Y + 9.0, phi: 1.46, theta: 0.42 },
+  charge: { h: 15, w: 36, wn: 36, ty: CHARGE_Y + 1.4, phi: 1.0 },
 };
 const HINT = {
   assembled: 'Working model, sizes in mm',
   exploded: 'Working model, sizes in mm',
   ring: 'Ring lock: twist the ring 20° and it drops off. Magnets pull it back into place with a click.',
   filter: 'Filter change: ring off, quarter-turn the head. The cartridge comes down with it and lifts out.',
-  dock: 'Charging dock: the ring stands on the charging contacts. The dock plugs into the wall with an EU plug, and the ring can stay lit while it charges.',
+  charge: 'Charging: take the ring off and plug a USB-C cable into the port on its inner wall. Any USB-C charger works.',
 };
 const state = { mode: 'assembled', shape: 'round', ribs: true, pE: 0, pR: 0, pF: 0, pD: 0, light: 0, lightTo: 0, water: 0, waterTo: 0, below: false };
 let userMoved = false, dirty = true, lastSig = '';
@@ -931,6 +902,7 @@ function viewFor() {
   let base = VIEW[state.mode];
   // The soft square's lock is easiest to read corner-on.
   if (state.mode === 'ring' && !SHAPES[state.shape].twist) base = { ...base, theta: SQ_VIEW, wn: 34, h: 24.5, ty: 2.3 };
+  if (state.mode === 'charge') base = { ...base, theta: variants[state.shape].chargeTheta }; // look across the ring at the port
   if (!state.below) return base;
   return state.mode === 'assembled' ? VIEW.below : { ...base, phi: 2.5 };
 }
@@ -969,8 +941,8 @@ function stepCam(dt) {
 }
 
 const btn = {};
-for (const id of ['assembled', 'exploded', 'ring', 'filter', 'dock', 'light', 'water', 'below', 'ribs']) btn[id] = document.getElementById('btn-' + id);
-const MODES = ['assembled', 'exploded', 'ring', 'filter', 'dock'];
+for (const id of ['assembled', 'exploded', 'ring', 'filter', 'charge', 'light', 'water', 'below', 'ribs']) btn[id] = document.getElementById('btn-' + id);
+const MODES = ['assembled', 'exploded', 'ring', 'filter', 'charge'];
 function setMode(mode, instant = false) {
   state.mode = mode;
   for (const m of MODES) btn[m].setAttribute('aria-pressed', String(m === mode));
@@ -1024,7 +996,7 @@ function setShape(key) {
   for (const k in SHAPES) document.getElementById('shape-' + k).setAttribute('aria-pressed', String(k === key));
   document.getElementById('nozzle-count').textContent = V.head.nozzles.length;
   hintEl.textContent = hintFor(state.mode);
-  if (state.mode === 'ring') goCamera();
+  if (state.mode === 'ring' || state.mode === 'charge') goCamera();
   dirty = true;
   updateShare();
 }
@@ -1061,24 +1033,24 @@ camera.position.copy(controls.target).add(v3.setFromSpherical(tmpS));
 new ResizeObserver(resize).observe(stageEl);
 resize();
 
-// A shared link can name a shape and a view after the #, for example #square-dock or #pebble-ring-light.
-const linkTokens = location.hash.slice(1).toLowerCase().split('-');
+// A shared link can name a shape and a view after the #, for example #square-charge or #pebble-ring-light.
+// Older links said dock; they now open the Charging view.
+const linkTokens = location.hash.slice(1).toLowerCase().split('-').map((t) => (t === 'dock' ? 'charge' : t));
 setShape(SHAPES[params.get('shape')] ? params.get('shape') : linkTokens.find((t) => SHAPES[t]) || 'round');
 if (params.get('ribs') === '0' || linkTokens.includes('smooth')) setRibs(false);
 
-// Still views for exports: ?view=side|below|glow|night|exploded|ring|filter|dock|dockglow|detail
+// Still views for exports: ?view=side|below|glow|night|exploded|ring|filter|charge|detail
 if (STILL) {
   if (STILL === 'side') VIEW.assembled.phi = 1.6;
   if (STILL === 'detail') Object.assign(VIEW.assembled, { h: 6.5, w: 9, ty: 1.05, phi: 1.36 });
-  if (STILL === 'exploded' || STILL === 'ring' || STILL === 'filter' || STILL === 'dock') setMode(STILL, true);
-  if (STILL === 'dockglow') setMode('dock', true);
-  if (STILL === 'glow' || STILL === 'night' || STILL === 'dockglow') { state.light = 1; setLight(true); }
+  if (STILL === 'exploded' || STILL === 'ring' || STILL === 'filter' || STILL === 'charge') setMode(STILL, true);
+  if (STILL === 'glow' || STILL === 'night') { state.light = 1; setLight(true); }
   if (STILL === 'night') { state.water = 1; setWater(true); }
   if (STILL === 'below' || STILL === 'glow') setBelow(true, true);
   state.pE = state.mode === 'exploded' ? 1 : 0;
   state.pR = state.mode === 'ring' ? 1 : 0;
   state.pF = state.mode === 'filter' ? 1 : 0;
-  state.pD = state.mode === 'dock' ? 1 : 0;
+  state.pD = state.mode === 'charge' ? 1 : 0;
   goCamera({ instant: true });
 }
 
@@ -1086,7 +1058,7 @@ if (STILL) {
 if (!STILL) {
   const startMode = MODES.includes(params.get('mode')) ? params.get('mode') : linkTokens.find((t) => MODES.includes(t));
   // Opened from a link, the view is shown as it ends up, without playing the animation first.
-  if (startMode) { setMode(startMode, true); state.pE = +(startMode === 'exploded'); state.pR = +(startMode === 'ring'); state.pF = +(startMode === 'filter'); state.pD = +(startMode === 'dock'); }
+  if (startMode) { setMode(startMode, true); state.pE = +(startMode === 'exploded'); state.pR = +(startMode === 'ring'); state.pF = +(startMode === 'filter'); state.pD = +(startMode === 'charge'); }
   if (linkTokens.includes('light')) setLight(true);
   if (linkTokens.includes('below')) setBelow(true, true);
 }
@@ -1111,7 +1083,7 @@ function frame(now) {
   state.pE = toward(state.pE, state.mode === 'exploded' ? 1 : 0, jump || dt / 0.9);
   state.pR = toward(state.pR, state.mode === 'ring' ? 1 : 0, jump || dt / 1.6);
   state.pF = toward(state.pF, state.mode === 'filter' ? 1 : 0, jump || dt / 3.0);
-  state.pD = toward(state.pD, state.mode === 'dock' ? 1 : 0, jump || dt / 2.6);
+  state.pD = toward(state.pD, state.mode === 'charge' ? 1 : 0, jump || dt / 2.6);
   state.light = ease(state.light, state.lightTo, dt, reduce ? 60 : 3.5);
   state.water = ease(state.water, state.waterTo, dt, reduce ? 60 : 3);
 
@@ -1123,15 +1095,14 @@ function frame(now) {
   parts.cartridge.position.y = 3.2 * E + headDrop + 2.4 * smooth(0.82, 1, F); // rides down in the head, then lifts out
   parts.head.position.y = headDrop;
   parts.head.rotation.y = (-Math.PI / 2) * smooth(0.36, 0.56, F);
-  // Dock: the ring twists off, drops, then tips up and settles into the dock.
+  // Charging: the ring comes off, moves down and aside, and the cable appears once it has settled.
   const D = state.pD, seat = smooth(0.22, 0.95, D);
   // The soft square has no twist: its ring is pulled straight down off the magnets.
   const ringY = -5.5 * E - 5.5 * smooth(0.3, 1, R) - 12.5 * smooth(0.12, 0.48, F) - 6 * smooth(0.08, 0.3, D);
   const twist = -TW * V.shape.twist * Math.min(1, smooth(0, 0.3, R) + smooth(0, 0.12, F) + smooth(0, 0.08, D));
-  parts.ring.position.set(0, ringY, 0).lerp(V.dockPos, seat);
-  parts.ring.rotation.x = DOCK_ROT_X * seat;
-  parts.ring.rotation.y = twist + (DOCK_TWIST - twist) * seat;
-  for (const k in variants) variants[k].dock.visible = k === state.shape && D > 0.02;
+  parts.ring.position.set(0, ringY, 0).lerp(V.chargePos, seat);
+  parts.ring.rotation.y = twist;
+  for (const k in variants) variants[k].charge.visible = k === state.shape && D > 0.96;
 
   const Lt = state.light;
   // How squarely the camera faces the lenses, whichever way the ring is turned.
@@ -1178,15 +1149,19 @@ function frame(now) {
     L.el.style.opacity = show;
   }
 
-  // Dock call-outs follow the dock on screen.
-  const showDock = smooth(0.8, 1, D);
-  for (const L of DOCK_TAGS) {
-    if (showDock < 0.01) { L.el.style.opacity = 0; continue; }
-    v3.copy(L.at).project(camera);
+  // Charging call-outs.
+  const showCharge = smooth(0.96, 1, D);
+  for (const L of CHARGE_TAGS) {
+    if (showCharge < 0.01) { L.el.style.opacity = 0; continue; }
+    const T = V.chargeTags[L.key];
+    v3.copy(T.at).project(camera);
     const x = (v3.x * 0.5 + 0.5) * W, y = (-v3.y * 0.5 + 0.5) * H;
+    let lead = 28;
+    if (T.out) { v3.copy(T.out).project(camera); lead = Math.max(16, Math.abs((v3.x * 0.5 + 0.5) * W - x)); }
+    L.el.style.setProperty('--lead', lead + 'px');
     L.el.classList.toggle('left', L.side < 0);
     L.el.style.transform = `translate(${L.side < 0 ? `calc(${x}px - 100%)` : `${x}px`}, calc(${y}px - 50%))`;
-    L.el.style.opacity = showDock;
+    L.el.style.opacity = showCharge;
   }
 
   // Lock call-outs for the soft square, once its ring is off.
