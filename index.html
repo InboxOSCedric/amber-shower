@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Amber Red Light Shower</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="amber-build" content="11 Nov 2026, 11:20">
+<meta name="amber-build" content="11 Nov 2026, 12:18">
 <script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;if(q.get("theme"))d.dataset.theme=q.get("theme");if(q.has("clean"))d.classList.add("clean-page");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -202,7 +202,7 @@ li b { font-weight: 500; }
     <div class="seg shapes finish" role="group" aria-label="Finish">
       <button type="button" id="finish-gunmetal" aria-pressed="true" aria-label="Gunmetal"><i class="sw" style="--c:#5a5c60"></i><span>Gunmetal</span></button>
       <button type="button" id="finish-beige" aria-pressed="false" aria-label="Beige"><i class="sw" style="--c:#c4b59b"></i><span>Beige</span></button>
-      <button type="button" id="finish-aluminium" aria-pressed="false" aria-label="Aluminium"><i class="sw" style="--c:#c9cbcd"></i><span>Aluminium</span></button>
+      <button type="button" id="finish-aluminium" aria-pressed="false" aria-label="Aluminium"><i class="sw" style="--c:#a9abae"></i><span>Aluminium</span></button>
       <button type="button" id="finish-gold" aria-pressed="false" aria-label="Gold"><i class="sw" style="--c:#caa567"></i><span>Gold</span></button>
       <button type="button" id="finish-copper" aria-pressed="false" aria-label="Copper"><i class="sw" style="--c:#c07a55"></i><span>Copper</span></button>
       <button type="button" id="finish-black" aria-pressed="false" aria-label="Black"><i class="sw" style="--c:#1b1b1c"></i><span>Black</span></button>
@@ -237,7 +237,7 @@ li b { font-weight: 500; }
         <dt>Fitting</dt><dd>Seat the cartridge in the head, screw the housing down over it, then screw the whole unit onto the shower arm by hand.</dd>
         <dt>Filter housing</dt><dd><span class="num">Ø 80 × 62 mm</span>, Amber wordmark debossed <span class="num">0.5 mm</span> into the front</dd>
         <dt>Connection</dt><dd>Ball joint with the ball hidden inside the dome, so the head still tilts. Only a short neck shows, in the same graphite as the body, with a <span class="num">G½</span> thread (<span class="num">½ inch, 1.27 cm</span>), the standard size that fits any shower arm.</dd>
-        <dt>Finish</dt><dd>Six finishes, switched at the top of the model: <b>Gunmetal</b>, <b>Beige</b> (matt coating), <b>Brushed aluminium</b>, <b>Brushed gold</b>, <b>Brushed copper</b> and <b>Black</b> (matt). The shower arm and fittings in the bathroom view follow the finish.</dd>
+        <dt>Finish</dt><dd>Six finishes, switched at the top of the model: <b>Gunmetal</b>, <b>Beige</b> (matt coating), <b>Brushed aluminium</b>, <b>Brushed gold</b>, <b>Brushed copper</b> (all three with fine brushing lines that run around the parts) and <b>Black</b> (matt). The shower arm and fittings in the bathroom view follow the finish.</dd>
         <dt>Light</dt><dd>12 round LED lenses, each with a <span class="num">630 nm</span> red and an <span class="num">850 nm</span> near-infrared chip</dd>
         <dt>Power</dt><dd>Rechargeable battery in the ring, sealed to <span class="num">IPX7</span></dd>
         <dt>Charging</dt><dd>A USB-C port on the inner wall of the ring. Take the ring off and plug in any USB-C charger. On the shower the port is covered by the head, so it is out of sight and out of the spray. No charging stand or special cable is needed.</dd>
@@ -353,8 +353,8 @@ const LOGO_TH = 0.42;                        // angle the wordmark faces
 
 // Materials. graphite is the body in whatever finish is chosen (see FINISHES); it starts as gunmetal.
 const M = {
-  graphite: new THREE.MeshPhysicalMaterial({ color: 0x64666a, metalness: 1, roughness: 0.3 }),
-  plate: new THREE.MeshPhysicalMaterial({ color: 0x55575b, metalness: 1, roughness: 0.42 }),
+  graphite: brushed(new THREE.MeshPhysicalMaterial({ color: 0x64666a, metalness: 1, roughness: 0.3 })),
+  plate: brushed(new THREE.MeshPhysicalMaterial({ color: 0x55575b, metalness: 1, roughness: 0.42 })),
   silicone: new THREE.MeshStandardMaterial({ color: 0x24201e, roughness: 0.85 }),
   seam: new THREE.MeshBasicMaterial({ color: 0x1a1715 }),
   slot: new THREE.MeshStandardMaterial({ color: 0x1f1c1a, roughness: 0.8, metalness: 0.3, side: THREE.DoubleSide }),
@@ -390,8 +390,68 @@ function profile(pts, seg = 10) {
   return out;
 }
 // Points run so that an outer wall goes upward; normals then face away from the solid.
+// Brushed metal. Fine lines run around every part: each line is a touch lighter or darker and a touch glossier or
+// duller than its neighbours, and changes slowly on its way round. BRUSH.value switches it on (1) or off (0).
+const BRUSH = { value: 0 };
+function brushed(mat) {
+  mat.onBeforeCompile = (sh) => {
+    sh.uniforms.uBrush = BRUSH;
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nattribute float brush;\nvarying float vBrush;\nvarying vec3 vBrushPos;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvBrush = brush;\nvBrushPos = position;');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', `#include <common>
+uniform float uBrush;
+varying float vBrush;
+varying vec3 vBrushPos;
+float brushHash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+// One line's value on its way round: n steps per turn, smoothly joined, each line starting somewhere else.
+float brushLine(float i, float a, float n) {
+  float t = a + brushHash(vec2(i, 7.3)) * n, j = floor(t), g = fract(t);
+  g = g * g * (3.0 - 2.0 * g);
+  return mix(brushHash(vec2(i, mod(j, n))), brushHash(vec2(i, mod(j + 1.0, n))), g);
+}
+// Lines of one width: f lines per cm. Fades to an even grey where the lines get finer than a pixel.
+float brushBand(float b, float turn, float f, float n) {
+  float x = b * f, i = floor(x), g = fract(x);
+  float v = mix(brushLine(i, turn * n, n), brushLine(i + 1.0, turn * n, n), smoothstep(0.25, 0.75, g));
+  return mix(v, 0.5, smoothstep(0.35, 0.9, fwidth(x))) - 0.5;
+}`)
+      .replace('#include <color_fragment>', `#include <color_fragment>
+float brushV = 0.0;
+if (uBrush > 0.0) {
+  float turn = atan(vBrushPos.x, vBrushPos.z) / 6.2831853 + 0.5;
+  brushV = 0.1 * brushBand(vBrush, turn, 6.0, 5.0) + 0.36 * brushBand(vBrush, turn, 16.0, 7.0)
+         + 0.36 * brushBand(vBrush, turn, 36.0, 9.0) + 0.18 * brushBand(vBrush, turn, 80.0, 11.0);
+  diffuseColor.rgb *= 1.0 + uBrush * 0.15 * brushV;
+}`)
+      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = clamp(roughnessFactor * (1.0 + uBrush * 0.7 * brushV), 0.05, 1.0);');
+  };
+  mat.customProgramCacheKey = () => 'brushed';
+  return mat;
+}
+// Parts that are not turned from a profile (bars, rods, plates) get their lines from their own height and radius.
+const brushDone = new WeakSet();
+function brushAll(root) {
+  root.traverse((o) => {
+    const g = o.geometry;
+    if (!g || brushDone.has(g) || (o.material !== M.graphite && o.material !== M.plate && o.material !== M.logo)) return;
+    brushDone.add(g);
+    if (g.attributes.brush) return;
+    const p = g.attributes.position, b = new Float32Array(p.count);
+    for (let i = 0; i < p.count; i++) b[i] = p.getY(i) + 0.73 * Math.hypot(p.getX(i), p.getZ(i));
+    g.setAttribute('brush', new THREE.BufferAttribute(b, 1));
+  });
+}
 function lathe(pts, mat, segments = 192) {
-  return new THREE.Mesh(new THREE.LatheGeometry(profile(pts), segments), mat);
+  const prof = profile(pts), geo = new THREE.LatheGeometry(prof, segments);
+  // Distance along the profile for every vertex, so the brushing lines of a brushed finish run exactly around the part.
+  const along = [0];
+  for (let j = 1; j < prof.length; j++) along.push(along[j - 1] + prof[j].distanceTo(prof[j - 1]));
+  const brush = new Float32Array(geo.attributes.position.count);
+  for (let i = 0; i < brush.length; i++) brush[i] = along[i % prof.length];
+  geo.setAttribute('brush', new THREE.BufferAttribute(brush, 1));
+  return new THREE.Mesh(geo, mat);
 }
 
 // The gentle slope of the head's top. On the flowing shapes the ring's top continues it.
@@ -450,10 +510,12 @@ function flutedRing(mat, shape, style = RIBS.fine, wall = 0) {
     cut[i] = N ? style.depth * style.cut(((i % segs) / segs) * TAU) : 0;
     ang[i] = th; sin[i] = Math.sin(th); cos[i] = Math.cos(th);
   }
-  const pos = [], idx = [];
-  for (const [r0, y, f] of rows) {
-    for (let i = 0; i <= M2; i++) { const r = warpR(shape, r0, ang[i]) - f * cut[i]; pos.push(r * sin[i], y, r * cos[i]); }
-  }
+  const pos = [], brush = [], idx = [];
+  let along = 0; // distance along the profile, for the brushing lines of a brushed finish
+  rows.forEach(([r0, y, f], j) => {
+    if (j) along += Math.hypot(r0 - rows[j - 1][0], y - rows[j - 1][1]);
+    for (let i = 0; i <= M2; i++) { const r = warpR(shape, r0, ang[i]) - f * cut[i]; pos.push(r * sin[i], y, r * cos[i]); brush.push(along); }
+  });
   for (let j = 0; j < rows.length - 1; j++) {
     for (let i = 0; i < M2; i++) {
       const a = j * W + i, b = a + 1, c = (j + 1) * W + i, d = c + 1;
@@ -462,6 +524,7 @@ function flutedRing(mat, shape, style = RIBS.fine, wall = 0) {
   }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setAttribute('brush', new THREE.Float32BufferAttribute(brush, 1));
   geo.setIndex(idx);
   geo.computeVertexNormals();
   // The first and last column sit on the same line; give them one shared normal so no seam shows.
@@ -847,7 +910,7 @@ cart.add(new THREE.Mesh(new THREE.CylinderGeometry(2.38, 2.38, 3.1, 96, 1, true)
 const housing = part('housing');
 {
   const { map, bump } = logoMaps(2.7);
-  const logoMat = M.logo = M.graphite.clone(); // kept on M so a change of finish reaches it too
+  const logoMat = M.logo = brushed(M.graphite.clone()); // kept on M so a change of finish reaches it too
   logoMat.map = map; logoMat.bumpMap = bump; logoMat.bumpScale = 3;
   const neck = new THREE.Mesh(new THREE.CylinderGeometry(NECK_R, NECK_R, NECK_Y1 - NECK_Y0, 192, 1, true), logoMat);
   neck.position.y = (NECK_Y0 + NECK_Y1) / 2;
@@ -1212,18 +1275,19 @@ function setRibs(key) {
 }
 for (const k in RIBS) document.getElementById('ribs-' + k).onclick = () => setRibs(k);
 // Finishes. color is the body, plate the slightly darker spray plate; metal and rough set how it catches the light:
-// the brushed metals are fully metallic with a soft sheen, beige and black are matt coatings.
+// the brushed metals are fully metallic with a soft sheen and fine brushing lines, beige and black are matt coatings.
 const FINISHES = {
   gunmetal: { color: 0x64666a, plate: 0x55575b, metal: 1, rough: 0.3 },
   beige: { color: 0xae9d82, plate: 0x9b8b72, metal: 0, rough: 0.55 },
-  aluminium: { color: 0xc9cbcd, plate: 0xb2b4b6, metal: 1, rough: 0.36 },
-  gold: { color: 0xcaa567, plate: 0xb59259, metal: 1, rough: 0.36 },
-  copper: { color: 0xc07a55, plate: 0xab6b49, metal: 1, rough: 0.36 },
+  aluminium: { color: 0xa4a6a9, plate: 0x909295, metal: 1, rough: 0.52, brushed: true },
+  gold: { color: 0xcaa567, plate: 0xb59259, metal: 1, rough: 0.42, brushed: true },
+  copper: { color: 0xc07a55, plate: 0xab6b49, metal: 1, rough: 0.42, brushed: true },
   black: { color: 0x1b1b1c, plate: 0x131313, metal: 0.4, rough: 0.5 },
 };
 function setFinish(key) {
   const f = FINISHES[key];
   state.finish = key;
+  BRUSH.value = f.brushed ? 1 : 0;
   for (const m of [M.graphite, M.logo]) { m.color.setHex(f.color); m.metalness = f.metal; m.roughness = f.rough; }
   M.plate.color.setHex(f.plate); M.plate.metalness = f.metal; M.plate.roughness = Math.min(1, f.rough + 0.12);
   for (const k in FINISHES) document.getElementById('finish-' + k).setAttribute('aria-pressed', String(k === key));
@@ -1415,7 +1479,7 @@ function frame(now) {
 
   // Only draw when something changed: the camera, an animation, the light or the water.
   const sig = [state.pE, state.pR, state.pF, state.pD, state.light, state.water].map((x) => x.toFixed(4)).join();
-  if (moved || dirty || sig !== lastSig || state.water > 0.01) renderer.render(scene, camera);
+  if (moved || dirty || sig !== lastSig || state.water > 0.01) { if (BRUSH.value) brushAll(scene); renderer.render(scene, camera); }
   dirty = false; lastSig = sig;
 }
 loadingEl.hidden = true;
