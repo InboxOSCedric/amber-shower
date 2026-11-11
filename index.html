@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Amber Red Light Shower</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="amber-build" content="11 Nov 2026, 11:09">
+<meta name="amber-build" content="11 Nov 2026, 11:20">
 <script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;if(q.get("theme"))d.dataset.theme=q.get("theme");if(q.has("clean"))d.classList.add("clean-page");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -100,6 +100,8 @@ h1 {
 .controls button:focus-visible, .shapes button:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 .shapes { position: absolute; top: 12px; right: 12px; }
 .shapes.ribs { top: 64px; }
+.shapes.finish { top: 116px; }
+.sw { width: 12px; height: 12px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.35); flex: none; }
 .stage.night .shapes button { color: var(--night-fg); }
 .stage.night .shapes button[aria-pressed="true"] { background: var(--night-chip-on); color: var(--night-chip-on-fg); }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0.35; }
@@ -158,7 +160,10 @@ li b { font-weight: 500; }
   .controls button, .shapes button { padding: 9px 11px; font-size: 13px; }
   .shapes { top: 10px; right: auto; left: 50%; transform: translateX(-50%); width: max-content; max-width: calc(100% - 20px); }
   .shapes.ribs { top: 56px; }
-  .hint { top: 106px; left: 14px; max-width: calc(100% - 28px); }
+  .shapes.finish { top: 102px; }
+  .shapes.finish span { display: none; } /* swatches only on a phone; the name is still read out */
+  .shapes.finish button { padding: 10px; }
+  .hint { top: 150px; left: 14px; max-width: calc(100% - 28px); }
   .controls .solo { padding: 12px 14px; }
   .tag small, .tag .l { display: none; }
   .tag .s { display: inline; }
@@ -176,7 +181,7 @@ li b { font-weight: 500; }
 <div class="wrap">
   <header>
     <h1>Amber red light shower</h1>
-    <p class="lede"><b>Concept 02.</b> A filtered shower head with a fluted red light ring that comes off to charge over USB-C, in gunmetal. Drag to turn it, scroll or pinch to zoom.</p>
+    <p class="lede"><b>Concept 02.</b> A filtered shower head with a fluted red light ring that comes off to charge over USB-C, in six finishes. Drag to turn it, scroll or pinch to zoom.</p>
   </header>
 
   <section class="stage" id="stage" aria-label="Interactive 3D model of the shower head">
@@ -193,6 +198,14 @@ li b { font-weight: 500; }
       <button type="button" id="ribs-bold" aria-pressed="false">Round ribs</button>
       <button type="button" id="ribs-wave" aria-pressed="false">Pleats</button>
       <button type="button" id="ribs-none" aria-pressed="false">Smooth</button>
+    </div>
+    <div class="seg shapes finish" role="group" aria-label="Finish">
+      <button type="button" id="finish-gunmetal" aria-pressed="true" aria-label="Gunmetal"><i class="sw" style="--c:#5a5c60"></i><span>Gunmetal</span></button>
+      <button type="button" id="finish-beige" aria-pressed="false" aria-label="Beige"><i class="sw" style="--c:#c4b59b"></i><span>Beige</span></button>
+      <button type="button" id="finish-aluminium" aria-pressed="false" aria-label="Aluminium"><i class="sw" style="--c:#c9cbcd"></i><span>Aluminium</span></button>
+      <button type="button" id="finish-gold" aria-pressed="false" aria-label="Gold"><i class="sw" style="--c:#caa567"></i><span>Gold</span></button>
+      <button type="button" id="finish-copper" aria-pressed="false" aria-label="Copper"><i class="sw" style="--c:#c07a55"></i><span>Copper</span></button>
+      <button type="button" id="finish-black" aria-pressed="false" aria-label="Black"><i class="sw" style="--c:#1b1b1c"></i><span>Black</span></button>
     </div>
     <div id="tags"></div>
     <div class="controls" role="toolbar" aria-label="Model controls">
@@ -224,7 +237,7 @@ li b { font-weight: 500; }
         <dt>Fitting</dt><dd>Seat the cartridge in the head, screw the housing down over it, then screw the whole unit onto the shower arm by hand.</dd>
         <dt>Filter housing</dt><dd><span class="num">Ø 80 × 62 mm</span>, Amber wordmark debossed <span class="num">0.5 mm</span> into the front</dd>
         <dt>Connection</dt><dd>Ball joint with the ball hidden inside the dome, so the head still tilts. Only a short neck shows, in the same graphite as the body, with a <span class="num">G½</span> thread (<span class="num">½ inch, 1.27 cm</span>), the standard size that fits any shower arm.</dd>
-        <dt>Finish</dt><dd><span class="swatch" aria-hidden="true"></span>Anodised aluminium, bead-blasted satin, gunmetal <span class="num">#4B4A49</span></dd>
+        <dt>Finish</dt><dd>Six finishes, switched at the top of the model: <b>Gunmetal</b>, <b>Beige</b> (matt coating), <b>Brushed aluminium</b>, <b>Brushed gold</b>, <b>Brushed copper</b> and <b>Black</b> (matt). The shower arm and fittings in the bathroom view follow the finish.</dd>
         <dt>Light</dt><dd>12 round LED lenses, each with a <span class="num">630 nm</span> red and an <span class="num">850 nm</span> near-infrared chip</dd>
         <dt>Power</dt><dd>Rechargeable battery in the ring, sealed to <span class="num">IPX7</span></dd>
         <dt>Charging</dt><dd>A USB-C port on the inner wall of the ring. Take the ring off and plug in any USB-C charger. On the shower the port is covered by the head, so it is out of sight and out of the spray. No charging stand or special cable is needed.</dd>
@@ -239,7 +252,7 @@ li b { font-weight: 500; }
           <li><b>Ribbed ring.</b> The ribs sit on the light ring only, in one of three patterns. Head and housing stay smooth.</li>
           <li><b>Crisp or flowing.</b> Round is crisp: ring and head share one flat top with a sharp edge, and the housing stands squarely on it. On Pebble and Soft square the ring continues the slope of the head, which sweeps up into the housing in one curve.</li>
           <li><b>Nothing on the outside.</b> The USB-C port sits on the inner wall of the ring, hidden by the head once the ring is on.</li>
-          <li><b>Gunmetal</b> with the wordmark pressed into the metal instead of printed on it.</li>
+          <li><b>One finish all over.</b> Ring, head, housing and neck share one finish, with the wordmark pressed into the metal instead of printed on it.</li>
           <li><b>Three shapes</b> are under consideration: round, pebble and soft square.</li>
         </ul>
       </section>
@@ -338,7 +351,7 @@ const A0 = 0.3;                              // angle of the first locking lug
 const TW = THREE.MathUtils.degToRad(20);     // ring twist to lock
 const LOGO_TH = 0.42;                        // angle the wordmark faces
 
-// Materials. The body is gunmetal: a dark, near-neutral grey with a satin sheen.
+// Materials. graphite is the body in whatever finish is chosen (see FINISHES); it starts as gunmetal.
 const M = {
   graphite: new THREE.MeshPhysicalMaterial({ color: 0x64666a, metalness: 1, roughness: 0.3 }),
   plate: new THREE.MeshPhysicalMaterial({ color: 0x55575b, metalness: 1, roughness: 0.42 }),
@@ -834,7 +847,7 @@ cart.add(new THREE.Mesh(new THREE.CylinderGeometry(2.38, 2.38, 3.1, 96, 1, true)
 const housing = part('housing');
 {
   const { map, bump } = logoMaps(2.7);
-  const logoMat = M.graphite.clone();
+  const logoMat = M.logo = M.graphite.clone(); // kept on M so a change of finish reaches it too
   logoMat.map = map; logoMat.bumpMap = bump; logoMat.bumpScale = 3;
   const neck = new THREE.Mesh(new THREE.CylinderGeometry(NECK_R, NECK_R, NECK_Y1 - NECK_Y0, 192, 1, true), logoMat);
   neck.position.y = (NECK_Y0 + NECK_Y1) / 2;
@@ -1066,7 +1079,7 @@ const HINT = {
   charge: 'Charging: take the ring off and plug a USB-C cable into the port on its inner wall. Any USB-C charger works.',
   bath: 'Bathroom: the shower head on a wall arm in a walk-in shower. Zoom out to see the whole shower, and switch shape, ribs, light and water.',
 };
-const state = { mode: 'assembled', bathRing: false, shape: 'round', ribs: 'fine', pE: 0, pR: 0, pF: 0, pD: 0, light: 0, lightTo: 0, water: 0, waterTo: 0, below: false };
+const state = { mode: 'assembled', bathRing: false, shape: 'round', ribs: 'fine', finish: 'gunmetal', pE: 0, pR: 0, pF: 0, pD: 0, light: 0, lightTo: 0, water: 0, waterTo: 0, below: false };
 let userMoved = false, dirty = true, lastSig = '';
 
 const tmpS = new THREE.Spherical(), v3 = new THREE.Vector3(), camRight = new THREE.Vector3(), m4 = new THREE.Matrix4(), axis = new THREE.Vector3();
@@ -1198,6 +1211,25 @@ function setRibs(key) {
   dirty = true;
 }
 for (const k in RIBS) document.getElementById('ribs-' + k).onclick = () => setRibs(k);
+// Finishes. color is the body, plate the slightly darker spray plate; metal and rough set how it catches the light:
+// the brushed metals are fully metallic with a soft sheen, beige and black are matt coatings.
+const FINISHES = {
+  gunmetal: { color: 0x64666a, plate: 0x55575b, metal: 1, rough: 0.3 },
+  beige: { color: 0xae9d82, plate: 0x9b8b72, metal: 0, rough: 0.55 },
+  aluminium: { color: 0xc9cbcd, plate: 0xb2b4b6, metal: 1, rough: 0.36 },
+  gold: { color: 0xcaa567, plate: 0xb59259, metal: 1, rough: 0.36 },
+  copper: { color: 0xc07a55, plate: 0xab6b49, metal: 1, rough: 0.36 },
+  black: { color: 0x1b1b1c, plate: 0x131313, metal: 0.4, rough: 0.5 },
+};
+function setFinish(key) {
+  const f = FINISHES[key];
+  state.finish = key;
+  for (const m of [M.graphite, M.logo]) { m.color.setHex(f.color); m.metalness = f.metal; m.roughness = f.rough; }
+  M.plate.color.setHex(f.plate); M.plate.metalness = f.metal; M.plate.roughness = Math.min(1, f.rough + 0.12);
+  for (const k in FINISHES) document.getElementById('finish-' + k).setAttribute('aria-pressed', String(k === key));
+  dirty = true;
+}
+for (const k in FINISHES) document.getElementById('finish-' + k).onclick = () => setFinish(k);
 controls.addEventListener('start', () => { userMoved = true; controls.autoRotate = false; camTween = null; });
 
 function resize() {
@@ -1221,6 +1253,11 @@ resize();
 // Older links said dock; they now open the Charging view.
 const linkTokens = location.hash.slice(1).toLowerCase().split('-').map((t) => (t === 'dock' ? 'charge' : t));
 setShape(SHAPES[params.get('shape')] ? params.get('shape') : linkTokens.find((t) => SHAPES[t]) || 'round');
+// Finish from the link: ?finish=gold or a #token (beige, aluminium, gold, copper, black).
+{
+  const key = FINISHES[params.get('finish')] ? params.get('finish') : linkTokens.find((t) => FINISHES[t]);
+  if (key) setFinish(key);
+}
 // Rib style from the link: ?ribs=fine|bold|wave|none, or a #token (bold, wave, smooth).
 {
   const q = params.get('ribs'), t = linkTokens.find((x) => x === 'bold' || x === 'wave' || x === 'smooth' || x === 'none');
