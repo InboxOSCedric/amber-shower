@@ -212,7 +212,7 @@ li b { font-weight: 500; }
     <section class="block">
       <h2>Specification</h2>
       <dl>
-        <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">3.3 mm</span> apart), <b>Round ribs</b> (56 half-round rods side by side, <span class="num">9.5 mm</span> apart, with rounded ends that stop short of the edges), <b>Pleats</b> (72 soft, even pleats, <span class="num">7.4 mm</span> apart, running straight into the top edge) and <b>Smooth</b>.</dd>
+        <dt>Light ring</dt><dd><span class="num">Ø 170 × 34 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">3.3 mm</span> apart), <b>Round ribs</b> (56 half-round rods side by side, <span class="num">9.5 mm</span> apart, straight and upright, cut off flat at the top and bottom), <b>Pleats</b> (72 shallow, even pleats, <span class="num">7.4 mm</span> apart and <span class="num">0.5 mm</span> deep, running straight into the top edge) and <b>Smooth</b>.</dd>
         <dt>Shapes</dt><dd>Three versions of the same product, switched at the top of the model: <b>Round</b> (crisp: flat top, sharp upper edge on head and ring, rounded underside, housing set squarely on the head), <b>Pebble</b> (round, with a fully rounded ring edge and a flowing sweep into the housing) and <b>Soft square</b> (a rounded-square head and ring on the same round housing).</dd>
         <dt>Ring lock</dt><dd>Slide the ring up over the head and twist it <span class="num">20°</span>. Three steel lugs on the head run into slots inside the ring, and magnets pull it home with a click. Twist back and it drops into your hand. </dd>
         <dt>Magnetic mount</dt><dd>The soft square cannot turn, so it is held by magnets alone. Lift the ring over the head: eight magnets around the head, one in each corner and one in the middle of each side, pull it up against a stop edge and centre it. It fits in any of the four directions. To take it off, pull it straight down. There are no buttons, slots or catches.</dd>
@@ -371,13 +371,13 @@ function slopeOf(shape) { return shape && shape.crisp ? 0 : HEAD_SLOPE; }
 function ringTopY(r, shape) { return 2.45 - (r - 6.0) * slopeOf(shape); }
 // Rib styles for the ring wall. n is how many ribs go round, segs how many columns of the mesh each rib gets.
 //   fine: narrow flutes cut into the wall.
-//   bold: half-round rods standing side by side, with rounded ends that stop short of the edges (after a ribbed lantern).
-//   wave: soft, even pleats that run straight into the top edge (after a pleated speaker body).
+//   bold: half-round rods standing side by side, cut off flat at the top and bottom (after a ribbed lantern).
+//   wave: shallow, even pleats that run straight into the top edge (after a pleated speaker body).
 //   none: a smooth wall.
 const RIBS = {
   fine: { n: 160, depth: 0.075, segs: 6, cut: (p) => Math.pow((1 - Math.cos(p)) / 2, 1.4) },
   bold: { n: 56, segs: 28, rods: true },
-  wave: { n: 72, depth: 0.14, segs: 10, cut: (p) => (1 - Math.cos(p)) / 2, late: true },
+  wave: { n: 72, depth: 0.05, segs: 10, cut: (p) => (1 - Math.cos(p)) / 2, late: true },
   none: { n: 0, depth: 0, segs: 0, cut: () => 0 },
 };
 // Ring shell as one continuous skin: flat underside, rounded shoulder, wall, shoulder or sharp edge, top.
@@ -389,11 +389,11 @@ function flutedRing(mat, shape, style = RIBS.fine) {
   const rb = shape.rb, rt = shape.rt, alpha = Math.atan(slopeOf(shape)), aMax = Q - alpha;
   const rise = shape.rise, rc = RO - rt, yc = ringTopY(rc, shape) + rise - rt / Math.cos(alpha);
   // Profile rows: radius of the smooth surface, height, and how strongly the ribs show at that height (0 to 1).
-  // Flutes and pleats are full depth on the wall and dissolve over the shoulders; pleats hold on longer at the top.
+  // Flutes and pleats are full depth on the wall and dissolve over the shoulders; pleats run right up to a sharp top edge.
   let rows = [[RI + 0.7, RB, 0]];
   for (let i = 0; i <= K; i++) { const a = (i / K) * Q; rows.push([RO - rb * (1 - Math.sin(a)), RB + rb * (1 - Math.cos(a)), smooth(0.15, 0.95, a / Q)]); }
   rows.push([RO, RB + rb + 0.03, 1], [RO, yc - 0.03, 1]); // short strips keep the straight wall shaded evenly
-  for (let i = 0; i <= K; i++) { const a = (i / K) * aMax; rows.push([rc + rt * Math.cos(a), yc + rt * Math.sin(a), 1 - (style.late ? smooth(0.6, 1, a / aMax) : smooth(0.05, 0.85, a / aMax))]); }
+  for (let i = 0; i <= K; i++) { const a = (i / K) * aMax; rows.push([rc + rt * Math.cos(a), yc + rt * Math.sin(a), 1 - (style.late && rt * aMax < 0.4 ? smooth(0.6, 1, a / aMax) : smooth(0.05, 0.85, a / aMax))]); }
   rows.push([RI + 0.7, ringTopY(RI + 0.7, shape) + rise, 0]);
 
   // Where each column sits across its rib (u from 0 to 1) and around the ring.
@@ -410,31 +410,34 @@ function flutedRing(mat, shape, style = RIBS.fine) {
   const pos = [];
   const angleOf = (i) => Math.atan2(sin[i], cos[i]);
   if (style.rods) {
-    // Arc length along the profile, then an even resampling so the rounded rod ends come out smooth.
+    // Arc length along the profile, then an even resampling of it.
     const sAt = [0];
     for (let j = 1; j < rows.length; j++) sAt[j] = sAt[j - 1] + Math.hypot(rows[j][0] - rows[j - 1][0], rows[j][1] - rows[j - 1][1]);
     const sWallBottom = sAt[K + 1], sWallTop = sAt[K + 4], last = rows.length - 1;
-    // The rods start part-way down the bottom shoulder. They end just under a sharp top edge, or part-way over a round one.
-    const s0 = sWallBottom - Math.min(0.45 * rb * Q, 0.7);
-    const s1 = rt * aMax < 0.4 ? sWallTop - 0.1 : sWallTop + Math.min(0.45 * rt * aMax, 0.9);
-    const dense = [];
-    const sample = (sv) => {
+    // The rods are straight, upright bars: they keep the wall's radius while the body curves away behind them.
+    // They start a few millimetres above the underside and run up to a sharp top edge, or part-way up a round
+    // shoulder. Both ends are cut off flat and level.
+    const lift = Math.min(0.25, rb * 0.6), s0 = sAt[1] + rb * Math.acos(1 - lift / rb);
+    const s1 = rt * aMax < 0.4 ? sWallTop : sWallTop + Math.min(0.45 * rt * aMax, 0.9);
+    const sample = (sv, on) => {
       let j = 1; while (j < last && sAt[j] < sv) j++;
       const t = (sv - sAt[j - 1]) / Math.max(sAt[j] - sAt[j - 1], 1e-9), A = rows[j - 1], B = rows[j];
-      const dr = B[0] - A[0], dy = B[1] - A[1], len = Math.hypot(dr, dy) || 1;
-      return { r: A[0] + dr * t, y: A[1] + dy * t, nr: dy / len, ny: -dr / len, s: sv }; // normal points out of the ring
+      return { r: A[0] + (B[0] - A[0]) * t, y: A[1] + (B[1] - A[1]) * t, on };
     };
-    dense.push(sample(0));
-    for (let sv = sAt[1]; sv < sAt[last - 1]; sv += 0.035) dense.push(sample(sv));
-    dense.push(sample(sAt[last - 1]), sample(sAt[last]));
+    // Each cut end gets doubled rows, so the flat end face shades as its own surface with crisp edges.
+    const dense = [sample(0, false)];
+    for (let sv = sAt[1]; sv < s0; sv += 0.06) dense.push(sample(sv, false));
+    dense.push(sample(s0, false), sample(s0, false), sample(s0, true), sample(s0, true));
+    for (let sv = s0 + 0.12; sv < s1; sv += 0.12) dense.push(sample(sv, true));
+    dense.push(sample(s1, true), sample(s1, true), sample(s1, false), sample(s1, false));
+    for (let sv = s1 + 0.03; sv < sAt[last - 1]; sv += 0.06) dense.push(sample(sv, false));
+    dense.push(sample(sAt[last - 1], false), sample(sAt[last], false));
     const rr = rodR * 0.97, pitch = 2 * rodR;
     for (const d of dense) {
-      const t = Math.min(d.s - s0, s1 - d.s);
-      const rho = t <= 0 ? 0 : t >= rr ? rr : Math.sqrt(rr * rr - (rr - t) * (rr - t)); // rod radius, shrinking into a round end
       for (let i = 0; i <= M2; i++) {
-        const x = (us[i] - 0.5) * pitch, h = rho > Math.abs(x) ? Math.sqrt(rho * rho - x * x) : 0;
-        const r = warpR(shape, d.r + d.nr * h, angleOf(i));
-        pos.push(r * sin[i], d.y + d.ny * h, r * cos[i]);
+        const x = (us[i] - 0.5) * pitch, h = d.on && rr > Math.abs(x) ? Math.sqrt(rr * rr - x * x) : 0;
+        const r = warpR(shape, d.on ? Math.max(d.r, RO + h) : d.r, angleOf(i));
+        pos.push(r * sin[i], d.y, r * cos[i]);
       }
     }
     rows = dense;
