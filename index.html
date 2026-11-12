@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Amber Red Light Shower</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="amber-build" content="12 Nov 2026, 14:45">
+<meta name="amber-build" content="12 Nov 2026, 15:04">
 <script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;if(q.get("theme"))d.dataset.theme=q.get("theme");if(q.has("clean"))d.classList.add("clean-page");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -258,7 +258,7 @@ li b { font-weight: 500; }
         <dt>Light ring</dt><dd><span class="num">Ø 212 × 42 mm</span>. The outer wall comes in four finishes, switched at the top of the model: <b>Fine ribs</b> (160 narrow flutes, <span class="num">4.2 mm</span> apart), <b>Round ribs</b> (56 fully round rods, <span class="num">Ø 11 mm</span>, standing side by side around the ring; their domed ends stick out <span class="num">4 mm</span> above and below it), <b>Pleats</b> (90 very shallow pleats, <span class="num">7.4 mm</span> apart and <span class="num">0.35 mm</span> deep, and <b>Smooth</b>. On Round the pleats fade in from the underside and stop just under the sharp top edge; on Pebble and Soft square they run on over the rounded edges, top and bottom.</dd>
         <dt>Bathroom view</dt><dd>The Bathroom button hangs the shower head on a wall arm in a walk-in shower, at about <span class="num">2 m</span>, so each shape and rib finish can be judged in place. Red light and water work there too, and Ring off takes the ring off the head in the room. <b>Both together</b>, above the model, adds the hand shower in its holder next to it.</dd>
         <dt>Shapes</dt><dd>Three versions of the same product, switched at the top of the model: <b>Round</b> (crisp: flat top, sharp upper edge on head and ring, rounded underside, housing set squarely on the head), <b>Pebble</b> (round, with a fully rounded ring edge and a flowing sweep into the housing) and <b>Soft square</b> (a rounded-square head and ring on the same round housing).</dd>
-        <dt>Ring lock</dt><dd>Slide the ring up over the head and twist it <span class="num">20°</span>. Three steel lugs on the head run into slots inside the ring, and magnets pull it home with a click. Twist back and it drops into your hand. </dd>
+        <dt>Ring lock</dt><dd>Slide the ring up over the head and twist it <span class="num">20°</span>. Three lugs on the head, in the finish of the shower, run into slots inside the ring, and magnets pull it home with a click. Twist back and it drops into your hand. </dd>
         <dt>Magnetic mount</dt><dd>The soft square cannot turn, so it is held by magnets alone. Lift the ring over the head: eight magnets around the head, one in each corner and one in the middle of each side, pull it up against a stop edge and centre it. It fits in any of the four directions. To take it off, pull it straight down. There are no buttons, slots or catches.</dd>
         <dt>Shower head</dt><dd><span class="num">Ø 150 mm</span>, smooth body that sweeps up into the housing in one short curve. The filter sits deep inside the head, which keeps the whole unit <span class="num">144 mm</span> tall. <span class="num" id="nozzle-count">241</span> easy-clean silicone nozzles</dd>
         <dt>Filter change</dt><dd>Take the ring off and give the head a quarter-turn. It comes away with the cartridge sitting in it, so you lift the old one out and drop the new one in, without tools.</dd>
@@ -789,7 +789,7 @@ function buildHead(shape, hand = false) {
     for (let k = 0; k < 3; k++) {
       const th = A0 + (k * TAU) / 3, holder = new THREE.Group();
       holder.rotation.y = th;
-      const lug = new THREE.Mesh(new THREE.CapsuleGeometry(0.17, 0.75, 6, 16), M.steel);
+      const lug = new THREE.Mesh(new THREE.CapsuleGeometry(0.17, 0.75, 6, 16), M.graphite); // in the finish of the shower
       lug.rotation.z = Math.PI / 2;
       lug.position.set(0, 1.25 + shape.rise / 2, warpR(shape, 5.99, th));
       holder.add(lug);
@@ -803,7 +803,7 @@ function buildHead(shape, hand = false) {
     for (const th of MAGNET_TH) {
       const holder = new THREE.Group();
       holder.rotation.y = th;
-      const magnet = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.04, 28), M.steel);
+      const magnet = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.04, 28), M.graphite);
       magnet.rotation.x = Math.PI / 2;
       magnet.position.set(0, MAGNET_Y, warpR(shape, 6.0, th));
       holder.add(magnet);
@@ -871,7 +871,7 @@ function buildRing(shape, hand = false) {
     for (const th of MAGNET_TH) {
       const holder = new THREE.Group();
       holder.rotation.y = th;
-      const plate = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.03, 28), M.steel);
+      const plate = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.03, 28), M.graphite);
       plate.rotation.x = Math.PI / 2;
       plate.position.set(0, MAGNET_Y, warpR(shape, RI, th) - 0.012);
       holder.add(plate);
@@ -894,7 +894,7 @@ function buildRing(shape, hand = false) {
     const port = new THREE.Group();
     port.position.set(0, PORT_Y, warpR(shape, RI, PIN_TH) - 0.012);
     port.scale.setScalar(hand ? 1 / KH : 1 / SIZE); // a USB-C port keeps its real size
-    const rim = new THREE.Mesh(new THREE.CapsuleGeometry(0.21, 0.6, 8, 20), M.steel);
+    const rim = new THREE.Mesh(new THREE.CapsuleGeometry(0.21, 0.6, 8, 20), M.graphite);
     rim.rotation.z = Math.PI / 2; rim.scale.z = 0.1;
     const hole = new THREE.Mesh(new THREE.CapsuleGeometry(0.14, 0.58, 8, 20), M.seam);
     hole.rotation.z = Math.PI / 2; hole.scale.z = 0.17;
@@ -1198,12 +1198,21 @@ bath.add(bathOver, bathHand);
     return new THREE.MeshStandardMaterial({ map: t, roughness: 0.6, metalness: 0, envMapIntensity: 0.45 });
   };
   const H = CEIL_Y - FLOOR_Y, yMid = (CEIL_Y + FLOOR_Y) / 2;
-  const back = new THREE.Mesh(new THREE.PlaneGeometry(420, H), tiles('#b3a999', '#9c9283', 60, 120, 420, H, 3));
+  // Bathroom style: wall tile, wall grout, tile width and height, then the same for the floor. ?room= picks one.
+  const ROOMS = {
+    sand: ['#b3a999', '#9c9283', 60, 120, '#6b655d', '#57524b', 60, 60],
+    white: ['#e9e6e0', '#c7c2b8', 15, 15, '#4a4744', '#3a3835', 30, 30],
+    dark: ['#3d3b39', '#2d2b29', 120, 240, '#2f2d2b', '#232120', 120, 120],
+    green: ['#5d6d5b', '#49574a', 10, 10, '#bdb6aa', '#a59e92', 60, 60],
+    concrete: ['#a09d97', '#9c9993', 240, 240, '#85827d', '#827f7a', 240, 240],
+  };
+  const RM = ROOMS[params.get('room')] || ROOMS.sand;
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(420, H), tiles(RM[0], RM[1], RM[2], RM[3], 420, H, 3));
   back.position.set(SIDE_X + 210, yMid, WALL_Z);
-  const side = new THREE.Mesh(new THREE.PlaneGeometry(260, H), tiles('#b3a999', '#9c9283', 60, 120, 260, H, 9));
+  const side = new THREE.Mesh(new THREE.PlaneGeometry(260, H), tiles(RM[0], RM[1], RM[2], RM[3], 260, H, 9));
   side.rotation.y = Math.PI / 2;
   side.position.set(SIDE_X, yMid, WALL_Z + 130);
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(420, 420), tiles('#6b655d', '#57524b', 60, 60, 420, 420, 5));
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(420, 420), tiles(RM[4], RM[5], RM[6], RM[7], 420, 420, 5));
   floor.rotation.x = -Math.PI / 2;
   floor.position.set(SIDE_X + 210, FLOOR_Y, WALL_Z + 210);
   const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(420, 420), new THREE.MeshStandardMaterial({ color: 0xd9d4cb, roughness: 0.9, envMapIntensity: 0.45 }));
