@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Amber Red Light Shower</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="amber-build" content="11 Nov 2026, 12:50">
+<meta name="amber-build" content="12 Nov 2026, 14:45">
 <script>(function(){var q=new URLSearchParams(location.search),d=document.documentElement;if(q.get("theme"))d.dataset.theme=q.get("theme");if(q.has("clean"))d.classList.add("clean-page");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -249,6 +249,7 @@ li b { font-weight: 500; }
         <dt>Connection</dt><dd><span class="num">G½</span> thread (<span class="num">½ inch</span>) at the base of the handle, the standard size that fits any shower hose.</dd>
         <dt>Light</dt><dd>12 round LED lenses, each with a <span class="num">630 nm</span> red and an <span class="num">850 nm</span> near-infrared chip</dd>
         <dt>Power</dt><dd>Rechargeable battery in the ring, sealed to <span class="num">IPX7</span></dd>
+        <dt>Control</dt><dd>A button on the underside of the ring, between two lenses at the front: one press switches the light on, the next switches it off. A timer is set in the app over Bluetooth.</dd>
         <dt>Charging</dt><dd>A USB-C port on the inner wall of the ring. Take the ring off and plug in any USB-C charger. On the hand shower the port sits at the bottom, covered by the head.</dd>
         <dt>Finish</dt><dd>The same six finishes: <b>Gunmetal</b>, <b>Beige</b>, <b>Brushed aluminium</b>, <b>Brushed gold</b>, <b>Brushed copper</b> and <b>Black</b>. Holder, hose and fittings in the bathroom view follow the finish.</dd>
         <dt>Bathroom view</dt><dd>The Bathroom button puts the hand shower in a wall holder at about <span class="num">1.75 m</span>, with its hose down to the thermostat. Red light, water and Ring off work there too. <b>Both together</b>, above the model, shows it in the same shower as the shower head.</dd>
@@ -267,6 +268,7 @@ li b { font-weight: 500; }
         <dt>Finish</dt><dd>Six finishes, switched at the top of the model: <b>Gunmetal</b>, <b>Beige</b> (matt coating), <b>Brushed aluminium</b>, <b>Brushed gold</b>, <b>Brushed copper</b> (all three with fine brushing lines that run around the parts) and <b>Black</b> (matt). The shower arm and fittings in the bathroom view follow the finish.</dd>
         <dt>Light</dt><dd>12 round LED lenses, each with a <span class="num">630 nm</span> red and an <span class="num">850 nm</span> near-infrared chip</dd>
         <dt>Power</dt><dd>Rechargeable battery in the ring, sealed to <span class="num">IPX7</span></dd>
+        <dt>Control</dt><dd>A button on the underside of the ring, between two lenses at the front: one press switches the light on, the next switches it off. A timer is set in the app over Bluetooth.</dd>
         <dt>Charging</dt><dd>A USB-C port on the inner wall of the ring. Take the ring off and plug in any USB-C charger. On the shower the port is covered by the head, so it is out of sight and out of the spray. No charging stand or special cable is needed.</dd>
         <dt>Filter</dt><dd>KDF-55, coconut-shell carbon and a polyphosphate scale inhibitor, cartridge swapped every 3 months</dd>
       </dl>
@@ -296,6 +298,7 @@ li b { font-weight: 500; }
           <li><b>Light output.</b> Measured irradiance at 30 cm in mW/cm², for both wavelengths.</li>
           <li><b>Sealing.</b> How the ring reaches IPX7, including at the USB-C port: a waterproof-rated port, a silicone plug, or both.</li>
           <li><b>Battery.</b> Capacity, run time per charge, and whether it can be replaced in service.</li>
+          <li><b>Button and app.</b> A sealed push button on the underside of the ring, and a Bluetooth module for an app that sets a timer. Which module, what it adds to unit cost, and whether you can supply the firmware.</li>
           <li><b>Filter.</b> Media volume and expected cartridge life at a typical flow rate.</li>
           <li><b>Ring lock.</b> Holding force and wear over repeated use, for the twist-lock, and the pull force of the magnets on the soft square: enough to hold the ring through a knock, light enough to pull off with wet hands.</li>
           <li data-for="hand"><b>Hand shower.</b> Battery capacity and run time in the smaller ring, whether it can use the same LED board, and the weight of the hand shower with the ring on.</li>
@@ -897,6 +900,24 @@ function buildRing(shape, hand = false) {
     hole.rotation.z = Math.PI / 2; hole.scale.z = 0.17;
     port.add(rim, hole);
     holder.add(port);
+    g.add(holder);
+  }
+  // Power button on the underside, at the front between two lenses: one press switches the light on, the next off.
+  // A timer is set in the app. The button keeps its real size (Ø 9 mm in a Ø 12 mm bezel).
+  {
+    const holder = new THREE.Group();
+    holder.rotation.y = SQ_PHI;
+    const button = new THREE.Group();
+    button.position.set(0, RB, warpR(shape, shape.led, SQ_PHI));
+    button.scale.setScalar(hand ? 1 / KH : 1 / SIZE);
+    button.add(disc(new THREE.RingGeometry(0.45, 0.6, 40), M.seam, -0.004));
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.43, 0.43, 0.1, 40), M.graphite);
+    cap.position.y = -0.03;
+    button.add(cap, disc(new THREE.RingGeometry(0.16, 0.2, 32, 1, 0.5, TAU - 1.0), M.seam, -0.082));
+    const tick = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.004, 0.2), M.seam);
+    tick.position.set(0, -0.082, 0.14);
+    button.add(tick);
+    holder.add(button);
     g.add(holder);
   }
   // 12 round LED lenses on the underside.
